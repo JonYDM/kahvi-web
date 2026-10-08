@@ -73,7 +73,7 @@ export function PinInput({
                     : "border-outline-variant/40 bg-surface-container-lowest",
               )}
             >
-              {value[i] ? "â€¢" : ""}
+              {value[i] ? "•" : ""}
             </div>
           );
         })}
