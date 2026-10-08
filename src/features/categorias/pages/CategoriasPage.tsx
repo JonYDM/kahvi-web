@@ -1,6 +1,5 @@
 import { useState, useRef, type FormEvent, type DragEvent } from "react";
 import { Edit2, GripVertical, Plus, Trash2 } from "lucide-react";
-import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Button, Drawer, Input, SkeletonFila } from "@/components/ui";
 import { useToast } from "@/components/feedback/useToast";
@@ -194,10 +193,19 @@ export function CategoriasPage() {
       )}
 
       {!isLoading && !isError && ordenadas.length === 0 && (
-        <EmptyState
-          titulo="Sin categorías"
-          descripcion="Crea la primera categoría para organizar tus productos."
-        />
+        <div className="flex flex-col items-center py-10 text-center">
+          <img
+            src="/spil.png"
+            alt="Sin categorías"
+            className="h-40 w-40 object-contain"
+          />
+          <p className="mt-4 text-label-lg font-semibold text-on-surface">
+            Sin categorías
+          </p>
+          <p className="mt-1 text-body-sm text-on-surface-variant">
+            Crea la primera categoría para organizar tus productos.
+          </p>
+        </div>
       )}
 
       {!isLoading && !isError && ordenadas.length > 0 && (
