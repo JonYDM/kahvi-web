@@ -200,7 +200,7 @@ export function MeseroPage() {
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 0: TIPO DE SERVICIO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 0 && (
           <section aria-label="Tipo de servicio">
-            <PasoTitulo icon={Storefront} titulo="Â¿Dónde es el pedido?" sub="Elige mesa o para llevar" />
+            <PasoTitulo icon={Storefront} titulo="¿Dónde es el pedido?" sub="Elige mesa o para llevar" />
 
             {/* Selector Mesa / Para llevar */}
             <div className="mt-5 grid grid-cols-2 gap-3">
@@ -271,7 +271,7 @@ export function MeseroPage() {
                 <div className="mt-3">
                   <Input
                     label="Otra mesa"
-                    placeholder="Ej: Barra, Terraza, 9â€¦"
+                    placeholder="Ej: Barra, Terraza, 9…"
                     value={MESAS_RAPIDAS.includes(mesa) ? "" : mesa}
                     onChange={(e) => setMesa(e.target.value)}
                   />
@@ -284,7 +284,7 @@ export function MeseroPage() {
               <div className="mt-5">
                 <Input
                   label="Nombre del cliente (opcional)"
-                  placeholder="Â¿Cómo se llama?"
+                  placeholder="¿Cómo se llama?"
                   value={nombreCliente}
                   onChange={(e) => setNombreCliente(e.target.value)}
                 />
@@ -398,7 +398,7 @@ export function MeseroPage() {
             <PasoTitulo
               icon={Note}
               titulo="Revisa el pedido"
-              sub={`${refMesa} Â· ${totalArticulos} producto${totalArticulos !== 1 ? "s" : ""}`}
+              sub={`${refMesa} · ${totalArticulos} producto${totalArticulos !== 1 ? "s" : ""}`}
             />
 
             {lineas.length === 0 ? (
@@ -452,7 +452,7 @@ export function MeseroPage() {
                           autoFocus
                           value={notaTemp}
                           onChange={(e) => setNotaTemp(e.target.value)}
-                          placeholder="Ej: sin azúcar, extra calienteâ€¦"
+                          placeholder="Ej: sin azúcar, extra caliente…"
                           className="flex-1 rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2 text-body-sm text-on-surface outline-none focus:border-primary-container"
                           onKeyDown={(e) => e.key === "Enter" && guardarNota()}
                         />
@@ -516,7 +516,7 @@ export function MeseroPage() {
               <p className="text-body-sm text-on-surface-variant">{ETIQUETAS_PASO[paso]}</p>
               <p className="truncate text-label-lg font-bold text-on-surface">
                 {totalArticulos > 0
-                  ? `${totalArticulos} prod Â· ${formatCurrency(total)}`
+                  ? `${totalArticulos} prod · ${formatCurrency(total)}`
                   : paso === 0
                     ? refMesa
                     : "Ticket vacío"}
