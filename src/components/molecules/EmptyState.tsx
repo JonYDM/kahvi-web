@@ -15,7 +15,7 @@ export function EmptyState({ titulo, descripcion, accion }: Props) {
   return (
     <div className="flex flex-col items-center gap-4 py-14 text-center">
       <img
-        src="/empty.webp"
+        src="/spil.png"
         alt=""
         aria-hidden
         className="h-36 w-36 object-contain drop-shadow-sm"
