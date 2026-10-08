@@ -50,9 +50,6 @@ const StaffDashboard = lazy(() =>
 const AdminPage = lazy(() =>
   import("@/features/admin").then((m) => ({ default: m.AdminPage })),
 );
-const PosPage = lazy(() =>
-  import("@/features/pos").then((m) => ({ default: m.PosPage })),
-);
 const HistorialVentasPage = lazy(() =>
   import("@/features/pos").then((m) => ({ default: m.HistorialVentasPage })),
 );
@@ -137,7 +134,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <StaffDashboard /> },
       { path: "admin", element: <AdminPage /> },
-      { path: "pos", element: <PosPage /> },
+      { path: "pos", element: <Navigate to="/app/productos" replace /> },
       { path: "productos", element: <ProductosPage /> },
       {
         path: "ventas",
