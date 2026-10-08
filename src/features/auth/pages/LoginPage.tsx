@@ -97,7 +97,7 @@ export function LoginPage() {
             {/* Vito feliz + wordmark Kahvi */}
             <div className="flex flex-col items-center text-center">
               <img
-                src="/vito-feliz.png"
+                src="/vito-feliz.webp"
                 alt="Vito"
                 className="h-32 w-32 object-contain drop-shadow-md animate-vito-float"
               />
@@ -167,7 +167,7 @@ export function LoginPage() {
             {/* Vito + saludo con nombre real */}
             <div className="flex flex-col items-center text-center">
               <img
-                src="/vito-feliz.png"
+                src="/vito-feliz.webp"
                 alt="Vito"
                 className="h-28 w-28 object-contain drop-shadow-md"
               />

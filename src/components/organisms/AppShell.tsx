@@ -200,14 +200,14 @@ function VitoPopover() {
         aria-expanded={abierto}
         className="rounded-full transition-transform active:scale-95"
       >
-        <img src="/vito.png" alt="Vito" className="h-8 w-8 rounded-full object-contain" />
+        <img src="/vito.webp" alt="Vito" className="h-8 w-8 rounded-full object-contain" />
       </button>
 
       {abierto && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setAbierto(false)} />
           <div className="absolute left-0 top-full z-50 mt-2 w-52 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-3 text-center shadow-lift">
-            <img src="/vito.png" alt="Vito" className="mx-auto h-14 w-14 object-contain" />
+            <img src="/vito.webp" alt="Vito" className="mx-auto h-14 w-14 object-contain" />
             <p className="mt-1 font-marca text-base font-extrabold text-cafe-intenso">
               Â¡{saludoPorHora()}!
             </p>

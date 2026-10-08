@@ -100,7 +100,7 @@ export function VentasPage() {
       }
       accion={
         <img
-          src="/sale.png"
+          src="/sale.webp"
           alt=""
           aria-hidden
           className="-my-3 h-16 w-16 shrink-0 object-contain drop-shadow-sm"

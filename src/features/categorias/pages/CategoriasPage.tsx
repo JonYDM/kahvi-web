@@ -195,7 +195,7 @@ export function CategoriasPage() {
       {!isLoading && !isError && ordenadas.length === 0 && (
         <div className="flex flex-col items-center py-10 text-center">
           <img
-            src="/spil.png"
+            src="/spil.webp"
             alt="Sin categorías"
             className="h-40 w-40 object-contain"
           />

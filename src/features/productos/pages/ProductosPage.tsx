@@ -228,7 +228,7 @@ export function ProductosPage() {
       {!isLoading && !isError && lista.length === 0 && (
         <div className="flex flex-col items-center py-10 text-center">
           <img
-            src="/spil.png"
+            src="/spil.webp"
             alt="No hay productos"
             className="h-40 w-40 object-contain"
           />

@@ -26,7 +26,7 @@ export function EstacionLayout() {
         <div className="mx-auto flex h-14 w-full max-w-2xl items-center justify-between px-4">
           {/* Logo Kahvi */}
           <div className="flex items-center gap-2">
-            <img src="/vito.png" alt="Vito" className="h-8 w-8 rounded-full object-cover" />
+            <img src="/vito.webp" alt="Vito" className="h-8 w-8 rounded-full object-cover" />
             <span className="font-bold text-cafe-intenso">Kahvi</span>
           </div>
 

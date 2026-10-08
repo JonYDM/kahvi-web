@@ -40,7 +40,7 @@ export function StaffDashboard() {
       }
       accion={
         <img
-          src="/dashboard-hero.png"
+          src="/dashboard-hero.webp"
           alt="Kahvi"
           className="-my-3 h-16 w-16 shrink-0 object-contain drop-shadow-sm"
         />
