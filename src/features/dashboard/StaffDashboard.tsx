@@ -50,7 +50,7 @@ export function StaffDashboard() {
         {/* Acciones rápidas â€” estaciones de trabajo */}
         <div className="grid grid-cols-2 gap-2.5">
           <AccionRapida
-            to="/mesero"
+            to="/app/mesero"
             icon={Coffee}
             titulo="Mesero"
             sub="Tomar pedidos"
@@ -58,7 +58,7 @@ export function StaffDashboard() {
             iconWrap="bg-crema/10 text-crema"
           />
           <AccionRapida
-            to="/cocina"
+            to="/app/cocina"
             icon={ChefHat}
             titulo="Cocina"
             sub="Ver preparaciones"
@@ -66,7 +66,7 @@ export function StaffDashboard() {
             iconWrap="bg-caramelo/40 text-cafe-intenso"
           />
           <AccionRapida
-            to="/caja"
+            to="/app/caja"
             icon={Wallet}
             titulo="Caja"
             sub="Cobrar comandas"

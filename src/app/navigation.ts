@@ -43,9 +43,9 @@ export const navStaff: NavItem[] = [
   { to: "/app", label: "Inicio", icon: House, permiso: null },
   { to: "/app/ventas", label: "Ventas", icon: TrendUp, permiso: "ver_metricas" },
   // Estaciones â€” el Admin puede operar cualquiera
-  { to: "/mesero", label: "Mesero", icon: ShoppingCart, permiso: null, secundario: true },
-  { to: "/cocina", label: "Cocina", icon: ChefHat, permiso: null, secundario: true },
-  { to: "/caja", label: "Caja", icon: Wallet, permiso: null, secundario: true },
+  { to: "/app/mesero", label: "Mesero", icon: ShoppingCart, permiso: null, secundario: true },
+  { to: "/app/cocina", label: "Cocina", icon: ChefHat, permiso: null, secundario: true },
+  { to: "/app/caja", label: "Caja", icon: Wallet, permiso: null, secundario: true },
   { to: "/app/equipo", label: "Equipo", icon: UserGear, permiso: "gestionar_equipo", secundario: true },
   { to: "/app/historico", label: "Histórico", icon: Receipt, permiso: "ver_metricas", secundario: true },
 ];
@@ -66,12 +66,12 @@ export const navMesero: NavItem[] = [
 
 /** Navegación de Cocina (/cocina): tablero. */
 export const navCocina: NavItem[] = [
-  { to: "/cocina", label: "Cocina", icon: ChefHat, permiso: null },
+  { to: "/app/cocina", label: "Cocina", icon: ChefHat, permiso: null },
 ];
 
 /** Navegación de Caja (/caja): cobros. */
 export const navCaja: NavItem[] = [
-  { to: "/caja", label: "Caja", icon: Wallet, permiso: null },
+  { to: "/app/caja", label: "Caja", icon: Wallet, permiso: null },
 ];
 
 

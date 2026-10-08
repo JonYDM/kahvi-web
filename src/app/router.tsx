@@ -168,13 +168,17 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      // Estaciones para el Admin — dentro del AppShell con navStaff
+      { path: "mesero", element: <MeseroPage /> },
+      { path: "cocina", element: <CocinaPage /> },
+      { path: "caja", element: <CajaPage /> },
     ],
   },
 
   // â”€â”€ Àrea Mesero (/mesero) â”€â”€
   {
     path: "/mesero",
-    element: <Protegida roles={[RolUsuario.Mesero, RolUsuario.Administrador]}><MeseroLayout /></Protegida>,
+    element: <Protegida roles={[RolUsuario.Mesero]}><MeseroLayout /></Protegida>,
     children: [
       { index: true, element: <MeseroPage /> },
     ],
@@ -183,7 +187,7 @@ const router = createBrowserRouter([
   // â”€â”€ Àrea Cocina (/cocina) â”€â”€
   {
     path: "/cocina",
-    element: <Protegida roles={[RolUsuario.Cocina, RolUsuario.Administrador]}><CocinaLayout /></Protegida>,
+    element: <Protegida roles={[RolUsuario.Cocina]}><CocinaLayout /></Protegida>,
     children: [
       { index: true, element: <CocinaPage /> },
     ],
@@ -192,7 +196,7 @@ const router = createBrowserRouter([
   // â”€â”€ Àrea Caja (/caja) â”€â”€
   {
     path: "/caja",
-    element: <Protegida roles={[RolUsuario.Caja, RolUsuario.Administrador]}><CajaLayout /></Protegida>,
+    element: <Protegida roles={[RolUsuario.Caja]}><CajaLayout /></Protegida>,
     children: [
       { index: true, element: <CajaPage /> },
     ],
