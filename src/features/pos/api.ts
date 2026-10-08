@@ -66,3 +66,8 @@ export function editarProducto(
 export function desactivarProducto(productoId: string): Promise<unknown> {
   return http.post(`/api/productos/${productoId}/desactivar`);
 }
+
+/** Reactiva un producto previamente desactivado (Admin). */
+export function activarProducto(productoId: string): Promise<unknown> {
+  return http.post(`/api/productos/${productoId}/activar`);
+}

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   agregarProducto,
+  activarProducto,
   desactivarProducto,
   editarProducto,
   listarCatalogo,
@@ -78,6 +79,17 @@ export function useDesactivarProducto() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (productoId: string) => desactivarProducto(productoId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["catalogo"] });
+    },
+  });
+}
+
+/** Activa (reactiva) un producto e invalida el catálogo. */
+export function useActivarProducto() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (productoId: string) => activarProducto(productoId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["catalogo"] });
     },

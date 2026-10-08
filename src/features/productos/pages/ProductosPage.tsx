@@ -11,6 +11,7 @@ import {
   useAgregarProducto,
   useEditarProducto,
   useDesactivarProducto,
+  useActivarProducto,
 } from "@/features/pos/hooks";
 import { useCategorias } from "@/features/categorias/hooks";
 import type { Producto, CategoriaDto } from "@/types/api";
@@ -36,6 +37,7 @@ export function ProductosPage() {
   const crear = useAgregarProducto();
   const editar = useEditarProducto();
   const desactivar = useDesactivarProducto();
+  const activar = useActivarProducto();
   const toast = useToast();
 
   const [drawer, setDrawer] = useState<EstadoDrawer>(DRAWER_CERRADO);
@@ -121,14 +123,7 @@ export function ProductosPage() {
         await desactivar.mutateAsync(p.id);
         toast.exito(`"${p.nombre}" desactivado.`);
       } else {
-        // Reactivar: editar con los mismos datos activa el producto
-        await editar.mutateAsync({
-          productoId: p.id,
-          nombre: p.nombre,
-          categoriaId: p.categoriaId,
-          precio: p.precio,
-          costo: p.costo,
-        });
+        await activar.mutateAsync(p.id);
         toast.exito(`"${p.nombre}" reactivado.`);
       }
     } catch (err) {
