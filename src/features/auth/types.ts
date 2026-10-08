@@ -5,13 +5,8 @@ export interface Sesion {
   token: string;
   nombre: string;
   rol: RolUsuario;
-  expiraEn: string;
   /** Del JWT (ausente para SuperAdmin). */
-  veterinariaId?: string;
-  /** Del JWT (solo dueños de mascota). */
-  clienteId?: string;
-  /** Si el Admin de la veterinaria puede operar (no solo supervisar). */
-  adminOperativo: boolean;
+  cafeteriaId?: string;
 }
 
 export interface AuthState {

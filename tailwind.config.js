@@ -5,7 +5,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Tokens semánticos (estilo shadcn, con CSS variables HSL).
+        // ── Paleta Kahvi ──────────────────────────────────────────────────
+        "cafe-intenso": "#2B1F19",
+        "cafe-principal": "#6B4F3B",
+        "caramelo": "#C9BB5A",
+        "crema": "#F4E9DB",
+        "verde-menta": "#6FAF9A",
+
+        // Tokens semánticos (CSS variables HSL).
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -43,7 +50,7 @@ export default {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
-        // Alias de compatibilidad con el código existente (mapean a los tokens semánticos).
+        // Alias de compatibilidad
         canvas: "hsl(var(--background))",
         surface: "hsl(var(--card))",
         hairline: "hsl(var(--border))",
@@ -53,65 +60,62 @@ export default {
           muted: "hsl(var(--muted-foreground))",
         },
         danger: "hsl(var(--destructive))",
-        // Escalas de primary/accent usadas en algunos lugares.
         "primary-50": "hsl(var(--secondary))",
         "primary-100": "hsl(var(--secondary))",
 
-        // ── Tokens del design system Stitch (calco fiel del markup) ──
-        // Superficies en capas
+        // ── Tokens de superficies (Kahvi, calco del Stitch base) ──────────
         "surface-container-lowest": "#ffffff",
-        "surface-container-low": "#eff4ff",
-        "surface-container": "#e5eeff",
-        "surface-container-high": "#dce9ff",
-        "surface-container-highest": "#d3e4fe",
-        "surface-variant": "#d3e4fe",
-        "surface-dim": "#cbdbf5",
-        "on-surface": "#0b1c30",
-        "on-surface-variant": "#3e4948",
-        outline: "#6e7979",
-        "outline-variant": "#bec9c8",
-        // Primary (teal) — Stitch
-        "st-primary": "#005454",
-        "primary-container": "#0d6e6e",
+        "surface-container-low": "#fdf5ed",
+        "surface-container": "#f9ede0",
+        "surface-container-high": "#f4e9db",
+        "surface-container-highest": "#efe3d4",
+        "surface-variant": "#e8ddd0",
+        "surface-dim": "#ddd5c8",
+        "on-surface": "#2B1F19",
+        "on-surface-variant": "#6B4F3B",
+        outline: "#9c7e6a",
+        "outline-variant": "#d5c5b5",
+        // Primary (verde menta) — Kahvi
+        "st-primary": "#4a9982",
+        "primary-container": "#6FAF9A",
         "on-primary": "#ffffff",
-        "on-primary-container": "#9dedec",
-        "primary-fixed": "#a0f0f0",
-        "primary-fixed-dim": "#84d4d3",
-        "on-primary-fixed": "#002020",
-        // Secondary (terracota) — Stitch
-        "st-secondary": "#994703",
-        "secondary-container": "#fc934f",
+        "on-primary-container": "#1a4a3d",
+        "primary-fixed": "#b8ddd3",
+        "primary-fixed-dim": "#8ccab9",
+        "on-primary-fixed": "#0d2e26",
+        // Secondary (caramelo/café) — Kahvi
+        "st-secondary": "#6B4F3B",
+        "secondary-container": "#C9BB5A",
         "on-secondary": "#ffffff",
-        "secondary-fixed": "#ffdbc9",
-        "secondary-fixed-dim": "#ffb68c",
-        "on-secondary-fixed": "#321200",
-        "on-secondary-fixed-variant": "#753400",
-        "on-secondary-container": "#6d3000",
-        // Tertiary (teal profundo)
-        tertiary: "#145353",
-        "tertiary-container": "#316b6b",
-        "tertiary-fixed": "#b3edec",
-        "on-tertiary-fixed-variant": "#0e4f4f",
-        "on-tertiary-container": "#afe9e9",
+        "secondary-fixed": "#f0e8b8",
+        "secondary-fixed-dim": "#ddd08a",
+        "on-secondary-fixed": "#3a3210",
+        "on-secondary-fixed-variant": "#5a4e1a",
+        "on-secondary-container": "#3a3210",
+        // Tertiary (café intenso)
+        tertiary: "#3d2b1f",
+        "tertiary-container": "#6B4F3B",
+        "tertiary-fixed": "#d4c3b3",
+        "on-tertiary-fixed-variant": "#4d3728",
+        "on-tertiary-container": "#f4e9db",
         // Error
         "error-st": "#ba1a1a",
         "error-container": "#ffdad6",
         "on-error-container": "#93000a",
-        // Navegación inferior (docked): fondo tinteado translúcido (teal muy suave) + blur.
-        "surface-nav": "rgba(240, 250, 250, 0.85)",
+        // Nav: fondo crema translúcido + blur
+        "surface-nav": "rgba(244, 233, 219, 0.88)",
       },
       fontFamily: {
-        sans: ["Plus Jakarta Sans", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
-        marca: ["Nunito", "Plus Jakarta Sans", "system-ui", "sans-serif"],
+        sans: ["Nunito", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
+        marca: ["Nunito", "system-ui", "sans-serif"],
       },
       fontSize: {
-        display: ["2.25rem", { lineHeight: "2.75rem", letterSpacing: "-0.02em", fontWeight: "700" }],
+        display: ["2.25rem", { lineHeight: "2.75rem", letterSpacing: "-0.02em", fontWeight: "800" }],
         h1: ["1.75rem", { lineHeight: "2.25rem", letterSpacing: "-0.01em", fontWeight: "700" }],
         h2: ["1.375rem", { lineHeight: "1.75rem", fontWeight: "600" }],
         h3: ["1.125rem", { lineHeight: "1.5rem", fontWeight: "600" }],
         metric: ["2rem", { lineHeight: "2.375rem", letterSpacing: "-0.03em", fontWeight: "700" }],
-        // Escala Stitch (calco fiel)
-        "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }],
+        "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "800" }],
         "headline-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.01em", fontWeight: "700" }],
         "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }],
         "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }],
@@ -133,20 +137,19 @@ export default {
         "3xl": "calc(var(--radius) + 16px)",
       },
       boxShadow: {
-        xs: "0 1px 2px rgba(15,23,42,0.05)",
-        soft: "0 2px 8px -2px rgba(13,110,110,0.06), 0 1px 4px -1px rgba(15,23,42,0.04)",
-        lift: "0 10px 24px -4px rgba(8,76,76,0.10), 0 4px 10px -2px rgba(15,23,42,0.04)",
-        float: "0 20px 40px -8px rgba(15,23,42,0.22)",
+        xs: "0 1px 2px rgba(43,31,25,0.06)",
+        soft: "0 2px 8px -2px rgba(107,79,59,0.10), 0 1px 4px -1px rgba(43,31,25,0.05)",
+        lift: "0 10px 24px -4px rgba(107,79,59,0.14), 0 4px 10px -2px rgba(43,31,25,0.06)",
+        float: "0 20px 40px -8px rgba(43,31,25,0.24)",
         "primary-glow": "0 6px 20px hsl(var(--primary) / 0.28)",
-        // Profundidad "de abajo hacia arriba": highlight superior + sombra inferior.
         "inset-up":
-          "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -3px 8px -3px rgba(13,110,110,0.12), 0 6px 16px -6px rgba(8,76,76,0.14)",
+          "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -3px 8px -3px rgba(107,79,59,0.14), 0 6px 16px -6px rgba(43,31,25,0.14)",
       },
       backgroundImage: {
-        brand: "linear-gradient(135deg, #0D6E6E 0%, #084C4C 100%)",
+        brand: "linear-gradient(135deg, #6FAF9A 0%, #4a9982 100%)",
         "brand-mesh":
-          "radial-gradient(at 20% 20%, rgba(13,110,110,0.35) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(8,76,76,0.45) 0px, transparent 50%), radial-gradient(at 90% 90%, rgba(20,83,83,0.35) 0px, transparent 50%)",
-        "accent-grad": "linear-gradient(135deg, #F0954E 0%, #D97736 100%)",
+          "radial-gradient(at 20% 20%, rgba(111,175,154,0.35) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(107,79,59,0.30) 0px, transparent 50%), radial-gradient(at 90% 90%, rgba(201,187,90,0.25) 0px, transparent 50%)",
+        "accent-grad": "linear-gradient(135deg, #C9BB5A 0%, #b0a340 100%)",
       },
       transitionTimingFunction: {
         "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",
@@ -162,11 +165,11 @@ export default {
           to: { opacity: "1", transform: "scale(1)" },
         },
         shimmer: { "100%": { transform: "translateX(100%)" } },
-        "wipo-float": {
+        "vito-float": {
           "0%, 100%": { transform: "translateY(0) rotate(-1deg)" },
           "50%": { transform: "translateY(-6px) rotate(1deg)" },
         },
-        "wipo-hop": {
+        "vito-hop": {
           "0%, 100%": { transform: "translateY(0) scale(1)" },
           "30%": { transform: "translateY(-14px) scale(1.05)" },
           "55%": { transform: "translateY(0) scale(0.97)" },
@@ -179,8 +182,8 @@ export default {
       },
       animation: {
         "fade-in-up": "fade-in-up 280ms cubic-bezier(0.16, 1, 0.3, 1)",
-        "wipo-float": "wipo-float 3.5s ease-in-out infinite",
-        "wipo-hop": "wipo-hop 600ms ease-out",
+        "vito-float": "vito-float 3.5s ease-in-out infinite",
+        "vito-hop": "vito-hop 600ms ease-out",
       },
     },
   },

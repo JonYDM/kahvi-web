@@ -5,7 +5,7 @@ import { navAdmin } from "@/app/navigation";
 /** Layout del panel SuperAdmin (/admin/*). */
 export function AdminLayout() {
   return (
-    <AppShell nav={navAdmin} titulo="Panel SuperAdmin">
+    <AppShell nav={navAdmin} titulo="SuperAdmin">
       <Outlet />
     </AppShell>
   );

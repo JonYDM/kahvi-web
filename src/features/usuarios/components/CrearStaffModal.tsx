@@ -1,4 +1,4 @@
-import { ConciergeBell, Stethoscope } from "lucide-react";
+import { Coffee, ChefHat, Wallet } from "lucide-react";
 import { RolUsuario } from "@/types/api";
 import { useCrearStaff } from "../hooks";
 import { AltaStaffDrawer, type OpcionRol } from "./AltaStaffDrawer";
@@ -9,11 +9,12 @@ interface Props {
 }
 
 const ROLES: OpcionRol[] = [
-  { valor: RolUsuario.Veterinario, label: "Veterinario", detalle: "Consultas y expedientes", icon: Stethoscope },
-  { valor: RolUsuario.Recepcionista, label: "Recepción", detalle: "Citas, clientes y caja", icon: ConciergeBell },
+  { valor: RolUsuario.Mesero, label: "Mesero", detalle: "Toma y envía comandas", icon: Coffee },
+  { valor: RolUsuario.Cocina, label: "Cocina", detalle: "Prepara y avanza pedidos", icon: ChefHat },
+  { valor: RolUsuario.Caja, label: "Caja", detalle: "Cobra comandas", icon: Wallet },
 ];
 
-/** Alta de Veterinario o Recepcionista: rol → nombre → contacto → PIN (usuario autogenerado). */
+/** Alta de Mesero, Cocina o Caja: rol → nombre → contacto → PIN. */
 export function CrearStaffModal({ open, onClose }: Props) {
   const crear = useCrearStaff();
   return (
@@ -32,7 +33,7 @@ export function CrearStaffModal({ open, onClose }: Props) {
           telefono: datos.telefono,
           curp: datos.curp || null,
           pin,
-          rol: (rol ?? RolUsuario.Veterinario) as RolUsuario.Veterinario | RolUsuario.Recepcionista,
+          rol: (rol ?? RolUsuario.Mesero) as RolUsuario.Mesero | RolUsuario.Cocina | RolUsuario.Caja,
         })
       }
     />

@@ -22,38 +22,30 @@ function PaginaNoEncontrada() {
     />
   );
 }
-// Lazy loading por área (code-splitting por rol).
+
+// ── Lazy imports ─────────────────────────────────────────────────────────────
 const LoginPage = lazy(() =>
   import("@/features/auth/pages/LoginPage").then((m) => ({ default: m.LoginPage })),
 );
 const StaffLayout = lazy(() =>
   import("@/app/layouts/StaffLayout").then((m) => ({ default: m.StaffLayout })),
 );
-const PortalLayout = lazy(() =>
-  import("@/app/layouts/PortalLayout").then((m) => ({ default: m.PortalLayout })),
-);
 const AdminLayout = lazy(() =>
   import("@/app/layouts/AdminLayout").then((m) => ({ default: m.AdminLayout })),
 );
+const MeseroLayout = lazy(() =>
+  import("@/app/layouts/MeseroLayout").then((m) => ({ default: m.MeseroLayout })),
+);
+const CocinaLayout = lazy(() =>
+  import("@/app/layouts/CocinaLayout").then((m) => ({ default: m.CocinaLayout })),
+);
+const CajaLayout = lazy(() =>
+  import("@/app/layouts/CajaLayout").then((m) => ({ default: m.CajaLayout })),
+);
+
+// Área Admin
 const StaffDashboard = lazy(() =>
-  import("@/features/dashboard/StaffDashboard").then((m) => ({
-    default: m.StaffDashboard,
-  })),
-);
-const ClientesPage = lazy(() =>
-  import("@/features/clientes").then((m) => ({ default: m.ClientesPage })),
-);
-const ClienteDetallePage = lazy(() =>
-  import("@/features/clientes").then((m) => ({ default: m.ClienteDetallePage })),
-);
-const PerfilPacientePage = lazy(() =>
-  import("@/features/mascotas").then((m) => ({ default: m.PerfilPacientePage })),
-);
-const PacientesPage = lazy(() =>
-  import("@/features/mascotas").then((m) => ({ default: m.PacientesPage })),
-);
-const CitasPage = lazy(() =>
-  import("@/features/citas").then((m) => ({ default: m.CitasPage })),
+  import("@/features/dashboard/StaffDashboard").then((m) => ({ default: m.StaffDashboard })),
 );
 const PosPage = lazy(() =>
   import("@/features/pos").then((m) => ({ default: m.PosPage })),
@@ -61,47 +53,34 @@ const PosPage = lazy(() =>
 const HistorialVentasPage = lazy(() =>
   import("@/features/pos").then((m) => ({ default: m.HistorialVentasPage })),
 );
-const MisMascotasPage = lazy(() =>
-  import("@/features/portal").then((m) => ({ default: m.MisMascotasPage })),
-);
-const MiExpedientePage = lazy(() =>
-  import("@/features/portal").then((m) => ({ default: m.MiExpedientePage })),
-);
-const MisCitasPage = lazy(() =>
-  import("@/features/portal").then((m) => ({ default: m.MisCitasPage })),
-);
-const MisComprasPage = lazy(() =>
-  import("@/features/portal").then((m) => ({ default: m.MisComprasPage })),
-);
-const RecordatoriosPage = lazy(() =>
-  import("@/features/recordatorios").then((m) => ({ default: m.RecordatoriosPage })),
-);
-const VeterinariasPage = lazy(() =>
-  import("@/features/veterinarias").then((m) => ({
-    default: m.VeterinariasPage,
-  })),
-);
-const ResumenSuperAdminPage = lazy(() =>
-  import("@/features/veterinarias").then((m) => ({ default: m.ResumenSuperAdminPage })),
-);
-const AdministradoresPage = lazy(() =>
-  import("@/features/veterinarias").then((m) => ({ default: m.AdministradoresPage })),
-);
-const VeterinariaDetallePage = lazy(() =>
-  import("@/features/veterinarias").then((m) => ({ default: m.VeterinariaDetallePage })),
-);
-const CobrosPage = lazy(() =>
-  import("@/features/veterinarias").then((m) => ({ default: m.CobrosPage })),
-);
 const EquipoPage = lazy(() =>
   import("@/features/usuarios").then((m) => ({ default: m.StaffPage })),
 );
 
-const STAFF_ROLES = [
-  RolUsuario.Administrador,
-  RolUsuario.Veterinario,
-  RolUsuario.Recepcionista,
-];
+// Área Comandas
+const MeseroPage = lazy(() =>
+  import("@/features/comandas").then((m) => ({ default: m.MeseroPage })),
+);
+const CocinaPage = lazy(() =>
+  import("@/features/comandas").then((m) => ({ default: m.CocinaPage })),
+);
+const CajaPage = lazy(() =>
+  import("@/features/comandas").then((m) => ({ default: m.CajaPage })),
+);
+
+// Área SuperAdmin
+const ResumenSuperAdminPage = lazy(() =>
+  import("@/features/cafeterias").then((m) => ({ default: m.ResumenSuperAdminPage })),
+);
+const CafeteriasPage = lazy(() =>
+  import("@/features/cafeterias").then((m) => ({ default: m.CafeteriasPage })),
+);
+const AdministradoresPage = lazy(() =>
+  import("@/features/cafeterias").then((m) => ({ default: m.AdministradoresPage })),
+);
+
+// Roles con acceso al área de staff (Admin)
+const STAFF_ROLES = [RolUsuario.Administrador];
 
 /** Redirige la raíz "/" al home del rol actual (o al login si no hay sesión). */
 function RootRedirect() {
@@ -139,17 +118,12 @@ const router = createBrowserRouter([
     ),
   },
 
-  // ── Área de staff ──
+  // ── Área Administrador (/app) ──
   {
     path: "/app",
     element: <Protegida roles={STAFF_ROLES}><StaffLayout /></Protegida>,
     children: [
       { index: true, element: <StaffDashboard /> },
-      { path: "clientes", element: <ClientesPage /> },
-      { path: "clientes/:clienteId", element: <ClienteDetallePage /> },
-      { path: "pacientes", element: <PacientesPage /> },
-      { path: "mascotas/:mascotaId", element: <PerfilPacientePage /> },
-      { path: "citas", element: <CitasPage /> },
       { path: "pos", element: <PosPage /> },
       {
         path: "ventas",
@@ -159,7 +133,6 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      { path: "recordatorios", element: <RecordatoriosPage /> },
       {
         path: "equipo",
         element: (
@@ -171,29 +144,40 @@ const router = createBrowserRouter([
     ],
   },
 
-  // ── Portal del dueño ──
+  // ── Área Mesero (/mesero) ──
   {
-    path: "/portal",
-    element: <Protegida roles={[RolUsuario.DuenoMascota]}><PortalLayout /></Protegida>,
+    path: "/mesero",
+    element: <Protegida roles={[RolUsuario.Mesero, RolUsuario.Administrador]}><MeseroLayout /></Protegida>,
     children: [
-      { index: true, element: <MisMascotasPage /> },
-      { path: "mascotas/:mascotaId", element: <MiExpedientePage /> },
-      { path: "citas", element: <MisCitasPage /> },
-      // Antes se llamaba Recordatorios: los enlaces viejos siguen funcionando.
-      { path: "recordatorios", element: <Navigate to="/portal/citas" replace /> },
-      { path: "compras", element: <MisComprasPage /> },
+      { index: true, element: <MeseroPage /> },
     ],
   },
 
-  // ── Panel SuperAdmin ──
+  // ── Área Cocina (/cocina) ──
+  {
+    path: "/cocina",
+    element: <Protegida roles={[RolUsuario.Cocina, RolUsuario.Administrador]}><CocinaLayout /></Protegida>,
+    children: [
+      { index: true, element: <CocinaPage /> },
+    ],
+  },
+
+  // ── Área Caja (/caja) ──
+  {
+    path: "/caja",
+    element: <Protegida roles={[RolUsuario.Caja, RolUsuario.Administrador]}><CajaLayout /></Protegida>,
+    children: [
+      { index: true, element: <CajaPage /> },
+    ],
+  },
+
+  // ── Panel SuperAdmin (/admin) ──
   {
     path: "/admin",
     element: <Protegida roles={[RolUsuario.SuperAdmin]}><AdminLayout /></Protegida>,
     children: [
       { index: true, element: <ResumenSuperAdminPage /> },
-      { path: "veterinarias", element: <VeterinariasPage /> },
-      { path: "veterinarias/:id", element: <VeterinariaDetallePage /> },
-      { path: "cobros", element: <CobrosPage /> },
+      { path: "cafeterias", element: <CafeteriasPage /> },
       { path: "administradores", element: <AdministradoresPage /> },
     ],
   },

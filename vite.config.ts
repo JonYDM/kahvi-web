@@ -5,20 +5,20 @@ import path from "node:path";
 
 // Configuración de Vite.
 // - Alias "@" → src (imports limpios).
-// - Proxy /api → backend en Railway: evita problemas de CORS en desarrollo.
+// - Proxy /api → backend kahvi-api local en desarrollo.
 // - PWA: manifest + service worker (instalable). NO cachea /api (datos con auth).
 export default defineConfig({
   plugins: [
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "apple-touch-icon.png"],
+      includeAssets: ["favicon.svg", "apple-touch-icon.png", "vito.png", "vito-feliz.png"],
       manifest: {
-        name: "Patwi — Gestión veterinaria",
-        short_name: "Patwi",
-        description: "Patwi: gestión simple para tu veterinaria. 🐾",
-        theme_color: "#FFFFFF",
-        background_color: "#FFFFFF",
+        name: "Kahvi — POS para cafeterias",
+        short_name: "Kahvi",
+        description: "Kahvi: gestiona tu cafeteria de forma facil, rapida y deliciosa.",
+        theme_color: "#2B1F19",
+        background_color: "#F4E9DB",
         display: "standalone",
         orientation: "portrait",
         lang: "es-MX",
@@ -44,7 +44,6 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,svg,png,woff2}"],
-        // Nunca cachear la API: los datos son dinámicos y requieren auth fresca.
         navigateFallbackDenylist: [/^\/api/],
         runtimeCaching: [
           {
@@ -75,8 +74,6 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        // Separa las librerías grandes en chunks propios para mejor caché:
-        // al cambiar el código de la app, estos no se re-descargan.
         manualChunks: {
           "react-vendor": ["react", "react-dom", "react-router-dom"],
           "query-vendor": ["@tanstack/react-query"],
@@ -89,9 +86,9 @@ export default defineConfig({
     port: 5173,
     proxy: {
       "/api": {
-        target: "https://chiron-vet-production.up.railway.app",
+        target: "http://localhost:5000",
         changeOrigin: true,
-        secure: true,
+        secure: false,
       },
     },
   },

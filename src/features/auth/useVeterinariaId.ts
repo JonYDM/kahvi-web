@@ -1,14 +1,5 @@
-import { useAuth } from "@/features/auth";
-
 /**
- * Devuelve el veterinariaId de la sesión (tenant actual).
- * Los endpoints de staff lo requieren en la URL. Lanza si no existe
- * (no debería pasar dentro de rutas protegidas de staff).
+ * @deprecated Usa useCafeteriaId en su lugar.
+ * Mantenido por compatibilidad durante la migración.
  */
-export function useVeterinariaId(): string {
-  const { sesion } = useAuth();
-  if (!sesion?.veterinariaId) {
-    throw new Error("La sesión no tiene veterinariaId.");
-  }
-  return sesion.veterinariaId;
-}
+export { useCafeteriaId as useVeterinariaId } from "./useCafeteriaId";

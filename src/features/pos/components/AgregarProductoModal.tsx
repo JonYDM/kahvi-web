@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from "react";
 import { Button, Input, Modal, Select } from "@/components/ui";
-import { useVeterinariaId } from "@/features/auth/useVeterinariaId";
 import { ApiError } from "@/lib/http";
 import { opcionesDeEnum } from "@/lib/opciones";
 import { categoriaProductoLabel } from "@/lib/enums";
@@ -14,13 +13,10 @@ interface Props {
 
 /** Modal para agregar un producto al catálogo (solo Admin). */
 export function AgregarProductoModal({ open, onClose }: Props) {
-  const veterinariaId = useVeterinariaId();
   const agregar = useAgregarProducto();
 
   const [nombre, setNombre] = useState("");
-  const [categoria, setCategoria] = useState<CategoriaProducto>(
-    CategoriaProducto.Alimento,
-  );
+  const [categoria, setCategoria] = useState<CategoriaProducto>(CategoriaProducto.Cafe);
   const [precio, setPrecio] = useState("");
   const [stock, setStock] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +25,6 @@ export function AgregarProductoModal({ open, onClose }: Props) {
     e.preventDefault();
     setError(null);
     const body: AgregarProductoRequest = {
-      veterinariaId,
       nombre: nombre.trim(),
       categoria,
       precio: Number(precio),
@@ -42,21 +37,14 @@ export function AgregarProductoModal({ open, onClose }: Props) {
       setStock("");
       onClose();
     } catch (err) {
-      setError(
-        err instanceof ApiError ? err.message : "No se pudo agregar el producto.",
-      );
+      setError(err instanceof ApiError ? err.message : "No se pudo agregar el producto.");
     }
   }
 
   return (
     <Modal open={open} onClose={onClose} title="Nuevo producto">
       <form onSubmit={enviar} className="space-y-4">
-        <Input
-          label="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          required
-        />
+        <Input label="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
         <Select
           label="Categoría"
           value={categoria}
@@ -90,12 +78,8 @@ export function AgregarProductoModal({ open, onClose }: Props) {
         )}
 
         <div className="flex gap-2 pt-2">
-          <Button type="button" variant="ghost" onClick={onClose} fullWidth>
-            Cancelar
-          </Button>
-          <Button type="submit" loading={agregar.isPending} fullWidth>
-            Agregar
-          </Button>
+          <Button type="button" variant="ghost" onClick={onClose} fullWidth>Cancelar</Button>
+          <Button type="submit" loading={agregar.isPending} fullWidth>Agregar</Button>
         </div>
       </form>
     </Modal>
