@@ -31,7 +31,7 @@ export function StaffDashboard() {
 
   return (
     <PantallaConHeader
-      titulo={`${saludoPorHora()}â€¦`}
+      titulo={`${saludoPorHora()}…`}
       subtitulo={
         <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
           <CalendarCheck weight='light' className="h-4 w-4 text-primary-container" aria-hidden />
