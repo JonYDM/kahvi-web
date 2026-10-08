@@ -188,14 +188,27 @@ export function MeseroPage() {
   // â”€â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   return (
-    <PantallaConHeader
-      titulo="Nueva comanda"
-      subtitulo={
-        <div className="flex items-center gap-1.5">
-          <PasosIndicador paso={paso} />
+    <PantallaConHeader titulo="Nueva comanda">
+      {/* Barra de progreso — vive en el contenido para reactualizar con paso */}
+      {paso < 3 && (
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-on-surface-variant">
+              {ETIQUETAS_PASO[paso]}
+            </span>
+            <span className="text-[11px] text-on-surface-variant/60">
+              {paso + 1} / {ETIQUETAS_PASO.length - 1}
+            </span>
+          </div>
+          <div className="h-[3px] w-full overflow-hidden rounded-full bg-outline-variant/20">
+            <div
+              className="h-full rounded-full bg-cafe-intenso transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+              style={{ width: `${((paso) / (ETIQUETAS_PASO.length - 2)) * 100}%` }}
+            />
+          </div>
         </div>
-      }
-    >
+      )}
+
       <div className="flex flex-col gap-4 pb-48">
 
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 0: TIPO DE SERVICIO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
@@ -587,34 +600,7 @@ function PasoTitulo({
   );
 }
 
-function PasosIndicador({ paso }: { paso: number }) {
-  return (
-    <div className="flex items-center gap-1.5">
-      {ETIQUETAS_PASO.map((label, i) => (
-        <div key={label} className="flex items-center gap-1.5">
-          <span
-            className={cn(
-              "flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold transition-all duration-300",
-              i === paso
-                ? "bg-cafe-intenso text-crema"
-                : i < paso
-                  ? "bg-primary-container/20 text-primary-container"
-                  : "bg-surface-container text-on-surface-variant/50",
-            )}
-          >
-            {i < paso ? <Check weight='light' className="h-3 w-3" aria-hidden /> : <span>{i + 1}</span>}
-            <span className={i === paso ? "inline" : "hidden sm:inline"}>{label}</span>
-          </span>
-          {i < ETIQUETAS_PASO.length - 1 && (
-            <span
-              className={cn("h-0.5 w-3 rounded-full", i < paso ? "bg-primary-container" : "bg-outline-variant/30")}
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
+
 
 function ProductoCard({
   producto,
