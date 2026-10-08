@@ -62,6 +62,12 @@ const EquipoPage = lazy(() =>
 const CategoriasPage = lazy(() =>
   import("@/features/categorias").then((m) => ({ default: m.CategoriasPage })),
 );
+const ProductosPage = lazy(() =>
+  import("@/features/productos").then((m) => ({ default: m.ProductosPage })),
+);
+const VentasResumenPage = lazy(() =>
+  import("@/features/ventas").then((m) => ({ default: m.VentasPage })),
+);
 
 // Área Comandas
 const MeseroPage = lazy(() =>
@@ -132,8 +138,17 @@ const router = createBrowserRouter([
       { index: true, element: <StaffDashboard /> },
       { path: "admin", element: <AdminPage /> },
       { path: "pos", element: <PosPage /> },
+      { path: "productos", element: <ProductosPage /> },
       {
         path: "ventas",
+        element: (
+          <ProtectedRoute roles={[RolUsuario.Administrador]}>
+            <VentasResumenPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "historico",
         element: (
           <ProtectedRoute roles={[RolUsuario.Administrador]}>
             <HistorialVentasPage />

@@ -3,10 +3,10 @@ import {
   ChefHat,
   Coffee,
   Home,
+  Package,
   Receipt,
-  Settings,
   ShoppingCart,
-  Tag,
+  TrendingUp,
   UserCog,
   Users,
   Wallet,
@@ -32,16 +32,15 @@ export interface NavItem {
 
 /**
  * Navegación del Administrador (/app/*).
- * Barra inferior: Inicio · Gestión (AdminPage con tabs).
- * Menú "Más": POS · Historial · Equipo · Categorías (mantenidos para backward compat).
+ * Barra inferior: Productos (izq) · Inicio/Dashboard (centro) · Ventas (der)
+ * Menú "Más": Equipo, Histórico
  */
 export const navStaff: NavItem[] = [
+  { to: "/app/productos", label: "Productos", icon: Package, permiso: "gestionar_productos" },
   { to: "/app", label: "Inicio", icon: Home, permiso: null },
-  { to: "/app/admin", label: "Gestión", icon: Settings, permiso: "gestionar_productos" },
-  { to: "/app/pos", label: "Ventas", icon: ShoppingCart, permiso: "usar_pos", secundario: true },
-  { to: "/app/ventas", label: "Historial", icon: Receipt, permiso: "ver_metricas", secundario: true },
+  { to: "/app/ventas", label: "Ventas", icon: TrendingUp, permiso: "ver_metricas" },
   { to: "/app/equipo", label: "Equipo", icon: UserCog, permiso: "gestionar_equipo", secundario: true },
-  { to: "/app/categorias", label: "Categorías", icon: Tag, permiso: "gestionar_productos", secundario: true },
+  { to: "/app/historico", label: "Histórico", icon: Receipt, permiso: "ver_metricas", secundario: true },
 ];
 
 /**
