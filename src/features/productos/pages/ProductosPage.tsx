@@ -304,11 +304,9 @@ function ProductoCard({
         !p.activo && "opacity-60",
       )}
     >
-      {/* Zona de imagen futura — placeholder con color de la paleta */}
-      <div className="flex h-28 items-center justify-center bg-primary-container/8">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-container/15">
-          <span className="text-2xl" aria-hidden>☕</span>
-        </div>
+      {/* Zona de imagen futura — placeholder limpio */}
+      <div className="flex h-20 items-center justify-center bg-primary-container/8">
+        <div className="h-10 w-10 rounded-xl bg-primary-container/20" />
       </div>
 
       {/* Contenido */}
