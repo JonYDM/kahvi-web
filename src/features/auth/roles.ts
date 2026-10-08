@@ -5,11 +5,13 @@ export function rutaInicialPorRol(rol: RolUsuario): string {
   switch (rol) {
     case RolUsuario.SuperAdmin:
       return "/admin";
-    case RolUsuario.DuenoMascota:
-      return "/portal";
+    case RolUsuario.Mesero:
+      return "/mesero";
+    case RolUsuario.Cocina:
+      return "/cocina";
+    case RolUsuario.Caja:
+      return "/caja";
     case RolUsuario.Administrador:
-    case RolUsuario.Veterinario:
-    case RolUsuario.Recepcionista:
       return "/app";
     default:
       return "/app";

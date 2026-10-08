@@ -2,78 +2,64 @@ import { RolUsuario } from "@/types/api";
 import type { Sesion } from "@/features/auth/types";
 
 /**
- * Acciones/capacidades de la app. Centralizar los permisos aquí (una sola fuente de
- * verdad) evita checks de rol dispersos y mantiene la UI coherente con el backend.
+ * Acciones/capacidades de la app Kahvi. Una sola fuente de verdad de permisos.
  */
 export type Accion =
-  | "ver_metricas" // dashboard de negocio
-  | "gestionar_equipo" // crear/editar/desactivar staff
-  | "gestionar_veterinarias" // SuperAdmin
-  | "operar_clientes" // registrar/editar/baja de clientes y mascotas (onboarding)
-  | "ver_expediente" // ver historial médico
-  | "editar_expediente" // agregar consultas/tratamientos
-  | "gestionar_citas" // agendar y cambiar estado
-  | "usar_pos" // punto de venta / cobrar
-  | "gestionar_acceso_portal"; // dar acceso / ver acceso de un cliente
+  | "ver_metricas"      // dashboard de negocio (Admin)
+  | "gestionar_equipo"  // crear/editar/desactivar staff (Admin)
+  | "gestionar_cafeterias" // SuperAdmin: gestionar tenants
+  | "usar_pos"          // punto de venta directo (Admin)
+  | "ver_cocina"        // tablero de cocina (Cocina, Admin)
+  | "ver_caja"          // módulo de caja/cobros (Caja, Admin)
+  | "enviar_comanda"    // crear comanda (Mesero, Admin)
+  | "gestionar_productos"; // alta/edición de productos (Admin)
 
 /**
- * Matriz base de permisos por rol. El Administrador tiene acceso completo a los módulos;
- * el SuperAdmin solo controla el alcance de veterinarias/sucursales del Admin, no qué
- * módulos ve. (El flag AdminOperativo quedó obsoleto para control de módulos.)
- */
-const PERMISOS_VET: Accion[] = [
-  "operar_clientes",
-  "ver_expediente",
-  "editar_expediente",
-  "gestionar_citas",
-  "gestionar_acceso_portal",
-];
-
-const PERMISOS_RECEP: Accion[] = [
-  "operar_clientes",
-  "ver_expediente", // solo lectura (la UI no muestra "agregar")
-  "gestionar_citas",
-  "usar_pos",
-  "gestionar_acceso_portal",
-];
-
-/** Acciones "operativas" que el Admin solo tiene si su veterinaria es AdminOperativo. */
-const OPERATIVAS: Accion[] = [
-  "operar_clientes",
-  "ver_expediente",
-  "editar_expediente",
-  "gestionar_citas",
-  "usar_pos",
-  "gestionar_acceso_portal",
-];
-
-/**
- * ¿La sesión puede realizar la acción? Única fuente de verdad de permisos en el front.
+ * ¿La sesión puede realizar la acción? Única fuente de verdad de permisos.
  */
 export function puede(sesion: Sesion | null, accion: Accion): boolean {
   if (!sesion) return false;
 
   switch (sesion.rol) {
     case RolUsuario.SuperAdmin:
-      return accion === "gestionar_veterinarias";
+      return accion === "gestionar_cafeterias";
 
     case RolUsuario.Administrador:
-      // El Administrador tiene acceso completo a todos los módulos operativos y de
-      // gestión. Lo que el SuperAdmin controla es el alcance de veterinarias/sucursales
-      // (multi-sucursal), NO qué módulos ve. Todos los Admin ven lo mismo.
-      return (
-        accion === "ver_metricas" ||
-        accion === "gestionar_equipo" ||
-        OPERATIVAS.includes(accion)
-      );
+      // El Administrador tiene acceso completo.
+      return true;
 
-    case RolUsuario.Veterinario:
-      return PERMISOS_VET.includes(accion);
+    case RolUsuario.Mesero:
+      return accion === "enviar_comanda";
 
-    case RolUsuario.Recepcionista:
-      return PERMISOS_RECEP.includes(accion);
+    case RolUsuario.Cocina:
+      return accion === "ver_cocina";
+
+    case RolUsuario.Caja:
+      return accion === "ver_caja";
 
     default:
       return false;
   }
+}
+
+/** ¿Puede ver el POS directo (venta sin comanda)? */
+export function puedeVerPos(sesion: Sesion | null): boolean {
+  if (!sesion) return false;
+  return (
+    sesion.rol === RolUsuario.Administrador ||
+    sesion.rol === RolUsuario.Mesero ||
+    sesion.rol === RolUsuario.Caja
+  );
+}
+
+/** ¿Puede ver el tablero de cocina? */
+export function puedeVerCocina(sesion: Sesion | null): boolean {
+  if (!sesion) return false;
+  return sesion.rol === RolUsuario.Cocina || sesion.rol === RolUsuario.Administrador;
+}
+
+/** ¿Puede ver el módulo de caja/corte? */
+export function puedeVerCorte(sesion: Sesion | null): boolean {
+  if (!sesion) return false;
+  return sesion.rol === RolUsuario.Caja || sesion.rol === RolUsuario.Administrador;
 }

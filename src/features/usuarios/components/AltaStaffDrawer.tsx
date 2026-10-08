@@ -145,7 +145,7 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
           <div className="space-y-1">
             <p className="text-headline-sm font-bold text-on-surface">{creado.nombreCompleto}</p>
             <p className="text-body-md text-on-surface-variant">
-              Entrégale su usuario y el PIN que capturaste para que entre a Patwi.
+              Entrégale su usuario y el PIN que capturaste para que entre a Kahvi.
             </p>
           </div>
           <div className="flex w-full items-center gap-3 rounded-2xl bg-primary-container/10 p-4 text-left">

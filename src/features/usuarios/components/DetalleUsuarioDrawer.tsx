@@ -4,7 +4,7 @@ import { Avatar, Badge, Button, Drawer, Pasos, SkeletonFila } from "@/components
 import { ApiError } from "@/lib/http";
 import { rolLabel } from "@/lib/enums";
 import { useToast } from "@/components/feedback/useToast";
-import { RolUsuario, type UsuarioDetalle } from "@/types/api";
+import type { UsuarioDetalle } from "@/types/api";
 import { useDetalleUsuario, useEditarDatosUsuario, useGestionarUsuario } from "../hooks";
 import { contactoValido, nombreValido, type DatosPersonales } from "../datosPersonales";
 import { CamposContacto, CamposNombre } from "./CamposDatosPersonales";
@@ -110,7 +110,7 @@ export function DetalleUsuarioDrawer({ open, onClose, usuarioId, veterinariaNomb
           </dl>
 
           {/* Usuarios creados antes de HU-SA4: faltan datos */}
-          {!u.apellidoPaterno && u.rol !== RolUsuario.DuenoMascota && (
+          {!u.apellidoPaterno && (
             <p className="flex items-start gap-2 rounded-xl bg-warning/10 px-4 py-3 text-body-sm text-[#B45309]">
               <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
               Faltan apellidos y teléfono. Complétalos en "Editar datos".
@@ -120,12 +120,10 @@ export function DetalleUsuarioDrawer({ open, onClose, usuarioId, veterinariaNomb
           {/* Acciones */}
           <div className="space-y-2">
             <div className="flex gap-2">
-              {u.rol !== RolUsuario.DuenoMascota && (
-                <Button variant="soft" size="sm" fullWidth onClick={() => setModo("editar")}>
+              <Button variant="soft" size="sm" fullWidth onClick={() => setModo("editar")}>
                   <Pencil className="h-4 w-4" aria-hidden />
                   Editar datos
                 </Button>
-              )}
               {onResetearPin && (
                 <Button variant="soft" size="sm" fullWidth onClick={onResetearPin}>
                   <KeyRound className="h-4 w-4" aria-hidden />

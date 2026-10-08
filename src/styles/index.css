@@ -1,86 +1,88 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+@import "@fontsource/nunito/400.css";
+@import "@fontsource/nunito/500.css";
+@import "@fontsource/nunito/600.css";
+@import "@fontsource/nunito/700.css";
+@import "@fontsource/nunito/800.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /*
- * Tokens semánticos (CSS variables en HSL). Identidad "Clínico Cálido":
- * teal médico (#0D6E6E) + terracota (#D97736), superficies claras y legibles.
- * Basado en el design system generado para Chiron (Refined Modern Clinical).
- * Las variables permiten consistencia total y habilitan modo oscuro.
+ * Tokens semánticos (CSS variables en HSL). Identidad Kahvi:
+ * verde-menta (#6FAF9A) + café principal (#6B4F3B), fondos cálidos crema.
  */
 @layer base {
   :root {
-    --background: 210 40% 96%;      /* gris-azulado suave (no blanco puro) */
-    --foreground: 222 47% 11%;      /* #0F172A texto */
+    --background: 30 44% 93%;       /* crema #F4E9DB */
+    --foreground: 18 29% 18%;       /* cafe-intenso #2B1F19 */
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 18 29% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 18 29% 18%;
 
-    --primary: 180 79% 24%;         /* #0D6E6E teal médico */
+    --primary: 161 27% 56%;         /* verde-menta #6FAF9A */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 185 40% 94%;       /* teal muy suave (contenedor) */
-    --secondary-foreground: 180 81% 16%;
+    --secondary: 30 40% 93%;        /* crema suave */
+    --secondary-foreground: 18 29% 18%;
 
-    --accent: 25 68% 53%;           /* #D97736 terracota */
-    --accent-foreground: 0 0% 100%;
-    --accent-strong: 25 100% 23%;   /* #753400 terracota oscuro (texto sobre accent claro) */
+    --accent: 52 52% 57%;           /* caramelo #C9BB5A */
+    --accent-foreground: 18 29% 18%;
+    --accent-strong: 18 29% 18%;    /* cafe-intenso sobre caramelo */
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%; /* #64748B slate */
+    --muted: 30 30% 90%;
+    --muted-foreground: 20 22% 42%; /* cafe-principal suave */
 
-    --destructive: 0 84% 60%;       /* #EF4444 */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 160 84% 39%;         /* #10B981 */
-    --warning: 38 92% 50%;          /* #F59E0B */
-    --info: 189 94% 43%;            /* #06B6D4 */
+    --success: 161 27% 56%;         /* verde-menta */
+    --warning: 52 52% 57%;          /* caramelo */
+    --info: 161 35% 45%;
 
-    --border: 214 32% 91%;          /* #E2E8F0 */
-    --input: 214 32% 88%;
-    --ring: 180 79% 24%;
+    --border: 25 28% 82%;           /* borde cálido */
+    --input: 25 28% 80%;
+    --ring: 161 27% 56%;            /* verde-menta */
 
-    --radius: 1rem;                 /* clinical cards 16px */
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 222 39% 7%;        /* #0B0F17 obsidiana */
-    --foreground: 210 40% 96%;      /* #F1F5F9 */
+    --background: 18 32% 12%;       /* oscuro café */
+    --foreground: 30 44% 93%;       /* crema */
 
-    --card: 217 33% 17%;            /* #1E293B */
-    --card-foreground: 210 40% 96%;
+    --card: 18 28% 18%;
+    --card-foreground: 30 44% 93%;
 
-    --popover: 217 33% 17%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 18 28% 18%;
+    --popover-foreground: 30 44% 93%;
 
-    --primary: 180 55% 55%;         /* teal más luminoso en oscuro */
-    --primary-foreground: 180 81% 12%;
+    --primary: 161 30% 60%;
+    --primary-foreground: 18 29% 10%;
 
-    --secondary: 217 33% 22%;
-    --secondary-foreground: 180 55% 70%;
+    --secondary: 18 28% 22%;
+    --secondary-foreground: 161 30% 75%;
 
-    --accent: 25 75% 60%;
-    --accent-foreground: 222 39% 7%;
-    --accent-strong: 25 80% 72%;
+    --accent: 52 48% 60%;
+    --accent-foreground: 18 29% 10%;
+    --accent-strong: 52 60% 80%;
 
-    --muted: 217 33% 20%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 18 28% 20%;
+    --muted-foreground: 25 20% 65%;
 
     --destructive: 0 72% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 160 70% 45%;
-    --warning: 38 88% 55%;
-    --info: 189 85% 50%;
+    --success: 161 30% 55%;
+    --warning: 52 48% 55%;
+    --info: 161 35% 50%;
 
-    --border: 215 28% 27%;          /* #334155 */
-    --input: 215 28% 27%;
-    --ring: 180 55% 55%;
+    --border: 18 22% 28%;
+    --input: 18 22% 28%;
+    --ring: 161 30% 60%;
   }
 
   * {
@@ -93,8 +95,6 @@
     height: 100%;
   }
 
-  /* Reserva el espacio de la scrollbar siempre → evita el salto/reacomodo de ancho
-     (header, contenido) cuando la barra aparece o desaparece al scrollear. */
   html {
     scrollbar-gutter: stable;
   }
@@ -102,13 +102,12 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     text-rendering: optimizeLegibility;
-    /* Cifras tabulares por defecto: pesos, temperaturas, dosis y dinero alineados. */
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
   }
 
   ::selection {
-    background: hsl(var(--primary) / 0.18);
+    background: hsl(var(--primary) / 0.20);
   }
 
   ::-webkit-scrollbar {
@@ -135,7 +134,6 @@
 }
 
 @layer utilities {
-  /* Números tabulares explícitos para métricas clínicas y montos. */
   .tabular {
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
@@ -150,7 +148,7 @@
     position: absolute;
     inset: 0;
     transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
     animation: shimmer 1.6s infinite;
   }
 }
@@ -163,11 +161,9 @@
   }
 }
 
-/* ── Cobro exitoso (estilo Nubank): círculo → check → pop/halo → datos ── */
+/* ── Cobro exitoso: círculo → check → pop/halo → datos ── */
 @keyframes cobro-trazo {
-  to {
-    stroke-dashoffset: 0;
-  }
+  to { stroke-dashoffset: 0; }
 }
 @keyframes cobro-pop {
   0% { transform: scale(0.8); }

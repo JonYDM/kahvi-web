@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from "react";
-import { NavLink } from "react-router-dom";import { Check, ChevronDown, KeyRound, LogOut, MapPin, MoreHorizontal } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { Check, ChevronDown, KeyRound, LogOut, MapPin, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/features/auth";
 import { rolLabel } from "@/lib/enums";
@@ -9,7 +10,6 @@ import { type NavItem } from "@/app/navigation";
 import { usePermisos } from "@/lib/usePermisos";
 import { Avatar } from "@/components/ui";
 import { CambiarMiPinModal } from "@/features/usuarios";
-import { SUCURSALES_MOCK } from "./sucursalesMock";
 import { HeaderTituloContext, useHeaderTitulo } from "./headerTitulo";
 
 interface AppShellProps {
@@ -45,11 +45,6 @@ function HeaderTituloProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/**
- * AppShell mobile-first (base Stitch) con header de DOS ALTURAS que se integra con
- * el contenido: barra fija (marca/sucursal + acciones) + zona de título grande que
- * se encoge hacia la barra al hacer scroll (collapsing header estilo iOS).
- */
 export function AppShell({ nav, children }: AppShellProps) {
   return (
     <HeaderTituloProvider>
@@ -68,19 +63,18 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
   const { titulo, subtitulo, accion } = useHeaderTitulo();
 
   return (
-    <div className="min-h-dvh bg-surface">
-      {/* HEADER simple, claro, continuo con la barra de estado (sube hasta el notch). */}
+    <div className="min-h-dvh bg-crema">
+      {/* HEADER */}
       <header
-        className="fixed inset-x-0 top-0 z-40 bg-surface"
+        className="fixed inset-x-0 top-0 z-40 bg-crema/95 backdrop-blur-sm border-b border-outline-variant/30"
         style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
       >
         <div className="mx-auto w-[90%] max-w-2xl">
           <div className="flex h-14 items-center justify-between gap-3">
-            {/* Izquierda: marca (Patwi + Wipo) o selector de sucursal */}
+            {/* Izquierda: Vito + Kahvi */}
             <div className="flex min-w-0 items-center gap-2.5">
               {sesion && <ContextoHeader rol={sesion.rol} />}
             </div>
-
             {/* Derecha: perfil */}
             <div className="flex shrink-0 items-center gap-1">
               {sesion && (
@@ -96,17 +90,16 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
         </div>
       </header>
 
-      {/* MAIN scrolleable. El padding-top deja espacio al header + safe-area del notch. */}
+      {/* MAIN */}
       <main
         className="mx-auto w-[90%] max-w-2xl pb-28"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 4.5rem)" }}
       >
-        {/* Encabezado de la vista dentro del contenido (título grande + subtítulo + acción) */}
         {(subtitulo || accion || titulo) && (
           <div className="mb-4 flex items-start justify-between gap-3">
             <div className="min-w-0">
               {subtitulo && <div className="mb-1">{subtitulo}</div>}
-              <h1 className="text-headline-lg-mobile font-bold tracking-tight text-on-surface">
+              <h1 className="text-headline-lg-mobile font-bold tracking-tight text-cafe-intenso">
                 {titulo}
               </h1>
             </div>
@@ -116,13 +109,13 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
         {children}
       </main>
 
-      {/* BOTTOM-NAV docked (edge-to-edge, pegado al borde, top-rounded, tinte translúcido) */}
+      {/* BOTTOM-NAV */}
       <nav aria-label="Navegación principal" className="fixed inset-x-0 bottom-0 z-40">
         <div
-          className="flex items-center justify-around gap-1 rounded-t-3xl border-t border-primary-container/15 bg-surface-nav px-2 pt-2 backdrop-blur-xl"
+          className="flex items-center justify-around gap-1 rounded-t-3xl border-t border-cafe-principal/15 bg-surface-nav px-2 pt-2 backdrop-blur-xl"
           style={{
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)",
-            boxShadow: "0 -8px 24px -12px rgba(8,76,76,0.20)",
+            boxShadow: "0 -8px 24px -12px rgba(43,31,25,0.18)",
           }}
         >
           {primarios.map((item) => {
@@ -136,7 +129,6 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
               >
                 {({ isActive }) =>
                   esInicio ? (
-                    // Inicio: destacado al centro (pastilla verde).
                     <span
                       className={cn(
                         "flex flex-col items-center gap-0.5 rounded-full px-3 py-1 text-[9px] font-bold transition-colors",
@@ -171,7 +163,6 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
             );
           })}
 
-          {/* Botón "Más": módulos secundarios. */}
           {secundarios.length > 0 && <MenuMas items={secundarios} />}
         </div>
       </nav>
@@ -181,33 +172,30 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
   );
 }
 
-/**
- * Avatar de Wipo como botón que abre un popover con Wipo saludando (estilo login).
- * Es independiente del selector de sucursal: solo la carita de Wipo.
- */
-function WipoPopover() {
+/** Popover con Vito saludando. */
+function VitoPopover() {
   const [abierto, setAbierto] = useState(false);
   return (
     <div className="relative">
       <button
         onClick={() => setAbierto((v) => !v)}
-        aria-label="Wipo"
+        aria-label="Vito"
         aria-expanded={abierto}
         className="rounded-full transition-transform active:scale-95"
       >
-        <Avatar nombre="Wipo" src="/profile-wipo.webp" size="sm" />
+        <img src="/vito.png" alt="Vito" className="h-8 w-8 rounded-full object-contain" />
       </button>
 
       {abierto && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setAbierto(false)} />
           <div className="absolute left-0 top-full z-50 mt-2 w-52 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-3 text-center shadow-lift">
-            <img src="/wipo.webp" alt="Wipo" className="mx-auto h-14 w-14 object-contain" />
-            <p className="mt-1 font-marca text-base font-extrabold text-primary-container">
+            <img src="/vito.png" alt="Vito" className="mx-auto h-14 w-14 object-contain" />
+            <p className="mt-1 font-marca text-base font-extrabold text-cafe-intenso">
               ¡{saludoPorHora()}!
             </p>
             <p className="mt-0.5 text-body-sm leading-snug text-on-surface-variant">
-              Soy Wipo, ¡qué gusto verte!
+              Soy Vito, ¡qué gusto verte!
             </p>
           </div>
         </>
@@ -216,28 +204,29 @@ function WipoPopover() {
   );
 }
 
-/**
- * Contenido izquierdo del header: Wipo (con popover propio) + marca "Patwi".
- * El Administrador ve además el selector de sucursal [MOCK].
- */
+/** Contenido izquierdo del header. */
 function ContextoHeader({ rol }: { rol: RolUsuario }) {
   if (rol === RolUsuario.Administrador) {
     return (
       <div className="flex min-w-0 items-center gap-2">
-        <WipoPopover />
+        <VitoPopover />
         <SelectorSucursal />
       </div>
     );
   }
   return (
     <div className="flex min-w-0 items-center gap-2">
-      <WipoPopover />
-      <span className="truncate font-marca text-headline-sm font-extrabold text-on-surface">Patwi</span>
+      <VitoPopover />
+      <span className="truncate font-marca text-headline-sm font-extrabold text-cafe-intenso">Kahvi</span>
     </div>
   );
 }
 
-/** [MOCK] Selector de sucursal (solo Administrador con multi-sucursal). */
+const SUCURSALES_MOCK = [
+  { id: "1", nombre: "Kahvi", zona: "Principal" },
+];
+
+/** Selector de sucursal (Administrador). */
 function SelectorSucursal() {
   const [abierto, setAbierto] = useState(false);
   const [activa, setActiva] = useState(SUCURSALES_MOCK[0]);
@@ -250,7 +239,7 @@ function SelectorSucursal() {
         className="flex min-w-0 items-center gap-2 rounded-lg px-1.5 py-1 text-left transition-colors hover:bg-surface-container"
       >
         <span className="min-w-0 leading-tight">
-          <span className="block truncate font-marca text-headline-sm font-extrabold text-on-surface">Patwi</span>
+          <span className="block truncate font-marca text-headline-sm font-extrabold text-cafe-intenso">Kahvi</span>
           <span className="flex items-center gap-1 text-[11px] font-medium text-on-surface-variant">
             <span className="truncate">{activa.zona}</span>
             <ChevronDown
@@ -271,10 +260,7 @@ function SelectorSucursal() {
             {SUCURSALES_MOCK.map((s) => (
               <button
                 key={s.id}
-                onClick={() => {
-                  setActiva(s);
-                  setAbierto(false);
-                }}
+                onClick={() => { setActiva(s); setAbierto(false); }}
                 className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-surface-container"
               >
                 <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface-container text-primary-container">
@@ -294,10 +280,7 @@ function SelectorSucursal() {
   );
 }
 
-/**
- * Botón "Más" del bottom-nav: agrupa los módulos secundarios (recordatorios, ventas,
- * equipo). El perfil (PIN / cerrar sesión) vive en el avatar del header. Abre hacia ARRIBA.
- */
+/** Botón "Más" del bottom-nav. */
 function MenuMas({ items }: { items: NavItem[] }) {
   const [abierto, setAbierto] = useState(false);
   return (
@@ -354,7 +337,7 @@ function MenuMas({ items }: { items: NavItem[] }) {
   );
 }
 
-/** Menú de perfil del header (avatar → PIN / salir). */
+/** Menú de perfil del header. */
 function PerfilMenu({
   nombre,
   rol,
@@ -389,10 +372,7 @@ function PerfilMenu({
             </div>
             <div className="my-1 h-px bg-outline-variant/30" />
             <button
-              onClick={() => {
-                setAbierto(false);
-                onPin();
-              }}
+              onClick={() => { setAbierto(false); onPin(); }}
               className="flex w-full items-center gap-2 rounded-xl px-2.5 py-2 text-label-md font-medium text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface"
             >
               <KeyRound className="h-4 w-4" aria-hidden />

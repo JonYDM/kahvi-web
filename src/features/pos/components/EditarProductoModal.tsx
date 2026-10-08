@@ -5,11 +5,7 @@ import { ApiError } from "@/lib/http";
 import { opcionesDeEnum } from "@/lib/opciones";
 import { categoriaProductoLabel } from "@/lib/enums";
 import type { Producto } from "@/types/api";
-import {
-  useDesactivarProducto,
-  useEditarProducto,
-  useReabastecerStock,
-} from "../hooks";
+import { useDesactivarProducto, useEditarProducto } from "../hooks";
 
 interface Props {
   open: boolean;
@@ -17,16 +13,14 @@ interface Props {
   producto: Producto;
 }
 
-/** Modal para editar un producto, reabastecer su stock o darlo de baja. */
+/** Modal para editar un producto o darlo de baja lógica. */
 export function EditarProductoModal({ open, onClose, producto }: Props) {
   const editar = useEditarProducto();
-  const reabastecer = useReabastecerStock();
   const desactivar = useDesactivarProducto();
 
   const [nombre, setNombre] = useState(producto.nombre);
   const [categoria, setCategoria] = useState<number>(producto.categoria);
   const [precio, setPrecio] = useState(String(producto.precio));
-  const [reabasto, setReabasto] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   async function guardar(e: FormEvent) {
@@ -39,12 +33,6 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
         categoria,
         precio: Number(precio),
       });
-      if (reabasto && Number(reabasto) > 0) {
-        await reabastecer.mutateAsync({
-          productoId: producto.id,
-          cantidad: Number(reabasto),
-        });
-      }
       onClose();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo guardar.");
@@ -64,12 +52,7 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
   return (
     <Modal open={open} onClose={onClose} title="Editar producto">
       <form onSubmit={guardar} className="space-y-4">
-        <Input
-          label="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          required
-        />
+        <Input label="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
         <Select
           label="Categoría"
           value={categoria}
@@ -85,14 +68,6 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
           onChange={(e) => setPrecio(e.target.value)}
           required
         />
-        <Input
-          label="Reabastecer (sumar al stock)"
-          type="number"
-          min="0"
-          value={reabasto}
-          onChange={(e) => setReabasto(e.target.value)}
-          hint={`Stock actual: ${producto.stock}`}
-        />
 
         {error && (
           <p role="alert" className="rounded-xl bg-error-container/60 px-4 py-3 text-body-sm font-medium text-on-error-container">
@@ -101,22 +76,11 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
         )}
 
         <div className="flex gap-2 pt-2">
-          <Button
-            type="button"
-            variant="danger"
-            onClick={darDeBaja}
-            loading={desactivar.isPending}
-          >
+          <Button type="button" variant="danger" onClick={darDeBaja} loading={desactivar.isPending}>
             <Trash2 className="h-4 w-4" aria-hidden />
             Dar de baja
           </Button>
-          <Button
-            type="submit"
-            fullWidth
-            loading={editar.isPending || reabastecer.isPending}
-          >
-            Guardar
-          </Button>
+          <Button type="submit" fullWidth loading={editar.isPending}>Guardar</Button>
         </div>
       </form>
     </Modal>

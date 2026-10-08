@@ -12,7 +12,7 @@ export function listarStaff(signal?: AbortSignal): Promise<UsuarioDto[]> {
   return http.get<UsuarioDto[]>("/api/usuarios/staff", signal);
 }
 
-/** Crea un Veterinario o Recepcionista; devuelve el usuario generado. */
+/** Crea un usuario de staff (Mesero, Cocina, Caja); devuelve el usuario generado. */
 export function crearStaff(body: CrearStaffRequest): Promise<UsuarioCreado> {
   return http.post<UsuarioCreado>("/api/usuarios/staff", body);
 }
