@@ -246,7 +246,7 @@ export function ProductosPage() {
             : "Modifica los datos del producto."
         }
       >
-        <form onSubmit={enviar} className="space-y-4">
+        <form key={`${drawer.modo}-${drawer.producto?.id ?? 'nuevo'}`} onSubmit={enviar} className="space-y-4">
           <Input
             label="Nombre"
             placeholder="Ej: Latte, Chilaquiles…"
