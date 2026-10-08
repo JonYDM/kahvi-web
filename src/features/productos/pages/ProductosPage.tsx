@@ -216,6 +216,21 @@ export function ProductosPage() {
             autoFocus
           />
 
+          <div className="flex flex-col gap-1.5">
+            <label className="text-label-sm font-semibold text-on-surface-variant">
+              Categoría
+            </label>
+            <select
+              value={categoriaId || (categorias[0]?.id ?? "")}
+              onChange={(e) => setCategoriaId(e.target.value)}
+              className="h-12 w-full rounded-xl border border-outline-variant/60 bg-surface-container-lowest px-3 text-body-md text-on-surface outline-none focus:border-primary-container"
+            >
+              {categorias.map((c: CategoriaDto) => (
+                <option key={c.id} value={c.id}>{c.nombre}</option>
+              ))}
+            </select>
+          </div>
+
           <div className="flex gap-3">
             <Input
               label="Precio"
@@ -227,31 +242,16 @@ export function ProductosPage() {
               onChange={(e) => setPrecio(e.target.value)}
               required
             />
-            <div className="flex flex-1 flex-col gap-1.5">
-              <label className="text-label-sm font-semibold text-on-surface-variant">
-                Categoría
-              </label>
-              <select
-                value={categoriaId || (categorias[0]?.id ?? "")}
-                onChange={(e) => setCategoriaId(e.target.value)}
-                className="h-12 w-full rounded-xl border border-outline-variant/60 bg-surface-container-lowest px-3 text-body-md text-on-surface outline-none focus:border-primary-container"
-              >
-                {categorias.map((c: CategoriaDto) => (
-                  <option key={c.id} value={c.id}>{c.nombre}</option>
-                ))}
-              </select>
-            </div>
+            <Input
+              label="Costo (opcional)"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="0.00"
+              value={costo}
+              onChange={(e) => setCosto(e.target.value)}
+            />
           </div>
-
-          <Input
-            label="Costo de insumos (opcional)"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="Para calcular el margen"
-            value={costo}
-            onChange={(e) => setCosto(e.target.value)}
-          />
 
           {errorForm && (
             <p role="alert" className="rounded-xl bg-error-container/60 px-4 py-3 text-body-sm font-medium text-on-error-container">
