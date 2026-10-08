@@ -40,6 +40,7 @@ export function ProductosPage() {
 
   const [drawer, setDrawer] = useState<EstadoDrawer>(DRAWER_CERRADO);
   const [busqueda, setBusqueda] = useState("");
+  const [filtroCat, setFiltroCat] = useState<string | null>(null);
 
   // Formulario del drawer
   const [nombre, setNombre] = useState("");
@@ -49,15 +50,17 @@ export function ProductosPage() {
   const [errorForm, setErrorForm] = useState<string | null>(null);
 
   const q = busqueda.trim().toLowerCase();
-  const lista = (productos ?? []).filter(
-    (p) => !q || p.nombre.toLowerCase().includes(q),
-  );
+  const lista = (productos ?? []).filter((p) => {
+    if (filtroCat && p.categoriaId !== filtroCat) return false;
+    if (q && !p.nombre.toLowerCase().includes(q)) return false;
+    return true;
+  });
 
   function abrirCrear() {
     setNombre("");
     setPrecio("");
     setCosto("");
-    setCategoriaId(categorias[0]?.id ?? "");
+    setCategoriaId("");
     setErrorForm(null);
     setDrawer({ abierto: true, modo: "crear", producto: null });
   }
@@ -175,6 +178,37 @@ export function ProductosPage() {
               ? `No encontramos "${busqueda}" en el menú.`
               : "Toca el botón + para agregar el primer producto."}
           </p>
+        </div>
+      )}
+
+      {/* Chips de categoría */}
+      {!isLoading && !isError && categorias.length > 0 && (
+        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <button
+            onClick={() => setFiltroCat(null)}
+            className={cn(
+              "shrink-0 rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+              filtroCat === null
+                ? "bg-primary-container text-on-primary"
+                : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
+            )}
+          >
+            Todos
+          </button>
+          {[...(categorias ?? [])].sort((a, b) => a.orden - b.orden).map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setFiltroCat(cat.id === filtroCat ? null : cat.id)}
+              className={cn(
+                "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+                filtroCat === cat.id
+                  ? "bg-primary-container text-on-primary"
+                  : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
+              )}
+            >
+              {cat.nombre}
+            </button>
+          ))}
         </div>
       )}
 
