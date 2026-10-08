@@ -312,9 +312,11 @@ function ProductoCard({
         <p className="line-clamp-2 text-label-lg font-bold leading-snug text-on-surface">
           {p.nombre}
         </p>
-        <p className="text-body-sm text-on-surface-variant">
-          {categoriaNombre ?? ""}
-        </p>
+        {categoriaNombre && (
+          <span className="inline-block rounded-full bg-surface-container px-2 py-0.5 text-[11px] font-medium text-on-surface-variant">
+            {categoriaNombre}
+          </span>
+        )}
         <p className="mt-1 text-label-lg font-bold text-primary-container">
           {formatCurrency(p.precio)}
         </p>
