@@ -34,13 +34,13 @@ const AdminLayout = lazy(() =>
   import("@/app/layouts/AdminLayout").then((m) => ({ default: m.AdminLayout })),
 );
 const MeseroLayout = lazy(() =>
-  import("@/app/layouts/EstacionLayout").then((m) => ({ default: m.EstacionLayout })),
+  import("@/app/layouts/AdaptiveEstacionLayout").then((m) => ({ default: m.AdaptiveEstacionLayout })),
 );
 const CocinaLayout = lazy(() =>
-  import("@/app/layouts/EstacionLayout").then((m) => ({ default: m.EstacionLayout })),
+  import("@/app/layouts/AdaptiveEstacionLayout").then((m) => ({ default: m.AdaptiveEstacionLayout })),
 );
 const CajaLayout = lazy(() =>
-  import("@/app/layouts/EstacionLayout").then((m) => ({ default: m.EstacionLayout })),
+  import("@/app/layouts/AdaptiveEstacionLayout").then((m) => ({ default: m.AdaptiveEstacionLayout })),
 );
 
 // Àrea Admin
