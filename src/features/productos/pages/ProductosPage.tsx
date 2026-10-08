@@ -315,7 +315,7 @@ export function ProductosPage() {
   );
 }
 
-// ─── Card de producto (grid 2 col, preparada para imagen futura) ──────────────
+// ─── Card de producto — editorial luxury ──────────────────────────────────────
 
 function ProductoCard({
   producto: p,
@@ -333,66 +333,91 @@ function ProductoCard({
   desactivando: boolean;
 }) {
   return (
+    /* Outer shell — double-bezel */
     <div
       className={cn(
-        "flex flex-col overflow-hidden rounded-2xl border border-outline-variant/40",
-        "bg-surface-container-lowest shadow-soft transition-all duration-200",
-        !p.activo && "opacity-60",
+        "group relative rounded-[1.25rem] p-[3px]",
+        "bg-gradient-to-b from-white/60 to-transparent",
+        "shadow-[0_2px_16px_-4px_rgba(43,31,25,0.12),0_1px_3px_-1px_rgba(43,31,25,0.06)]",
+        "transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+        "hover:shadow-[0_8px_32px_-8px_rgba(43,31,25,0.18),0_2px_8px_-2px_rgba(43,31,25,0.08)]",
+        "hover:-translate-y-0.5",
+        "active:scale-[0.98] active:duration-150",
+        !p.activo && "opacity-50 grayscale",
       )}
     >
-      {/* Zona de imagen — ocupa todo el ancho, la card es el marco */}
-      <div className="h-24 w-full rounded-t-2xl bg-primary-container/10" />
+      {/* Inner core */}
+      <div className="overflow-hidden rounded-[calc(1.25rem-3px)] bg-surface-container-lowest">
 
-      {/* Contenido */}
-      <div className="flex flex-1 flex-col gap-1 px-3 pb-3 pt-2">
-        <p className="line-clamp-2 text-label-lg font-bold leading-snug text-on-surface">
-          {p.nombre}
-        </p>
-        {categoriaNombre && (
-          <span className="inline-block rounded-full bg-surface-container px-2 py-0.5 text-[11px] font-medium text-on-surface-variant">
-            {categoriaNombre}
-          </span>
-        )}
-        <p className="mt-1 text-label-lg font-bold text-primary-container">
-          {formatCurrency(p.precio)}
-        </p>
-        {margen !== null && (
-          <p className="text-body-sm font-medium text-primary-container/70">
-            {margen}% margen
-          </p>
-        )}
-      </div>
+        {/* Zona imagen — full bleed */}
+        <div className="relative h-[6.5rem] w-full overflow-hidden bg-[#F0EBE3]">
+          {/* Placeholder: gradiente cálido sutil */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#EDE4D8] to-[#D9CFC3]" />
+          {/* Shimmer decorativo */}
+          <div className="absolute -left-8 top-3 h-16 w-16 rounded-full bg-white/30 blur-2xl" />
+        </div>
 
-      {/* Acciones */}
-      <div className="flex items-center justify-between border-t border-outline-variant/20 px-2 py-1.5">
-        <button
-          onClick={onToggleActivo}
-          disabled={desactivando}
-          className={cn(
-            "rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors",
-            p.activo
-              ? "bg-primary-container/15 text-primary-container"
-              : "bg-surface-container text-on-surface-variant",
+        {/* Contenido */}
+        <div className="px-3 pb-3 pt-2.5">
+          {/* Categoría — eyebrow tag */}
+          {categoriaNombre && (
+            <span className="mb-1.5 inline-block rounded-full bg-surface-container px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-on-surface-variant/70">
+              {categoriaNombre}
+            </span>
           )}
-        >
-          {p.activo ? "Activo" : "Inactivo"}
-        </button>
-        <div className="flex items-center gap-0.5">
-          <button
-            onClick={onEditar}
-            aria-label={`Editar ${p.nombre}`}
-            className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-surface-container"
-          >
-            <Edit2 className="h-3.5 w-3.5" aria-hidden />
-          </button>
+
+          {/* Nombre */}
+          <p className="line-clamp-2 text-[0.9rem] font-bold leading-[1.25] tracking-[-0.01em] text-on-surface">
+            {p.nombre}
+          </p>
+
+          {/* Precio */}
+          <p className="mt-1.5 text-[1.05rem] font-black tracking-[-0.02em] text-primary-container">
+            {formatCurrency(p.precio)}
+          </p>
+
+          {/* Margen */}
+          {margen !== null && (
+            <p className="mt-0.5 text-[10px] font-medium tracking-wide text-primary-container/60">
+              {margen}% margen
+            </p>
+          )}
+        </div>
+
+        {/* Footer acciones */}
+        <div className="flex items-center justify-between border-t border-black/[0.04] px-2.5 py-2">
+          {/* Toggle activo */}
           <button
             onClick={onToggleActivo}
             disabled={desactivando}
-            aria-label={`Desactivar ${p.nombre}`}
-            className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-error-container/40 hover:text-on-error-container disabled:opacity-50"
+            className={cn(
+              "rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] transition-all duration-300",
+              p.activo
+                ? "bg-primary-container/12 text-primary-container"
+                : "bg-surface-container text-on-surface-variant/60",
+            )}
           >
-            <Trash2 className="h-3.5 w-3.5" aria-hidden />
+            {p.activo ? "Activo" : "Inactivo"}
           </button>
+
+          {/* Acciones */}
+          <div className="flex items-center gap-0.5">
+            <button
+              onClick={onEditar}
+              aria-label={`Editar ${p.nombre}`}
+              className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant/50 transition-all duration-200 hover:bg-surface-container hover:text-on-surface"
+            >
+              <Edit2 className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
+            </button>
+            <button
+              onClick={onToggleActivo}
+              disabled={desactivando}
+              aria-label={`Desactivar ${p.nombre}`}
+              className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant/50 transition-all duration-200 hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
+            >
+              <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
+            </button>
+          </div>
         </div>
       </div>
     </div>
