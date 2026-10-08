@@ -1,4 +1,5 @@
-import { ArrowsClockwise, Clock, Fire } from "@phosphor-icons/react";
+import { useState } from "react";
+import { ArrowsClockwise, Clock, Fire, CheckCircle } from "@phosphor-icons/react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { SkeletonFila } from "@/components/ui";
 import { useToast } from "@/components/feedback/useToast";
@@ -8,7 +9,24 @@ import { estadoComandaLabel } from "@/lib/enums";
 import type { ComandaDto, EstadoComanda } from "@/types/api";
 import { useComandasActivas, useAvanzarComanda } from "../hooks";
 
-/** Calcula el tiempo transcurrido desde una fecha ISO en formato legible. */
+// ─── Tipos de filtro ──────────────────────────────────────────────────────────
+
+type FiltroChip = "Todos" | "Recibida" | "EnPreparacion" | "Lista";
+
+interface ChipDef {
+  id: FiltroChip;
+  label: string;
+}
+
+const CHIPS: ChipDef[] = [
+  { id: "Todos", label: "Todos" },
+  { id: "Recibida", label: "Pendiente" },
+  { id: "EnPreparacion", label: "Preparando" },
+  { id: "Lista", label: "Lista" },
+];
+
+// ─── Helpers de tiempo ────────────────────────────────────────────────────────
+
 function tiempoTranscurrido(creadaEn: string): string {
   const diff = Math.floor((Date.now() - new Date(creadaEn).getTime()) / 1000);
   if (diff < 60) return `${diff}s`;
@@ -23,58 +41,99 @@ function esUrgente(creadaEn: string): boolean {
   return min >= 10;
 }
 
-// Columnas del tablero
-interface Columna {
-  id: EstadoComanda;
-  label: string;
-  badgeClass: string;
-  cardBg: string;
-  cardBorder: string;
-  boton?: string;
+// ─── Mapa de estilos por estado ───────────────────────────────────────────────
+
+interface EstiloEstado {
+  outerFrom: string;
+  badgeBg: string;
+  badgeText: string;
 }
 
-const COLUMNAS: Columna[] = [
-  {
-    id: "Recibida",
-    label: "Pendiente",
-    badgeClass: "bg-caramelo/20 text-cafe-intenso border-caramelo/40",
-    cardBg: "bg-caramelo/10",
-    cardBorder: "border-caramelo/40",
-    boton: "Preparar",
+const ESTILOS: Record<EstadoComanda, EstiloEstado> = {
+  Recibida: {
+    outerFrom: "from-[#FFF8E7]/80",
+    badgeBg: "bg-caramelo/20",
+    badgeText: "text-cafe-intenso",
   },
-  {
-    id: "EnPreparacion",
-    label: "Preparando",
-    badgeClass: "bg-orange-100 text-orange-800 border-orange-200",
-    cardBg: "bg-orange-50",
-    cardBorder: "border-orange-200",
-    boton: "Lista",
+  EnPreparacion: {
+    outerFrom: "from-orange-50/80",
+    badgeBg: "bg-orange-100",
+    badgeText: "text-orange-800",
   },
-  {
-    id: "Lista",
-    label: "Lista",
-    badgeClass: "bg-verde-menta/20 text-cafe-intenso border-verde-menta/50",
-    cardBg: "bg-verde-menta/10",
-    cardBorder: "border-verde-menta/40",
+  Lista: {
+    outerFrom: "from-[#E8F5F0]/80",
+    badgeBg: "bg-verde-menta/20",
+    badgeText: "text-cafe-intenso",
   },
-];
+  Entregada: {
+    outerFrom: "from-surface-container/40",
+    badgeBg: "bg-surface-container",
+    badgeText: "text-on-surface-variant",
+  },
+  Cancelada: {
+    outerFrom: "from-error-container/30",
+    badgeBg: "bg-error-container",
+    badgeText: "text-on-error-container",
+  },
+};
 
-/** Tablero Kanban de cocina: 3 columnas con polling cada 5s. */
+function textoVacioFiltro(filtro: FiltroChip): string {
+  switch (filtro) {
+    case "Recibida":
+      return "No hay comandas pendientes.";
+    case "EnPreparacion":
+      return "Nada en preparacion ahora.";
+    case "Lista":
+      return "Ninguna comanda lista para caja.";
+    default:
+      return "No hay comandas activas. El sistema actualiza cada 5 segundos.";
+  }
+}
+
+// ─── Pagina principal ─────────────────────────────────────────────────────────
+
+/** Vista de cocina: chips de filtro + lista vertical de comandas. Mobile-first. */
 export function CocinaPage() {
-  const { data: comandas, isLoading, isError, refetch } = useComandasActivas();
+  const { data: comandas, isLoading, isError, refetch, dataUpdatedAt } =
+    useComandasActivas();
   const avanzar = useAvanzarComanda();
   const toast = useToast();
 
+  const [filtro, setFiltro] = useState<FiltroChip>("Todos");
+
   const activas = (comandas ?? []).filter(
-    (c) => c.estado === "Recibida" || c.estado === "EnPreparacion" || c.estado === "Lista",
+    (c) =>
+      c.estado === "Recibida" ||
+      c.estado === "EnPreparacion" ||
+      c.estado === "Lista",
   );
+
+  const listaMostrada =
+    filtro === "Todos"
+      ? activas
+      : activas.filter((c) => c.estado === filtro);
+
+  const ultimaActualizacion =
+    dataUpdatedAt > 0
+      ? new Date(dataUpdatedAt).toLocaleTimeString("es-MX", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        })
+      : null;
 
   async function handleAvanzar(comanda: ComandaDto) {
     try {
       const res = await avanzar.mutateAsync(comanda.id);
-      toast.exito(`Comanda #${comanda.folio} -> ${estadoComandaLabel[res.nuevoEstado]}`);
+      toast.exito(
+        `Comanda #${comanda.folio} -> ${estadoComandaLabel[res.nuevoEstado]}`,
+      );
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : "No se pudo avanzar la comanda.");
+      toast.error(
+        err instanceof ApiError
+          ? err.message
+          : "No se pudo avanzar la comanda.",
+      );
     }
   }
 
@@ -82,14 +141,20 @@ export function CocinaPage() {
     <PantallaConHeader
       titulo="Cocina"
       subtitulo={
-        <p className="flex items-center gap-1.5 text-body-sm text-on-surface-variant">
+        <p className="flex flex-wrap items-center gap-x-1.5 text-body-sm text-on-surface-variant">
           <span className="font-semibold text-on-surface">{activas.length}</span>
-          {" "}comanda{activas.length !== 1 ? "s" : ""} activa{activas.length !== 1 ? "s" : ""}
+          {" "}comanda{activas.length !== 1 ? "s" : ""} activa
+          {activas.length !== 1 ? "s" : ""}
+          {ultimaActualizacion && (
+            <span className="text-on-surface-variant/60">
+              &middot; {ultimaActualizacion}
+            </span>
+          )}
         </p>
       }
       accion={
         <button
-          onClick={() => refetch()}
+          onClick={() => void refetch()}
           aria-label="Actualizar"
           className="grid h-9 w-9 place-items-center rounded-full text-on-surface-variant hover:bg-surface-container transition-colors"
         >
@@ -97,173 +162,207 @@ export function CocinaPage() {
         </button>
       }
     >
+      {/* ── Chips de filtro ── */}
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {CHIPS.map((chip) => (
+          <button
+            key={chip.id}
+            onClick={() => setFiltro(chip.id)}
+            className={cn(
+              "shrink-0 rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+              filtro === chip.id
+                ? "bg-primary-container text-on-primary"
+                : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
+            )}
+          >
+            {chip.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Estado: cargando ── */}
       {isLoading && (
-        <div className="flex flex-col gap-3">
-          {[1, 2, 3].map((i) => <SkeletonFila key={i} />)}
+        <div className="flex flex-col gap-3 mt-4">
+          {[1, 2, 3].map((i) => (
+            <SkeletonFila key={i} />
+          ))}
         </div>
       )}
 
+      {/* ── Estado: error ── */}
       {isError && (
-        <div className="rounded-2xl bg-error-container/40 p-6 text-center text-body-sm text-on-error-container">
+        <div className="mt-4 rounded-2xl bg-error-container/40 p-6 text-center text-body-sm text-on-error-container">
           No se pudieron cargar las comandas.
         </div>
       )}
 
-      {!isLoading && !isError && activas.length === 0 && (
-        <div className="flex flex-col items-center gap-4 py-16 text-center">
+      {/* ── Estado: vacio ── */}
+      {!isLoading && !isError && listaMostrada.length === 0 && (
+        <div className="flex flex-col items-center gap-4 py-16 text-center mt-4">
           <img
             src="/spil.webp"
             alt="Sin comandas"
             className="h-32 w-32 object-contain"
           />
           <div>
-            <p className="text-headline-sm font-bold text-cafe-intenso">Todo listo</p>
+            <p className="text-headline-sm font-bold text-cafe-intenso">
+              Todo listo
+            </p>
             <p className="mt-1 text-body-md text-on-surface-variant">
-              No hay comandas pendientes. El sistema actualiza cada 5 segundos.
+              {textoVacioFiltro(filtro)}
             </p>
           </div>
         </div>
       )}
 
-      {/* Tablero Kanban */}
-      {!isLoading && !isError && activas.length > 0 && (
-        <div className="overflow-x-auto -mx-4 px-4">
-          <div className="flex gap-3 min-w-max pb-4">
-            {COLUMNAS.map((col) => {
-              const cards = activas.filter((c) => c.estado === col.id);
-              return (
-                <div
-                  key={col.id}
-                  className="flex w-[85vw] max-w-xs flex-col gap-3 sm:w-72"
-                >
-                  {/* Header columna */}
-                  <div className="flex items-center justify-between rounded-xl bg-surface-container-low px-3 py-2">
-                    <span className="text-label-md font-bold text-on-surface">
-                      {col.label}
-                    </span>
-                    <span
-                      className={cn(
-                        "rounded-full border px-2 py-0.5 text-label-sm font-bold",
-                        col.badgeClass,
-                      )}
-                    >
-                      {cards.length}
-                    </span>
-                  </div>
-
-                  {/* Cards */}
-                  <div className="flex flex-col gap-2">
-                    {cards.length === 0 && (
-                      <div className="rounded-xl border border-dashed border-outline-variant/40 px-4 py-6 text-center text-body-sm text-on-surface-variant/50">
-                        {col.id === "Lista" ? "Para caja" : "Vacio"}
-                      </div>
-                    )}
-                    {cards.map((comanda) => (
-                      <ComandaCard
-                        key={comanda.id}
-                        comanda={comanda}
-                        col={col}
-                        onAvanzar={() => handleAvanzar(comanda)}
-                        avanzando={avanzar.isPending}
-                      />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      {/* ── Lista vertical de comandas ── */}
+      {!isLoading && !isError && listaMostrada.length > 0 && (
+        <div className="mt-4 flex flex-col gap-3">
+          {listaMostrada.map((comanda) => (
+            <ComandaCard
+              key={comanda.id}
+              comanda={comanda}
+              onAvanzar={() => handleAvanzar(comanda)}
+              avanzando={avanzar.isPending}
+            />
+          ))}
         </div>
       )}
     </PantallaConHeader>
   );
 }
 
+// ─── ComandaCard premium double-bezel ────────────────────────────────────────
+
 function ComandaCard({
   comanda,
-  col,
   onAvanzar,
   avanzando,
 }: {
   comanda: ComandaDto;
-  col: Columna;
   onAvanzar: () => void;
   avanzando: boolean;
 }) {
   const urgente = esUrgente(comanda.creadaEn);
   const tiempo = tiempoTranscurrido(comanda.creadaEn);
+  const estilos = ESTILOS[comanda.estado] ?? ESTILOS.Recibida;
+
+  const esLista = comanda.estado === "Lista";
+  const esEntregada = comanda.estado === "Entregada";
+  const mostrarAccion = !esLista && !esEntregada;
+
+  const ubicacion = comanda.esParaLlevar
+    ? comanda.nombreCliente
+      ? `Para llevar - ${comanda.nombreCliente}`
+      : "Para llevar"
+    : comanda.mesa;
 
   return (
+    /* Outer shell — double-bezel */
     <div
       className={cn(
-        "flex flex-col gap-2.5 rounded-xl border-2 p-3 transition-all",
-        col.cardBg,
-        col.cardBorder,
+        "rounded-[1.25rem] p-[3px]",
+        "bg-gradient-to-b to-transparent",
+        estilos.outerFrom,
+        "shadow-[0_2px_16px_-4px_rgba(43,31,25,0.12)]",
+        "transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
       )}
     >
-      {/* Cabecera */}
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className="text-label-md font-black text-cafe-intenso">
-            #{comanda.folio}
-          </p>
-          <p className="text-body-sm font-semibold text-cafe-intenso">
-            {comanda.esParaLlevar ? "Para llevar" : comanda.mesa}
-            {comanda.esParaLlevar && comanda.nombreCliente
-              ? ` \u00B7 ${comanda.nombreCliente}`
-              : ""}
-          </p>
-        </div>
-        <span
-          className={cn(
-            "flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-label-sm font-bold",
-            urgente ? "bg-red-100 text-red-600" : "bg-white/60 text-on-surface-variant",
-          )}
-        >
-          {urgente ? (
-            <Fire weight="fill" className="h-3 w-3" aria-hidden />
-          ) : (
-            <Clock weight="light" className="h-3 w-3" aria-hidden />
-          )}
-          {tiempo}
-        </span>
-      </div>
+      {/* Inner core */}
+      <div className="overflow-hidden rounded-[calc(1.25rem-3px)] bg-surface-container-lowest">
 
-      {/* Items */}
-      <ul className="flex flex-col gap-1 rounded-lg bg-white/50 px-2.5 py-2">
-        {comanda.items.map((item, i) => (
-          <li key={i} className="flex items-start gap-1.5">
-            <span className="shrink-0 min-w-[1.25rem] text-label-sm font-black text-cafe-principal">
-              {item.cantidad}x
-            </span>
-            <div className="min-w-0 flex-1">
-              <span className="text-label-sm font-semibold text-cafe-intenso">
-                {item.nombre}
-              </span>
-              {item.nota && (
-                <p className="text-body-xs italic text-cafe-principal mt-0.5">
-                  &ldquo;{item.nota}&rdquo;
-                </p>
+        {/* ── Fila superior ── */}
+        <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-3">
+          {/* Izquierda: folio + ubicacion */}
+          <div className="min-w-0 flex-1">
+            <p className="text-2xl font-black leading-none text-cafe-intenso">
+              #{comanda.folio}
+            </p>
+            <p className="mt-1 truncate text-body-sm font-medium text-on-surface-variant">
+              {ubicacion}
+            </p>
+          </div>
+
+          {/* Derecha: badge estado + tiempo */}
+          <div className="flex shrink-0 flex-col items-end gap-1.5">
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-0.5 text-label-sm font-bold",
+                estilos.badgeBg,
+                estilos.badgeText,
               )}
-            </div>
-          </li>
-        ))}
-      </ul>
+            >
+              {estadoComandaLabel[comanda.estado]}
+            </span>
+            <span
+              className={cn(
+                "flex items-center gap-1 text-label-sm font-semibold",
+                urgente ? "text-red-500" : "text-on-surface-variant/70",
+              )}
+            >
+              {urgente ? (
+                <Fire weight="fill" className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              ) : (
+                <Clock weight="light" className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              )}
+              {tiempo}
+            </span>
+          </div>
+        </div>
 
-      {/* Boton de accion */}
-      {col.boton && (
-        <button
-          onClick={onAvanzar}
-          disabled={avanzando}
-          className={cn(
-            "w-full rounded-lg py-2 text-label-sm font-bold transition-all active:scale-95 disabled:opacity-50",
-            col.id === "Recibida"
-              ? "bg-cafe-intenso text-crema hover:bg-cafe-intenso/90"
-              : "bg-verde-menta text-cafe-intenso hover:bg-verde-menta/80",
-          )}
-        >
-          {col.boton}
-        </button>
-      )}
+        {/* ── Divisor ── */}
+        <div className="border-t border-outline-variant/20" />
+
+        {/* ── Items ── */}
+        <ul className="flex flex-col gap-1.5 bg-surface-container/30 px-4 py-3">
+          {comanda.items.map((item, i) => (
+            <li key={i} className="flex items-start gap-2">
+              <span className="shrink-0 font-black text-cafe-intenso text-label-md leading-snug">
+                {item.cantidad}x
+              </span>
+              <div className="min-w-0 flex-1">
+                <span className="font-semibold text-on-surface text-label-md leading-snug">
+                  {item.nombre}
+                </span>
+                {item.nota ? (
+                  <p className="mt-0.5 text-body-xs italic text-on-surface-variant">
+                    {item.nota}
+                  </p>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {/* ── Accion ── */}
+        {mostrarAccion ? (
+          <div className="px-4 pb-4 pt-3">
+            <button
+              onClick={onAvanzar}
+              disabled={avanzando}
+              className={cn(
+                "w-full rounded-full py-2.5 text-label-md font-bold transition-all active:scale-[0.98] disabled:opacity-50",
+                comanda.estado === "Recibida"
+                  ? "border border-caramelo/40 bg-caramelo/20 text-cafe-intenso hover:bg-caramelo/30"
+                  : "bg-cafe-intenso text-crema",
+              )}
+            >
+              {comanda.estado === "Recibida" ? "Preparar" : "Marcar como lista"}
+            </button>
+          </div>
+        ) : esLista ? (
+          <div className="flex items-center justify-center gap-1.5 px-4 pb-4 pt-3">
+            <CheckCircle
+              weight="fill"
+              className="h-4 w-4 shrink-0 text-verde-menta"
+              aria-hidden
+            />
+            <span className="text-label-sm font-semibold text-on-surface-variant">
+              Lista para caja
+            </span>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
