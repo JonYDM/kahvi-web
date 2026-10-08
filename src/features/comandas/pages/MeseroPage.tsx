@@ -195,7 +195,7 @@ export function MeseroPage() {
         </div>
       }
     >
-      <div className="flex flex-col gap-4 pb-32">
+      <div className="flex flex-col gap-4 pb-48">
 
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 0: TIPO DE SERVICIO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 0 && (
@@ -498,8 +498,10 @@ export function MeseroPage() {
 
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• BARRA DE NAVEGACIÀ“N FIJA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {paso < 3 && (
-        <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-outline-variant/20 bg-surface/95 backdrop-blur-sm">
-          <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+        <footer className="fixed inset-x-0 z-30 backdrop-blur-md"
+          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 6.5rem)" }}
+        >
+          <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
             {paso > 0 ? (
               <button
                 onClick={() => irA((paso - 1) as Paso)}
