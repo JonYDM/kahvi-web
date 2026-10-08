@@ -7,7 +7,7 @@ import { ApiError } from "@/lib/http";
 import { cn } from "@/lib/cn";
 import { formatCurrency } from "@/lib/format";
 import {
-  useCatalogo,
+  useCatalogoTodos,
   useAgregarProducto,
   useEditarProducto,
   useDesactivarProducto,
@@ -31,7 +31,7 @@ const DRAWER_CERRADO: EstadoDrawer = { abierto: false, modo: "crear", producto: 
 
 /** Gestión CRUD de productos del menú. Solo Administrador. */
 export function ProductosPage() {
-  const { data: productos, isLoading, isError } = useCatalogo();
+  const { data: productos, isLoading, isError } = useCatalogoTodos();
   const { data: categorias = [] } = useCategorias();
   const crear = useAgregarProducto();
   const editar = useEditarProducto();
@@ -41,6 +41,7 @@ export function ProductosPage() {
   const [drawer, setDrawer] = useState<EstadoDrawer>(DRAWER_CERRADO);
   const [busqueda, setBusqueda] = useState("");
   const [filtroCat, setFiltroCat] = useState<string | null>(null);
+  const [mostrarInactivos, setMostrarInactivos] = useState(false);
 
   // Formulario del drawer
   const [nombre, setNombre] = useState("");
@@ -51,10 +52,14 @@ export function ProductosPage() {
 
   const q = busqueda.trim().toLowerCase();
   const lista = (productos ?? []).filter((p) => {
+    if (!mostrarInactivos && !p.activo) return false;
+    if (mostrarInactivos && p.activo) return false;
     if (filtroCat && p.categoriaId !== filtroCat) return false;
     if (q && !p.nombre.toLowerCase().includes(q)) return false;
     return true;
   });
+
+  const numInactivos = (productos ?? []).filter((p) => !p.activo).length;
 
   function abrirCrear() {
     setNombre("");
@@ -106,9 +111,26 @@ export function ProductosPage() {
   }
 
   async function handleDesactivar(p: Producto) {
+    // Confirmación antes de desactivar (no antes de reactivar)
+    if (p.activo) {
+      const ok = window.confirm(`¿Desactivar "${p.nombre}"? No aparecerá en el menú.`);
+      if (!ok) return;
+    }
     try {
-      await desactivar.mutateAsync(p.id);
-      toast.exito(`"${p.nombre}" ${p.activo ? "desactivado" : "activado"}.`);
+      if (p.activo) {
+        await desactivar.mutateAsync(p.id);
+        toast.exito(`"${p.nombre}" desactivado.`);
+      } else {
+        // Reactivar: editar con los mismos datos activa el producto
+        await editar.mutateAsync({
+          productoId: p.id,
+          nombre: p.nombre,
+          categoriaId: p.categoriaId,
+          precio: p.precio,
+          costo: p.costo,
+        });
+        toast.exito(`"${p.nombre}" reactivado.`);
+      }
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : "No se pudo actualizar el producto.");
     }
@@ -154,10 +176,10 @@ export function ProductosPage() {
       {categorias.length > 0 && (
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <button
-            onClick={() => setFiltroCat(null)}
+            onClick={() => { setFiltroCat(null); setMostrarInactivos(false); }}
             className={cn(
               "shrink-0 rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
-              filtroCat === null
+              !mostrarInactivos && filtroCat === null
                 ? "bg-primary-container text-on-primary"
                 : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
             )}
@@ -167,10 +189,10 @@ export function ProductosPage() {
           {[...(categorias ?? [])].sort((a, b) => a.orden - b.orden).map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setFiltroCat(cat.id === filtroCat ? null : cat.id)}
+              onClick={() => { setFiltroCat(cat.id === filtroCat ? null : cat.id); setMostrarInactivos(false); }}
               className={cn(
                 "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
-                filtroCat === cat.id
+                !mostrarInactivos && filtroCat === cat.id
                   ? "bg-primary-container text-on-primary"
                   : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
               )}
@@ -178,6 +200,20 @@ export function ProductosPage() {
               {cat.nombre}
             </button>
           ))}
+          {/* Chip inactivos */}
+          {numInactivos > 0 && (
+            <button
+              onClick={() => { setMostrarInactivos((v) => !v); setFiltroCat(null); }}
+              className={cn(
+                "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+                mostrarInactivos
+                  ? "bg-error-st text-white"
+                  : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
+              )}
+            >
+              Inactivos {numInactivos > 0 && `(${numInactivos})`}
+            </button>
+          )}
         </div>
       )}
 

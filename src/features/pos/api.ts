@@ -13,6 +13,11 @@ export function listarCatalogo(signal?: AbortSignal): Promise<Producto[]> {
   return http.get<Producto[]>("/api/productos", signal);
 }
 
+/** Solo productos inactivos (Admin). */
+export function listarCatalogoTodos(signal?: AbortSignal): Promise<Producto[]> {
+  return http.get<Producto[]>("/api/productos?estado=Todos", signal);
+}
+
 /** Agrega un producto al catálogo (solo Admin). */
 export function agregarProducto(body: AgregarProductoRequest): Promise<string> {
   return http.post<string>("/api/productos", body);

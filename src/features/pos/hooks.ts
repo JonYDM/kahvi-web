@@ -4,6 +4,7 @@ import {
   desactivarProducto,
   editarProducto,
   listarCatalogo,
+  listarCatalogoTodos,
   listarVentas,
   registrarVenta,
   resumenVentas,
@@ -15,6 +16,14 @@ export function useCatalogo() {
   return useQuery({
     queryKey: ["catalogo"],
     queryFn: ({ signal }) => listarCatalogo(signal),
+  });
+}
+
+/** Todos los productos incluyendo inactivos (Admin). */
+export function useCatalogoTodos() {
+  return useQuery({
+    queryKey: ["catalogo", "todos"],
+    queryFn: ({ signal }) => listarCatalogoTodos(signal),
   });
 }
 
