@@ -315,7 +315,7 @@ function ProductoCard({
           {p.nombre}
         </p>
         <p className="text-body-sm text-on-surface-variant">
-          {categoriaNombre ?? "—"}
+          {categoriaNombre ?? ""}
         </p>
         <p className="mt-1 text-label-lg font-bold text-primary-container">
           {formatCurrency(p.precio)}
