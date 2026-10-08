@@ -153,7 +153,7 @@ export function ProductosPage() {
         <input
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
-          placeholder="Buscar productoâ€¦"
+          placeholder="Buscar producto…"
           className="w-full rounded-2xl border border-outline-variant/40 bg-surface-container-lowest py-3 pl-11 pr-10 text-body-md text-on-surface shadow-soft outline-none placeholder:text-on-surface-variant/50 focus:border-primary-container"
         />
         {busqueda && (

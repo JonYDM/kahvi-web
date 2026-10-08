@@ -311,7 +311,7 @@ export function MeseroPage() {
               <Input
                 variant="soft"
                 aria-label="Buscar productos"
-                placeholder="Buscar productoâ€¦"
+                placeholder="Buscar producto…"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 className="h-12 pl-12"
