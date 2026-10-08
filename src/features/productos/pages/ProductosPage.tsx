@@ -304,10 +304,8 @@ function ProductoCard({
         !p.activo && "opacity-60",
       )}
     >
-      {/* Zona de imagen futura — placeholder limpio */}
-      <div className="flex h-20 items-center justify-center bg-primary-container/8">
-        <div className="h-10 w-10 rounded-xl bg-primary-container/20" />
-      </div>
+      {/* Zona de imagen — ocupa todo el ancho, la card es el marco */}
+      <div className="h-24 w-full rounded-t-2xl bg-primary-container/10" />
 
       {/* Contenido */}
       <div className="flex flex-1 flex-col gap-1 px-3 pb-3 pt-2">
