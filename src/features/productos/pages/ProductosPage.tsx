@@ -82,7 +82,7 @@ export function ProductosPage() {
 
     const precioNum = parseFloat(precio);
     const costoNum = costo ? parseFloat(costo) : null;
-    const catId = categoriaId || categorias[0]?.id || "";
+    const catId = categoriaId;
 
     if (!nombre.trim()) { setErrorForm("El nombre es obligatorio."); return; }
     if (isNaN(precioNum) || precioNum <= 0) { setErrorForm("El precio debe ser mayor que cero."); return; }
@@ -227,10 +227,12 @@ export function ProductosPage() {
               Categoría
             </label>
             <select
-              value={categoriaId || (categorias[0]?.id ?? "")}
+              value={categoriaId}
               onChange={(e) => setCategoriaId(e.target.value)}
+              required
               className="h-12 w-full rounded-xl border border-outline-variant/60 bg-surface-container-lowest px-3 text-body-md text-on-surface outline-none focus:border-primary-container"
             >
+              <option value="" disabled>Selecciona una categoría…</option>
               {categorias.map((c: CategoriaDto) => (
                 <option key={c.id} value={c.id}>{c.nombre}</option>
               ))}
