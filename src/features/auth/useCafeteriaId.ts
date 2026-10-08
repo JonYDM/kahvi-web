@@ -1,4 +1,4 @@
-import { useAuth } from "@/features/auth";
+﻿import { useAuth } from "@/features/auth";
 
 /**
  * Devuelve el cafeteriaId de la sesión (tenant actual).
@@ -11,3 +11,5 @@ export function useCafeteriaId(): string {
   }
   return sesion.cafeteriaId;
 }
+
+

@@ -61,7 +61,7 @@ export function PosPage() {
 
   const esAdmin = sesion?.rol === RolUsuario.Administrador;
 
-  // CategorÃ­as ordenadas para los chips
+  // Categorías ordenadas para los chips
   const categoriasOrdenadas = useMemo(
     () => [...(categorias ?? [])].sort((a, b) => a.orden - b.orden),
     [categorias],
@@ -166,7 +166,7 @@ export function PosPage() {
           />
         </div>
 
-        {/* Chips de categorÃ­a dinÃ¡mica */}
+        {/* Chips de categoría dinámica */}
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <button
             onClick={() => setCategoriaId(null)}
@@ -195,14 +195,14 @@ export function PosPage() {
           ))}
         </div>
 
-        {/* CatÃ¡logo */}
+        {/* Catálogo */}
         {isLoading ? (
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: 6 }).map((_, i) => <SkeletonFila key={i} />)}
           </div>
         ) : isError ? (
           <div className="rounded-2xl bg-surface-container-lowest p-8 text-center text-body-sm text-error-st shadow-soft">
-            No se pudo cargar el catÃ¡logo.
+            No se pudo cargar el catálogo.
           </div>
         ) : visibles.length > 0 ? (
           <div className="grid grid-cols-2 gap-3">
@@ -221,13 +221,13 @@ export function PosPage() {
           </div>
         ) : (
           <EmptyState
-            titulo={texto || categoriaId !== null ? "Sin resultados" : "CatÃ¡logo vacÃ­o"}
+            titulo={texto || categoriaId !== null ? "Sin resultados" : "Catálogo vacío"}
             descripcion={
               texto || categoriaId !== null
                 ? "No hay productos que coincidan."
                 : esAdmin
                   ? "Agrega tu primer producto para empezar a vender."
-                  : "AÃºn no hay productos en el catÃ¡logo."
+                  : "Aún no hay productos en el catálogo."
             }
           />
         )}
@@ -302,9 +302,9 @@ export function PosPage() {
               ))}
             </ul>
 
-            {/* MÃ©todo de pago */}
+            {/* Método de pago */}
             <div>
-              <p className="mb-1.5 text-label-md font-semibold text-on-surface-variant">MÃ©todo de pago</p>
+              <p className="mb-1.5 text-label-md font-semibold text-on-surface-variant">Método de pago</p>
               <div className="grid grid-cols-3 gap-2">
                 {METODOS.map((m) => {
                   const activo = metodoPago === m.valor;
@@ -512,4 +512,6 @@ function CobroExitoso({
     </div>
   );
 }
+
+
 

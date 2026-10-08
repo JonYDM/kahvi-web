@@ -1,4 +1,4 @@
-import { useAuth } from "@/features/auth";
+﻿import { useAuth } from "@/features/auth";
 import { puede, type Accion } from "@/lib/permisos";
 
 /**
@@ -9,3 +9,5 @@ export function usePermisos() {
   const { sesion } = useAuth();
   return (accion: Accion) => puede(sesion, accion);
 }
+
+

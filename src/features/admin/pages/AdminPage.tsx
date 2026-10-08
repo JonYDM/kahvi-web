@@ -31,7 +31,7 @@ type Tab = "resumen" | "platillos" | "categorias" | "personal";
 const TABS: { id: Tab; label: string; icon: typeof ChartPie }[] = [
   { id: "resumen", label: "Resumen", icon: ChartPie },
   { id: "platillos", label: "Platillos", icon: Package },
-  { id: "categorias", label: "CategorÃ­as", icon: Tag },
+  { id: "categorias", label: "Categorías", icon: Tag },
   { id: "personal", label: "Personal", icon: Users },
 ];
 
@@ -147,7 +147,7 @@ function Resumen() {
       {/* Top productos */}
       {metricas?.topProductos && metricas.topProductos.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-lg font-bold text-cafe-intenso">MÃ¡s vendidos hoy</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">Más vendidos hoy</h2>
           <div className="divide-y divide-cafe-intenso/5 rounded-2xl bg-white/70 px-5 shadow-sm">
             {metricas.topProductos.slice(0, 6).map((p, i) => (
               <div key={p.nombre} className="flex items-center gap-3 py-4">
@@ -155,17 +155,17 @@ function Resumen() {
                   {i + 1}
                 </span>
                 <span className="flex-1 text-sm text-cafe-intenso">{p.nombre}</span>
-                <span className="text-sm font-bold text-verde-menta">Ã—{p.cantidad}</span>
+                <span className="text-sm font-bold text-verde-menta">À—{p.cantidad}</span>
               </div>
             ))}
           </div>
         </section>
       )}
 
-      {/* Breakdown por mÃ©todo si hay datos */}
+      {/* Breakdown por método si hay datos */}
       {caja && (
         <section className="space-y-4">
-          <h2 className="text-lg font-bold text-cafe-intenso">Por mÃ©todo de pago</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">Por método de pago</h2>
           <div className="grid grid-cols-3 gap-3">
             {[
               { label: "Efectivo", valor: caja.efectivo },
@@ -343,7 +343,7 @@ function Platillos() {
       {/* Lista */}
       <section className="space-y-3">
         <h2 className="text-lg font-bold text-cafe-intenso">
-          MenÃº ({lista.length})
+          Menú ({lista.length})
         </h2>
         <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar platilloâ€¦" />
 
@@ -403,7 +403,7 @@ function Platillos() {
   );
 }
 
-// â”€â”€â”€ CategorÃ­as â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€â”€ Categorías â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function Categorias() {
   const { data: categorias = [], isLoading } = useCategorias();
@@ -432,13 +432,13 @@ function Categorias() {
     <div className="space-y-8">
       {/* Formulario */}
       <div className="rounded-3xl bg-white/70 p-5 shadow-sm">
-        <h2 className="text-lg font-bold text-cafe-intenso">Nueva categorÃ­a</h2>
+        <h2 className="text-lg font-bold text-cafe-intenso">Nueva categoría</h2>
         <div className="mt-4 flex gap-3">
           <input
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && crear()}
-            placeholder="Ej. PanaderÃ­a"
+            placeholder="Ej. Panadería"
             className="flex-1 rounded-2xl border border-cafe-intenso/10 bg-white px-4 py-3 text-sm text-cafe-intenso shadow-sm outline-none placeholder:text-cafe-intenso/35 focus:border-verde-menta"
           />
           <button
@@ -454,9 +454,9 @@ function Categorias() {
       {/* Lista */}
       <section className="space-y-3">
         <h2 className="text-lg font-bold text-cafe-intenso">
-          CategorÃ­as ({lista.length})
+          Categorías ({lista.length})
         </h2>
-        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar categorÃ­aâ€¦" />
+        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar categoríaâ€¦" />
 
         {isLoading ? (
           <div className="space-y-2">
@@ -598,7 +598,7 @@ function Personal() {
               <input
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
-                placeholder="TelÃ©fono"
+                placeholder="Teléfono"
                 className="w-full rounded-2xl border border-cafe-intenso/10 bg-white px-4 py-3 text-sm text-cafe-intenso shadow-sm outline-none placeholder:text-cafe-intenso/35 focus:border-verde-menta"
               />
             </>
@@ -622,14 +622,14 @@ function Personal() {
               value={pin}
               onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
               inputMode="numeric"
-              placeholder="PIN (6 dÃ­gitos)"
+              placeholder="PIN (6 dígitos)"
               className={`flex-1 rounded-2xl border bg-white px-4 py-3 text-sm text-cafe-intenso shadow-sm outline-none placeholder:text-cafe-intenso/35 focus:border-verde-menta ${
                 pinInvalido ? "border-red-300" : "border-cafe-intenso/10"
               }`}
             />
           </div>
           {pinInvalido && (
-            <p className="text-xs text-red-500">El PIN debe ser de 6 dÃ­gitos.</p>
+            <p className="text-xs text-red-500">El PIN debe ser de 6 dígitos.</p>
           )}
           <div className="flex gap-2 pt-1">
             <button
@@ -697,5 +697,7 @@ function Personal() {
     </div>
   );
 }
+
+
 
 

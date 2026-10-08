@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 
 /**
  * Devuelve true si la media query hace match. Reacciona a cambios de tamaño.
@@ -19,3 +19,5 @@ export function useMediaQuery(query: string): boolean {
 
   return coincide;
 }
+
+

@@ -1,4 +1,4 @@
-import type { RolUsuario } from "@/types/api";
+﻿import type { RolUsuario } from "@/types/api";
 
 /** Sesión activa del usuario, derivada del login + claims del JWT. */
 export interface Sesion {
@@ -13,3 +13,5 @@ export interface AuthState {
   sesion: Sesion | null;
   cargando: boolean;
 }
+
+

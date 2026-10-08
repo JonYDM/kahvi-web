@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Utilidades de formato con Intl nativo (sin librerías de fecha).
  * Localización: español de México (es-MX), moneda MXN.
  */
@@ -61,9 +61,9 @@ function aFechaLocal(value: string | Date): Date {
 }
 /** Formatea una fecha ISO (o Date) como "27 sept 2026". */
 export function formatDate(value: string | Date | null | undefined): string {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const d = aFechaLocal(value);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "â€”";
   return dateFmt.format(d);
 }
 
@@ -71,9 +71,9 @@ export function formatDate(value: string | Date | null | undefined): string {
 export function formatDateTime(
   value: string | Date | null | undefined,
 ): string {
-  if (!value) return "—";
+  if (!value) return "â€”";
   const d = aFechaLocal(value);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "â€”";
   return dateTimeFmt.format(d);
 }
 
@@ -95,3 +95,5 @@ export function edadEnAnios(
   if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
   return edad >= 0 ? edad : null;
 }
+
+

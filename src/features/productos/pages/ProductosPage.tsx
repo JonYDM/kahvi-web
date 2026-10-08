@@ -30,7 +30,7 @@ const DRAWER_CERRADO: EstadoDrawer = { abierto: false, modo: "crear", producto: 
 
 // â”€â”€â”€ Componente principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-/** GestiÃ³n CRUD de productos del menÃº. Solo Administrador. */
+/** Gestión CRUD de productos del menú. Solo Administrador. */
 export function ProductosPage() {
   const { data: productos, isLoading, isError } = useCatalogoTodos();
   const { data: categorias = [] } = useCategorias();
@@ -96,7 +96,7 @@ export function ProductosPage() {
 
     if (!nombre.trim()) { setErrorForm("El nombre es obligatorio."); return; }
     if (isNaN(precioNum) || precioNum <= 0) { setErrorForm("El precio debe ser mayor que cero."); return; }
-    if (!catId) { setErrorForm("Selecciona una categorÃ­a."); return; }
+    if (!catId) { setErrorForm("Selecciona una categoría."); return; }
 
     try {
       if (drawer.modo === "crear") {
@@ -113,9 +113,9 @@ export function ProductosPage() {
   }
 
   async function handleDesactivar(p: Producto) {
-    // ConfirmaciÃ³n antes de desactivar (no antes de reactivar)
+    // Confirmación antes de desactivar (no antes de reactivar)
     if (p.activo) {
-      const ok = window.confirm(`Â¿Desactivar "${p.nombre}"? No aparecerÃ¡ en el menÃº.`);
+      const ok = window.confirm(`Â¿Desactivar "${p.nombre}"? No aparecerá en el menú.`);
       if (!ok) return;
     }
     try {
@@ -159,7 +159,7 @@ export function ProductosPage() {
         {busqueda && (
           <button
             onClick={() => setBusqueda("")}
-            aria-label="Limpiar bÃºsqueda"
+            aria-label="Limpiar búsqueda"
             className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container"
           >
             <X weight='light' className="h-4 w-4" />
@@ -167,7 +167,7 @@ export function ProductosPage() {
         )}
       </div>
 
-      {/* Chips de categorÃ­a â€” siempre visibles */}
+      {/* Chips de categoría â€” siempre visibles */}
       {categorias.length > 0 && (
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <button
@@ -233,12 +233,12 @@ export function ProductosPage() {
             className="h-40 w-40 object-contain"
           />
           <p className="mt-4 text-label-lg font-semibold text-on-surface">
-            {busqueda ? "Sin resultados" : "AÃºn no hay productos"}
+            {busqueda ? "Sin resultados" : "Aún no hay productos"}
           </p>
           <p className="mt-1 text-body-sm text-on-surface-variant">
             {busqueda
-              ? `No encontramos "${busqueda}" en el menÃº.`
-              : "Toca el botÃ³n + para agregar el primer producto."}
+              ? `No encontramos "${busqueda}" en el menú.`
+              : "Toca el botón + para agregar el primer producto."}
           </p>
         </div>
       )}
@@ -289,7 +289,7 @@ export function ProductosPage() {
 
           <div className="flex flex-col gap-1.5">
             <label className="text-label-sm font-semibold text-on-surface-variant">
-              CategorÃ­a
+              Categoría
             </label>
             <select
               value={categoriaId}
@@ -297,7 +297,7 @@ export function ProductosPage() {
               required
               className="h-12 w-full rounded-xl border border-outline-variant/60 bg-surface-container-lowest px-3 text-body-md text-on-surface outline-none focus:border-primary-container"
             >
-              <option value="" disabled>Selecciona una categorÃ­aâ€¦</option>
+              <option value="" disabled>Selecciona una categoríaâ€¦</option>
               {categorias.map((c: CategoriaDto) => (
                 <option key={c.id} value={c.id}>{c.nombre}</option>
               ))}
@@ -382,7 +382,7 @@ function ProductoCard({
 
         {/* Zona imagen â€” full bleed */}
         <div className="relative h-[6.5rem] w-full overflow-hidden bg-[#F0EBE3]">
-          {/* Placeholder: gradiente cÃ¡lido sutil */}
+          {/* Placeholder: gradiente cálido sutil */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#EDE4D8] to-[#D9CFC3]" />
           {/* Shimmer decorativo */}
           <div className="absolute -left-8 top-3 h-16 w-16 rounded-full bg-white/30 blur-2xl" />
@@ -390,7 +390,7 @@ function ProductoCard({
 
         {/* Contenido */}
         <div className="px-3 pb-3 pt-2.5">
-          {/* CategorÃ­a â€” eyebrow tag */}
+          {/* Categoría â€” eyebrow tag */}
           {categoriaNombre && (
             <span className="mb-1.5 inline-block rounded-full bg-surface-container px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-on-surface-variant/70">
               {categoriaNombre}
@@ -454,4 +454,6 @@ function ProductoCard({
     </div>
   );
 }
+
+
 

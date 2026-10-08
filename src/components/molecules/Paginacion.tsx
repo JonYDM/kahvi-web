@@ -1,4 +1,4 @@
-import { CaretLeft, CaretRight } from "@phosphor-icons/react";
+﻿import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { Button } from "@/components/ui";
 
 interface Props {
@@ -37,3 +37,5 @@ export function Paginacion({ pagina, totalPaginas, onCambio }: Props) {
     </div>
   );
 }
+
+

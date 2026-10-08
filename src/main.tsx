@@ -1,7 +1,7 @@
-import { StrictMode } from "react";
+﻿import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "@/app/App";
-// Nunito para la marca Kahvi (peso 800, subset latino) — ligero.
+// Nunito para la marca Kahvi (peso 800, subset latino) â€” ligero.
 import "@fontsource/nunito/latin-800.css";
 import "@/styles/index.css";
 
@@ -15,3 +15,5 @@ createRoot(rootElement).render(
     <App />
   </StrictMode>,
 );
+
+

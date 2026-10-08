@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { SignOut, Key } from "@phosphor-icons/react";
 import { useAuth } from "@/features/auth";
@@ -8,7 +8,7 @@ import { CambiarMiPinModal } from "@/features/usuarios";
 
 /**
  * Layout minimal para estaciones de trabajo (Mesero, Cocina, Caja).
- * Sin barra de navegación inferior — cada estación tiene una sola pantalla.
+ * Sin barra de navegación inferior â€” cada estación tiene una sola pantalla.
  * El contenido ocupa todo el espacio disponible sin padding extra abajo.
  */
 export function EstacionLayout() {
@@ -82,7 +82,7 @@ export function EstacionLayout() {
         </div>
       </header>
 
-      {/* Contenido — padding top solo para el header, sin padding bottom extra */}
+      {/* Contenido â€” padding top solo para el header, sin padding bottom extra */}
       <main
         className="mx-auto w-full max-w-2xl px-4"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 4rem)" }}
@@ -94,3 +94,5 @@ export function EstacionLayout() {
     </div>
   );
 }
+
+

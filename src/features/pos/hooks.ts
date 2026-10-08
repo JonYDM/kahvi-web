@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+﻿import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   agregarProducto,
   activarProducto,
@@ -111,3 +111,5 @@ export function useResumenVentas(desde?: string, hasta?: string) {
     queryFn: ({ signal }) => resumenVentas(desde, hasta, signal),
   });
 }
+
+

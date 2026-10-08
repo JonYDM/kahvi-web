@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode } from "react";
+﻿import { createContext, useContext, type ReactNode } from "react";
 
 export interface HeaderTituloValor {
   /** Título de la pantalla (grande en el header, se encoge a la barra al scrollear). */
@@ -36,3 +36,5 @@ export function useHeaderTitulo(): HeaderTituloValor {
   }
   return ctx;
 }
+
+

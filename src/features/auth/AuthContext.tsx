@@ -1,4 +1,4 @@
-import {
+﻿import {
   createContext,
   useCallback,
   useContext,
@@ -102,3 +102,5 @@ export function useAuth(): AuthContextValue {
   if (!ctx) throw new Error("useAuth debe usarse dentro de <AuthProvider>.");
   return ctx;
 }
+
+

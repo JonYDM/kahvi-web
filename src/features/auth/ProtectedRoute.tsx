@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router-dom";
+﻿import { Navigate, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 import { useAuth } from "./AuthContext";
 import { rutaInicialPorRol } from "./roles";
@@ -14,8 +14,8 @@ interface ProtectedRouteProps {
 
 /**
  * Guarda de ruta:
- * - Sin sesión → redirige a /login (recordando a dónde iba).
- * - Con sesión pero rol no permitido → redirige a su home por rol.
+ * - Sin sesión â†’ redirige a /login (recordando a dónde iba).
+ * - Con sesión pero rol no permitido â†’ redirige a su home por rol.
  */
 export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
   const { sesion, cargando } = useAuth();
@@ -24,7 +24,7 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
   if (cargando) {
     return (
       <div className="grid min-h-full place-items-center">
-        <Spinner label="Cargando sesión…" />
+        <Spinner label="Cargando sesiónâ€¦" />
       </div>
     );
   }
@@ -46,3 +46,5 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
 
   return <>{children}</>;
 }
+
+

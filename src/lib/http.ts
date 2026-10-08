@@ -1,8 +1,8 @@
-import type { ApiErrorBody } from "@/types/api";
+﻿import type { ApiErrorBody } from "@/types/api";
 
 /**
  * Cliente HTTP ligero sobre fetch nativo (sin axios).
- * - Base URL configurable: en dev usa el proxy de Vite (/api → Railway),
+ * - Base URL configurable: en dev usa el proxy de Vite (/api â†’ Railway),
  *   en prod usa VITE_API_URL.
  * - Inyecta Authorization: Bearer <token> si hay sesión.
  * - Normaliza los errores del backend ({ error: "..." }) a ApiError.
@@ -58,7 +58,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     signal,
   });
 
-  // 401: sesión inválida → notificar a la capa de auth.
+  // 401: sesión inválida â†’ notificar a la capa de auth.
   if (response.status === 401) {
     onUnauthorized?.();
     throw new ApiError(401, "Sesión expirada. Inicia sesión de nuevo.");
@@ -139,3 +139,5 @@ export const http = {
     return data as T;
   },
 };
+
+

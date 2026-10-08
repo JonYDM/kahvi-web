@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Tipos de la API de Kahvi. Reflejan los contratos reales del backend .NET.
  *
- * IMPORTANTE: el backend serializa los enums como NÚMEROS (no strings).
+ * IMPORTANTE: el backend serializa los enums como NÀšMEROS (no strings).
  * Aquí se modelan como enums numéricos para que coincidan 1:1.
  */
 
-// ─────────────────────────── Enums (valores numéricos del backend) ───────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Enums (valores numéricos del backend) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export enum RolUsuario {
   Administrador = 1,
@@ -58,7 +58,7 @@ export interface ResultadoPaginado<T> {
   totalPaginas: number;
 }
 
-// ─────────────────────────── Auth ───────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Auth â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface LoginRequest {
   identificador: string;
@@ -84,7 +84,7 @@ export interface JwtClaims {
   [key: string]: unknown;
 }
 
-// ─────────────────────────── Categorías dinámicas ───────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Categorías dinámicas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /** Categoría dinámica de producto (CRUD por el Administrador). */
 export interface CategoriaDto {
@@ -94,7 +94,7 @@ export interface CategoriaDto {
   cafeteriaId: string;
 }
 
-// ─────────────────────────── Entidades ──────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Entidades â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /** Plan de suscripción de la cafetería. */
 export enum PlanSuscripcion {
@@ -114,7 +114,7 @@ export interface Sucursal {
   fechaAlta: string;
 }
 
-/** Cafetería (tenant) — visible para SuperAdmin. */
+/** Cafetería (tenant) â€” visible para SuperAdmin. */
 export interface Cafeteria {
   id: string;
   nombre: string;
@@ -141,7 +141,7 @@ export interface Producto {
   id: string;
   cafeteriaId: string;
   nombre: string;
-  /** ID de la categoría (Guid) — referencia a CategoriaDto. */
+  /** ID de la categoría (Guid) â€” referencia a CategoriaDto. */
   categoriaId: string;
   precio: number;
   /** Costo de adquisición. Solo visible para el Administrador (null para otros roles). */
@@ -149,7 +149,7 @@ export interface Producto {
   activo: boolean;
 }
 
-// ─────────────────────────── Comandas ───────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Comandas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /** Línea de una comanda. */
 export interface LineaComandaDto {
@@ -201,7 +201,7 @@ export interface CobrarComandaRequest {
   montoRecibido?: number;
 }
 
-// ─────────────────────────── Ventas ─────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Ventas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /** Línea de una venta del historial. */
 export interface LineaVentaHistorial {
@@ -244,7 +244,7 @@ export interface MetricasDashboard {
   topProductos: { nombre: string; cantidad: number }[];
 }
 
-// ─────────────────────────── Requests (comandos/DTOs) ───────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Requests (comandos/DTOs) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /** Alta de staff. */
 export interface CrearStaffRequest {
@@ -358,3 +358,5 @@ export interface RenovarRequest {
   fechaPago?: string | null;
   nota?: string | null;
 }
+
+

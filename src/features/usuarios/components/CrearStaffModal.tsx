@@ -1,4 +1,4 @@
-import { Coffee, ChefHat, Wallet } from "@phosphor-icons/react";
+﻿import { Coffee, ChefHat, Wallet } from "@phosphor-icons/react";
 import { RolUsuario } from "@/types/api";
 import { useCrearStaff } from "../hooks";
 import { AltaStaffDrawer, type OpcionRol } from "./AltaStaffDrawer";
@@ -14,7 +14,7 @@ const ROLES: OpcionRol[] = [
   { valor: RolUsuario.Caja, label: "Caja", detalle: "Cobra comandas", icon: Wallet },
 ];
 
-/** Alta de Mesero, Cocina o Caja: rol → nombre → contacto → PIN. */
+/** Alta de Mesero, Cocina o Caja: rol â†’ nombre â†’ contacto â†’ PIN. */
 export function CrearStaffModal({ open, onClose }: Props) {
   const crear = useCrearStaff();
   return (
@@ -39,3 +39,5 @@ export function CrearStaffModal({ open, onClose }: Props) {
     />
   );
 }
+
+

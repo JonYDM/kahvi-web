@@ -1,4 +1,4 @@
-import { http } from "@/lib/http";
+﻿import { http } from "@/lib/http";
 import type {
   CrearStaffRequest,
   EditarDatosUsuarioRequest,
@@ -62,3 +62,5 @@ export function obtenerUsuarioDeCliente(
     .get<UsuarioDto | undefined>(`/api/clientes/${clienteId}/usuario`, signal)
     .then((u) => u ?? null);
 }
+
+

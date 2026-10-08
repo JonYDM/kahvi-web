@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+﻿import { type ReactNode } from "react";
 
 interface Props {
   titulo: string;
@@ -30,3 +30,5 @@ export function EmptyState({ titulo, descripcion, accion }: Props) {
     </div>
   );
 }
+
+

@@ -27,7 +27,7 @@ const DRAWER_CERRADO: EstadoDrawer = { abierto: false, modo: "crear", categoria:
 
 // â”€â”€â”€ Componente principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-/** GestiÃ³n CRUD de categorÃ­as con drag-and-drop para reordenar. Solo Administrador. */
+/** Gestión CRUD de categorías con drag-and-drop para reordenar. Solo Administrador. */
 export function CategoriasPage() {
   const { data: categorias, isLoading, isError } = useCategorias();
   const crear = useCrearCategoria();
@@ -80,21 +80,21 @@ export function CategoriasPage() {
 
     try {
       if (drawer.modo === "crear") {
-        // El orden nuevo es el siguiente al Ãºltimo
+        // El orden nuevo es el siguiente al último
         const siguienteOrden = ordenadas.length + 1;
         await crear.mutateAsync({ nombre: nombre.trim(), orden: siguienteOrden });
-        toast.exito("CategorÃ­a creada.");
+        toast.exito("Categoría creada.");
       } else if (drawer.categoria) {
         // Conserva el mismo orden, solo cambia el nombre
         await editar.mutateAsync({
           id: drawer.categoria.id,
           data: { nombre: nombre.trim(), orden: drawer.categoria.orden },
         });
-        toast.exito("CategorÃ­a actualizada.");
+        toast.exito("Categoría actualizada.");
       }
       cerrar();
     } catch (err) {
-      setErrorForm(err instanceof ApiError ? err.message : "No se pudo guardar la categorÃ­a.");
+      setErrorForm(err instanceof ApiError ? err.message : "No se pudo guardar la categoría.");
     }
   }
 
@@ -102,9 +102,9 @@ export function CategoriasPage() {
     try {
       await eliminar.mutateAsync(cat.id);
       setOrdenLocal(null); // limpiar orden local tras eliminar
-      toast.exito(`CategorÃ­a "${cat.nombre}" eliminada.`);
+      toast.exito(`Categoría "${cat.nombre}" eliminada.`);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : "No se pudo eliminar la categorÃ­a.");
+      toast.error(err instanceof ApiError ? err.message : "No se pudo eliminar la categoría.");
     }
   }
 
@@ -113,7 +113,7 @@ export function CategoriasPage() {
   function onDragStart(e: DragEvent, id: string) {
     draggingId.current = id;
     e.dataTransfer.effectAllowed = "move";
-    // Opacidad en el elemento arrastrado via class (se aÃ±ade en el render)
+    // Opacidad en el elemento arrastrado via class (se añade en el render)
   }
 
   function onDragOver(e: DragEvent, id: string) {
@@ -130,7 +130,7 @@ export function CategoriasPage() {
 
     const [movido] = lista.splice(fromIdx, 1);
     lista.splice(toIdx, 0, movido);
-    // Re-asigna nÃºmeros de orden correlativos
+    // Re-asigna números de orden correlativos
     setOrdenLocal(lista.map((c, i) => ({ ...c, orden: i + 1 })));
   }
 
@@ -159,7 +159,7 @@ export function CategoriasPage() {
   }
 
   function onDragEnd() {
-    // Si se soltÃ³ fuera de un drop target vÃ¡lido, revertir
+    // Si se soltó fuera de un drop target válido, revertir
     draggingId.current = null;
     dragOverId.current = null;
   }
@@ -168,14 +168,14 @@ export function CategoriasPage() {
 
   return (
     <PantallaConHeader
-      titulo="CategorÃ­as"
+      titulo="Categorías"
       subtitulo={
         <p className="text-body-sm text-on-surface-variant">
-          {ordenadas.length} categorÃ­a{ordenadas.length !== 1 ? "s" : ""}
+          {ordenadas.length} categoría{ordenadas.length !== 1 ? "s" : ""}
         </p>
       }
       accion={
-        <Button size="icon" onClick={abrirCrear} aria-label="Nueva categorÃ­a">
+        <Button size="icon" onClick={abrirCrear} aria-label="Nueva categoría">
           <Plus weight='light' className="h-5 w-5" aria-hidden />
         </Button>
       }
@@ -188,7 +188,7 @@ export function CategoriasPage() {
 
       {isError && (
         <div className="rounded-2xl bg-error-container/40 p-6 text-center text-body-sm text-on-error-container">
-          No se pudieron cargar las categorÃ­as.
+          No se pudieron cargar las categorías.
         </div>
       )}
 
@@ -196,14 +196,14 @@ export function CategoriasPage() {
         <div className="flex flex-col items-center py-10 text-center">
           <img
             src="/spil.png"
-            alt="Sin categorÃ­as"
+            alt="Sin categorías"
             className="h-40 w-40 object-contain"
           />
           <p className="mt-4 text-label-lg font-semibold text-on-surface">
-            Sin categorÃ­as
+            Sin categorías
           </p>
           <p className="mt-1 text-body-sm text-on-surface-variant">
-            Crea la primera categorÃ­a para organizar tus productos.
+            Crea la primera categoría para organizar tus productos.
           </p>
         </div>
       )}
@@ -230,17 +230,17 @@ export function CategoriasPage() {
       <Drawer
         open={drawer.abierto}
         onClose={cerrar}
-        title={drawer.modo === "crear" ? "Nueva categorÃ­a" : "Editar categorÃ­a"}
+        title={drawer.modo === "crear" ? "Nueva categoría" : "Editar categoría"}
         descripcion={
           drawer.modo === "crear"
-            ? "Ingresa el nombre de la categorÃ­a."
-            : "Modifica el nombre de la categorÃ­a."
+            ? "Ingresa el nombre de la categoría."
+            : "Modifica el nombre de la categoría."
         }
       >
         <form onSubmit={enviar} className="space-y-4">
           <Input
             label="Nombre"
-            placeholder="Ej: CafÃ©, Postres, Bebidasâ€¦"
+            placeholder="Ej: Café, Postres, Bebidasâ€¦"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             required
@@ -267,7 +267,7 @@ export function CategoriasPage() {
   );
 }
 
-// â”€â”€â”€ Fila de categorÃ­a con drag-and-drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€â”€ Fila de categoría con drag-and-drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function CategoriaFila({
   categoria,
@@ -309,7 +309,7 @@ function CategoriaFila({
         <DotsSixVertical weight='light' className="h-5 w-5" />
       </span>
 
-      {/* NÃºmero de orden */}
+      {/* Número de orden */}
       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary-container/15 text-label-md font-bold text-primary-container">
         {categoria.orden}
       </span>
@@ -323,7 +323,7 @@ function CategoriaFila({
       <div className="flex shrink-0 items-center gap-1">
         <button
           onClick={onEditar}
-          aria-label={`Editar categorÃ­a ${categoria.nombre}`}
+          aria-label={`Editar categoría ${categoria.nombre}`}
           className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-surface-container"
         >
           <PencilSimple weight='light' className="h-4 w-4" aria-hidden />
@@ -331,7 +331,7 @@ function CategoriaFila({
         <button
           onClick={onEliminar}
           disabled={eliminando}
-          aria-label={`Eliminar categorÃ­a ${categoria.nombre}`}
+          aria-label={`Eliminar categoría ${categoria.nombre}`}
           className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-error-container/40 hover:text-on-error-container disabled:opacity-50"
         >
           <Trash weight='light' className="h-4 w-4" aria-hidden />
@@ -340,4 +340,6 @@ function CategoriaFila({
     </li>
   );
 }
+
+
 

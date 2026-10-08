@@ -46,7 +46,7 @@ export function LoginPage() {
       setNombreReal(r.nombre ?? null);
       setPaso("pin");
     } catch {
-      setErrorId("No se pudo verificar. Revisa tu conexiÃ³n e intenta de nuevo.");
+      setErrorId("No se pudo verificar. Revisa tu conexión e intenta de nuevo.");
     } finally {
       setVerificando(false);
     }
@@ -105,11 +105,11 @@ export function LoginPage() {
                 Kahvi
               </span>
               <p className="mt-0.5 text-body-md text-cafe-principal font-medium">
-                Tu cafeterÃ­a, en buenas manos
+                Tu cafetería, en buenas manos
               </p>
             </div>
 
-            {/* Saludo cÃ¡lido */}
+            {/* Saludo cálido */}
             <div className="mt-8 text-center">
               <h1 className="text-h1 font-bold tracking-tight text-cafe-intenso">
                 Â¡{saludoPorHora()}!
@@ -177,7 +177,7 @@ export function LoginPage() {
               <p className="mt-1.5 text-body-lg text-on-surface-variant">
                 {nombreReal
                   ? "Ingresa tu PIN para entrar"
-                  : `Ingresa tu PIN de ${PIN_LENGTH} dÃ­gitos`}
+                  : `Ingresa tu PIN de ${PIN_LENGTH} dígitos`}
               </p>
             </div>
 
@@ -222,4 +222,6 @@ export function LoginPage() {
     </main>
   );
 }
+
+
 

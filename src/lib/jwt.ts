@@ -1,4 +1,4 @@
-import type { JwtClaims } from "@/types/api";
+﻿import type { JwtClaims } from "@/types/api";
 
 /**
  * Decodifica el payload de un JWT sin verificar la firma (eso lo hace el backend).
@@ -35,3 +35,5 @@ export function isExpired(claims: JwtClaims | null): boolean {
   const nowSeconds = Math.floor(Date.now() / 1000);
   return claims.exp <= nowSeconds + 10;
 }
+
+

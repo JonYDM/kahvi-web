@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+﻿import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   avanzarComanda,
   cancelarComanda,
@@ -35,7 +35,7 @@ export function useEnviarComanda() {
   });
 }
 
-/** Avanza el estado de una comanda (Recibida → EnPreparacion → Lista). */
+/** Avanza el estado de una comanda (Recibida â†’ EnPreparacion â†’ Lista). */
 export function useAvanzarComanda() {
   const qc = useQueryClient();
   return useMutation({
@@ -69,3 +69,5 @@ export function useCobrarComanda() {
     },
   });
 }
+
+

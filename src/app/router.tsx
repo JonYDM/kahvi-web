@@ -1,4 +1,4 @@
-import { lazy, Suspense, type ReactNode } from "react";
+﻿import { lazy, Suspense, type ReactNode } from "react";
 import {
   createBrowserRouter,
   Navigate,
@@ -23,7 +23,7 @@ function PaginaNoEncontrada() {
   );
 }
 
-// ── Lazy imports ─────────────────────────────────────────────────────────────
+// â”€â”€ Lazy imports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const LoginPage = lazy(() =>
   import("@/features/auth/pages/LoginPage").then((m) => ({ default: m.LoginPage })),
 );
@@ -43,7 +43,7 @@ const CajaLayout = lazy(() =>
   import("@/app/layouts/EstacionLayout").then((m) => ({ default: m.EstacionLayout })),
 );
 
-// Área Admin
+// Àrea Admin
 const StaffDashboard = lazy(() =>
   import("@/features/dashboard/StaffDashboard").then((m) => ({ default: m.StaffDashboard })),
 );
@@ -66,7 +66,7 @@ const VentasResumenPage = lazy(() =>
   import("@/features/ventas").then((m) => ({ default: m.VentasPage })),
 );
 
-// Área Comandas
+// Àrea Comandas
 const MeseroPage = lazy(() =>
   import("@/features/comandas").then((m) => ({ default: m.MeseroPage })),
 );
@@ -77,7 +77,7 @@ const CajaPage = lazy(() =>
   import("@/features/comandas").then((m) => ({ default: m.CajaPage })),
 );
 
-// Área SuperAdmin
+// Àrea SuperAdmin
 const ResumenSuperAdminPage = lazy(() =>
   import("@/features/cafeterias").then((m) => ({ default: m.ResumenSuperAdminPage })),
 );
@@ -94,7 +94,7 @@ const STAFF_ROLES = [RolUsuario.Administrador];
 /** Redirige la raíz "/" al home del rol actual (o al login si no hay sesión). */
 function RootRedirect() {
   const { sesion, cargando } = useAuth();
-  if (cargando) return <FullSpinner label="Cargando…" />;
+  if (cargando) return <FullSpinner label="Cargandoâ€¦" />;
   if (!sesion) return <Navigate to="/login" replace />;
   return <Navigate to={rutaInicialPorRol(sesion.rol)} replace />;
 }
@@ -127,7 +127,7 @@ const router = createBrowserRouter([
     ),
   },
 
-  // ── Área Administrador (/app) ──
+  // â”€â”€ Àrea Administrador (/app) â”€â”€
   {
     path: "/app",
     element: <Protegida roles={STAFF_ROLES}><StaffLayout /></Protegida>,
@@ -171,7 +171,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // ── Área Mesero (/mesero) ──
+  // â”€â”€ Àrea Mesero (/mesero) â”€â”€
   {
     path: "/mesero",
     element: <Protegida roles={[RolUsuario.Mesero, RolUsuario.Administrador]}><MeseroLayout /></Protegida>,
@@ -180,7 +180,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // ── Área Cocina (/cocina) ──
+  // â”€â”€ Àrea Cocina (/cocina) â”€â”€
   {
     path: "/cocina",
     element: <Protegida roles={[RolUsuario.Cocina, RolUsuario.Administrador]}><CocinaLayout /></Protegida>,
@@ -189,7 +189,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // ── Área Caja (/caja) ──
+  // â”€â”€ Àrea Caja (/caja) â”€â”€
   {
     path: "/caja",
     element: <Protegida roles={[RolUsuario.Caja, RolUsuario.Administrador]}><CajaLayout /></Protegida>,
@@ -198,7 +198,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // ── Panel SuperAdmin (/admin) ──
+  // â”€â”€ Panel SuperAdmin (/admin) â”€â”€
   {
     path: "/admin",
     element: <Protegida roles={[RolUsuario.SuperAdmin]}><AdminLayout /></Protegida>,
@@ -215,3 +215,5 @@ const router = createBrowserRouter([
 export function AppRouter() {
   return <RouterProvider router={router} />;
 }
+
+

@@ -1,4 +1,4 @@
-import { cva, type VariantProps } from "class-variance-authority";
+﻿import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
 const avatarVariants = cva(
@@ -46,3 +46,5 @@ export function Avatar({ nombre, size, tone, className, src }: AvatarProps) {
     </span>
   );
 }
+
+

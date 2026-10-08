@@ -1,4 +1,4 @@
-import { useRef, type ClipboardEvent } from "react";
+﻿import { useRef, type ClipboardEvent } from "react";
 import { cn } from "@/lib/cn";
 
 export interface PinInputProps {
@@ -73,7 +73,7 @@ export function PinInput({
                     : "border-outline-variant/40 bg-surface-container-lowest",
               )}
             >
-              {value[i] ? "•" : ""}
+              {value[i] ? "â€¢" : ""}
             </div>
           );
         })}
@@ -81,3 +81,5 @@ export function PinInput({
     </div>
   );
 }
+
+

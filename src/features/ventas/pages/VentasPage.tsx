@@ -15,9 +15,9 @@ function rangoMesActual(): { desde: string; hasta: string } {
   return { desde: inicio.toISOString(), hasta: fin.toISOString() };
 }
 
-const DIAS_SEMANA = ["Dom", "Lun", "Mar", "MiÃ©", "Jue", "Vie", "SÃ¡b"];
+const DIAS_SEMANA = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
-/** Agrupa ventas por dÃ­a de la semana (Ãºltimos 7 dÃ­as, Ã­ndice 0 = hoy). */
+/** Agrupa ventas por día de la semana (últimos 7 días, índice 0 = hoy). */
 function agruparPorDia(ventas: VentaHistorial[]): { label: string; total: number }[] {
   const ahora = new Date();
   const dias: { label: string; total: number }[] = [];
@@ -62,7 +62,7 @@ export function VentasPage() {
   const { data: ventas = [], isLoading: cargandoVentas } = useVentas(desde, hasta);
   const { data: resumen, isLoading: cargandoResumen } = useResumenVentas(desde, hasta);
 
-  // Totales calculados a partir de ventas si resumen no estÃ¡ disponible
+  // Totales calculados a partir de ventas si resumen no está disponible
   const totalCalculado = useMemo(
     () => ventas.reduce((acc, v) => acc + v.total, 0),
     [ventas],
@@ -71,7 +71,7 @@ export function VentasPage() {
   const totalMes = resumen?.total ?? totalCalculado;
   const numeroVentas = resumen?.numeroVentas ?? ventas.length;
 
-  // Desglose por mÃ©todo â€” desde resumen si existe, sino calculado
+  // Desglose por método â€” desde resumen si existe, sino calculado
   const porMetodo = useMemo(() => {
     if (resumen) {
       return [
@@ -95,11 +95,11 @@ export function VentasPage() {
     ];
   }, [resumen, ventas]);
 
-  // Datos para la grÃ¡fica de barras (Ãºltimos 7 dÃ­as)
+  // Datos para la gráfica de barras (últimos 7 días)
   const diasGrafica = useMemo(() => agruparPorDia(ventas), [ventas]);
   const maxDia = Math.max(...diasGrafica.map((d) => d.total), 1);
 
-  // Ãšltimas 5 ventas
+  // Àšltimas 5 ventas
   const ultimas5 = useMemo(
     () =>
       [...ventas]
@@ -149,9 +149,9 @@ export function VentasPage() {
           </div>
         )}
 
-        {/* â”€â”€ Desglose por mÃ©todo de pago â”€â”€ */}
+        {/* â”€â”€ Desglose por método de pago â”€â”€ */}
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-cafe-intenso">Por mÃ©todo de pago</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">Por método de pago</h2>
           {cargando ? (
             <div className="grid grid-cols-3 gap-3">
               {[1, 2, 3].map((i) => (
@@ -181,9 +181,9 @@ export function VentasPage() {
           )}
         </section>
 
-        {/* â”€â”€ GrÃ¡fica de barras Ãºltimos 7 dÃ­as â”€â”€ */}
+        {/* â”€â”€ Gráfica de barras últimos 7 días â”€â”€ */}
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-cafe-intenso">Ãšltimos 7 dÃ­as</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">Àšltimos 7 días</h2>
           {cargando ? (
             <div className="h-40 animate-pulse rounded-2xl bg-white/50" />
           ) : (
@@ -209,7 +209,7 @@ export function VentasPage() {
                           title={formatCurrency(dia.total)}
                         />
                       </div>
-                      {/* etiqueta dÃ­a */}
+                      {/* etiqueta día */}
                       <span
                         className={`text-[10px] font-medium ${
                           esHoy ? "text-cafe-intenso font-bold" : "text-cafe-intenso/50"
@@ -230,9 +230,9 @@ export function VentasPage() {
           )}
         </section>
 
-        {/* â”€â”€ Ãšltimas 5 ventas â”€â”€ */}
+        {/* â”€â”€ Àšltimas 5 ventas â”€â”€ */}
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-cafe-intenso">Ãšltimas ventas</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">Àšltimas ventas</h2>
           {cargando ? (
             <div className="space-y-2">
               {[1, 2, 3, 4, 5].map((i) => (
@@ -249,7 +249,7 @@ export function VentasPage() {
                 const Icon = METODO_ICON[v.metodoPago as MetodoPago] ?? Receipt;
                 return (
                   <div key={v.id} className="flex items-center gap-3 py-4">
-                    {/* Ã­ndice / folio visual */}
+                    {/* índice / folio visual */}
                     <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-cafe-principal/20 text-xs font-bold text-cafe-intenso">
                       #{idx + 1}
                     </span>
@@ -275,4 +275,6 @@ export function VentasPage() {
     </div>
   );
 }
+
+
 

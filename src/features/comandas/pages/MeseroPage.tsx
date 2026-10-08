@@ -42,7 +42,7 @@ interface LineaCarrito {
 
 // â”€â”€â”€ Componente principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-/** Pantalla del mesero con flujo en 4 pasos: Servicio â†’ Productos â†’ Revisar â†’ ConfirmaciÃ³n */
+/** Pantalla del mesero con flujo en 4 pasos: Servicio â†’ Productos â†’ Revisar â†’ Confirmación */
 export function MeseroPage() {
   const { sesion } = useAuth();
   const { data: productos, isLoading, isError } = useCatalogo();
@@ -65,7 +65,7 @@ export function MeseroPage() {
   const [editandoNota, setEditandoNota] = useState<string | null>(null);
   const [notaTemp, setNotaTemp] = useState("");
 
-  // Paso 3 â€” confirmaciÃ³n
+  // Paso 3 â€” confirmación
   const [folioConfirmado, setFolioConfirmado] = useState<number | null>(null);
 
   // Derivados
@@ -76,7 +76,7 @@ export function MeseroPage() {
     [lineas],
   );
 
-  // CategorÃ­as ordenadas para los chips
+  // Categorías ordenadas para los chips
   const categoriasOrdenadas = useMemo(
     () => [...(categorias ?? [])].sort((a, b) => a.orden - b.orden),
     [categorias],
@@ -127,7 +127,7 @@ export function MeseroPage() {
     setEditandoNota(null);
   }
 
-  // â”€â”€â”€ EnvÃ­o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â”€â”€â”€ Envío â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   async function confirmar() {
     if (lineas.length === 0 || enviarComanda.isPending) return;
@@ -146,9 +146,9 @@ export function MeseroPage() {
         nombreCliente: tipo === "llevar" ? nombreCliente.trim() || null : null,
       });
       // El backend devuelve { id } â€” el folio lo extraemos de las comandas activas,
-      // pero para la confirmaciÃ³n usamos un nÃºmero derivado del id.
+      // pero para la confirmación usamos un número derivado del id.
       // Como fallback, usamos un folio ficticio para mostrar al usuario.
-      setFolioConfirmado(null); // se mostrarÃ¡ el mensaje sin folio especÃ­fico
+      setFolioConfirmado(null); // se mostrará el mensaje sin folio específico
       void resp; // La data no tiene folio directo, solo id
       setPaso(3);
     } catch (err) {
@@ -200,7 +200,7 @@ export function MeseroPage() {
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 0: TIPO DE SERVICIO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 0 && (
           <section aria-label="Tipo de servicio">
-            <PasoTitulo icon={Storefront} titulo="Â¿DÃ³nde es el pedido?" sub="Elige mesa o para llevar" />
+            <PasoTitulo icon={Storefront} titulo="Â¿Dónde es el pedido?" sub="Elige mesa o para llevar" />
 
             {/* Selector Mesa / Para llevar */}
             <div className="mt-5 grid grid-cols-2 gap-3">
@@ -221,7 +221,7 @@ export function MeseroPage() {
                   aria-hidden
                 />
                 <p className="mt-3 text-label-lg font-bold text-on-surface">En mesa</p>
-                <p className="text-body-sm text-on-surface-variant">El cliente consume aquÃ­</p>
+                <p className="text-body-sm text-on-surface-variant">El cliente consume aquí</p>
               </button>
 
               <button
@@ -249,7 +249,7 @@ export function MeseroPage() {
             {tipo === "mesa" && (
               <div className="mt-5">
                 <p className="mb-2 text-label-md font-semibold text-on-surface-variant">
-                  NÃºmero de mesa
+                  Número de mesa
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {MESAS_RAPIDAS.map((n) => (
@@ -284,7 +284,7 @@ export function MeseroPage() {
               <div className="mt-5">
                 <Input
                   label="Nombre del cliente (opcional)"
-                  placeholder="Â¿CÃ³mo se llama?"
+                  placeholder="Â¿Cómo se llama?"
                   value={nombreCliente}
                   onChange={(e) => setNombreCliente(e.target.value)}
                 />
@@ -295,7 +295,7 @@ export function MeseroPage() {
 
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 1: PRODUCTOS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 1 && (
-          <section aria-label="SelecciÃ³n de productos">
+          <section aria-label="Selección de productos">
             <PasoTitulo
               icon={ShoppingBag}
               titulo="Agrega productos"
@@ -319,7 +319,7 @@ export function MeseroPage() {
               {busqueda && (
                 <button
                   onClick={() => setBusqueda("")}
-                  aria-label="Limpiar bÃºsqueda"
+                  aria-label="Limpiar búsqueda"
                   className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container"
                 >
                   <X weight='light' className="h-4 w-4" />
@@ -327,7 +327,7 @@ export function MeseroPage() {
               )}
             </div>
 
-            {/* Chips de categorÃ­a (se ocultan al buscar) */}
+            {/* Chips de categoría (se ocultan al buscar) */}
             {!busqueda.trim() && (
               <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
@@ -366,7 +366,7 @@ export function MeseroPage() {
                 </div>
               ) : isError ? (
                 <div className="rounded-2xl bg-surface-container-lowest p-8 text-center text-body-sm text-error-st shadow-soft">
-                  No se pudo cargar el catÃ¡logo.
+                  No se pudo cargar el catálogo.
                 </div>
               ) : visibles.length > 0 ? (
                 <div className="grid grid-cols-2 gap-3">
@@ -384,7 +384,7 @@ export function MeseroPage() {
                 <EmptyState
                   titulo="Sin resultados"
                   descripcion={
-                    busqueda ? `No hay productos para "${busqueda}".` : "No hay productos en esta categorÃ­a."
+                    busqueda ? `No hay productos para "${busqueda}".` : "No hay productos en esta categoría."
                   }
                 />
               )}
@@ -394,7 +394,7 @@ export function MeseroPage() {
 
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 2: REVISAR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 2 && (
-          <section aria-label="RevisiÃ³n del pedido">
+          <section aria-label="Revisión del pedido">
             <PasoTitulo
               icon={Note}
               titulo="Revisa el pedido"
@@ -445,14 +445,14 @@ export function MeseroPage() {
                       </div>
                     </div>
 
-                    {/* Nota del Ã­tem */}
+                    {/* Nota del ítem */}
                     {editandoNota === l.producto.id ? (
                       <div className="mt-3 flex gap-2">
                         <input
                           autoFocus
                           value={notaTemp}
                           onChange={(e) => setNotaTemp(e.target.value)}
-                          placeholder="Ej: sin azÃºcar, extra calienteâ€¦"
+                          placeholder="Ej: sin azúcar, extra calienteâ€¦"
                           className="flex-1 rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2 text-body-sm text-on-surface outline-none focus:border-primary-container"
                           onKeyDown={(e) => e.key === "Enter" && guardarNota()}
                         />
@@ -484,7 +484,7 @@ export function MeseroPage() {
           </section>
         )}
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 3: CONFIRMACIÃ“N â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 3: CONFIRMACIÀ“N â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 3 && (
           <ConfirmacionExito
             refMesa={refMesa}
@@ -496,7 +496,7 @@ export function MeseroPage() {
         )}
       </div>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• BARRA DE NAVEGACIÃ“N FIJA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• BARRA DE NAVEGACIÀ“N FIJA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {paso < 3 && (
         <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-outline-variant/20 bg-surface/95 backdrop-blur-sm">
           <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
@@ -520,7 +520,7 @@ export function MeseroPage() {
                   ? `${totalArticulos} prod Â· ${formatCurrency(total)}`
                   : paso === 0
                     ? refMesa
-                    : "Ticket vacÃ­o"}
+                    : "Ticket vacío"}
               </p>
             </div>
 
@@ -749,4 +749,6 @@ function ConfirmacionExito({
     </section>
   );
 }
+
+
 

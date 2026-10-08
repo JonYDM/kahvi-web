@@ -1,4 +1,4 @@
-@import "@fontsource/nunito/400.css";
+﻿@import "@fontsource/nunito/400.css";
 @import "@fontsource/nunito/500.css";
 @import "@fontsource/nunito/600.css";
 @import "@fontsource/nunito/700.css";
@@ -161,7 +161,7 @@
   }
 }
 
-/* ── Cobro exitoso: círculo → check → pop/halo → datos ── */
+/* â”€â”€ Cobro exitoso: círculo â†’ check â†’ pop/halo â†’ datos â”€â”€ */
 @keyframes cobro-trazo {
   to { stroke-dashoffset: 0; }
 }
@@ -200,3 +200,4 @@
   opacity: 0;
   animation: cobro-datos 350ms ease-out 1000ms forwards;
 }
+

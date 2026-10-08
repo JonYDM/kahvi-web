@@ -1,4 +1,4 @@
-import { MagnifyingGlass } from "@phosphor-icons/react";
+﻿import { MagnifyingGlass } from "@phosphor-icons/react";
 import { Input } from "@/components/ui";
 
 interface Props {
@@ -30,3 +30,5 @@ export function BarraBusqueda({ valor, onChange, placeholder, etiqueta }: Props)
     </div>
   );
 }
+
+

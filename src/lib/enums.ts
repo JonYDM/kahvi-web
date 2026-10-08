@@ -1,4 +1,4 @@
-import {
+﻿import {
   CategoriaProducto,
   MetodoPago,
   RolUsuario,
@@ -55,3 +55,5 @@ export function estadoComandaColor(estado: EstadoComanda): string {
       return "bg-surface-container text-on-surface-variant border-outline-variant";
   }
 }
+
+

@@ -13,7 +13,7 @@ import { DetalleUsuarioDrawer } from "../components/DetalleUsuarioDrawer";
 
 const ROLES_STAFF = [RolUsuario.Mesero, RolUsuario.Cocina, RolUsuario.Caja];
 
-/** GestiÃ³n del equipo del Administrador (buscar, listar, crear, resetear PIN, gestionar). */
+/** Gestión del equipo del Administrador (buscar, listar, crear, resetear PIN, gestionar). */
 export function StaffPage() {
   const { data: usuarios, isLoading, isError } = useStaff();
   const [crearAbierto, setCrearAbierto] = useState(false);
@@ -48,7 +48,7 @@ export function StaffPage() {
   return (
     <PantallaConHeader
       titulo="Equipo"
-      subtitulo={<p className="text-body-sm text-on-surface-variant">Personal de la cafeterÃ­a</p>}
+      subtitulo={<p className="text-body-sm text-on-surface-variant">Personal de la cafetería</p>}
       accion={
         <Button size="icon" onClick={() => setCrearAbierto(true)} aria-label="Nuevo integrante">
           <Plus weight='light' className="h-5 w-5" aria-hidden />
@@ -155,4 +155,6 @@ function CardRol({ icon: Icon, label, conteo, activo, onClick }: {
     </button>
   );
 }
+
+
 

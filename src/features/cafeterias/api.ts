@@ -1,4 +1,4 @@
-import { http } from "@/lib/http";
+﻿import { http } from "@/lib/http";
 import type {
   Cafeteria,
   CafeteriaRequest,
@@ -47,3 +47,5 @@ export function renovarCafeteria(id: string, body?: RenovarRequest): Promise<{ f
 export function crearAdmin(body: CrearAdminRequest): Promise<UsuarioCreado> {
   return http.post<UsuarioCreado>("/api/admin/usuarios-admin", body);
 }
+
+

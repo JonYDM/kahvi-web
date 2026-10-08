@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+﻿import { useEffect, useRef } from "react";
 import anime from "animejs";
 
 function reduceMotion(): boolean {
@@ -41,3 +41,5 @@ export function useContador(
 
   return ref;
 }
+
+

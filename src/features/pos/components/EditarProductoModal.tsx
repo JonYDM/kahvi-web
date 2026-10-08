@@ -12,7 +12,7 @@ interface Props {
   producto: Producto;
 }
 
-/** Modal para editar un producto o darlo de baja lÃ³gica. */
+/** Modal para editar un producto o darlo de baja lógica. */
 export function EditarProductoModal({ open, onClose, producto }: Props) {
   const editar = useEditarProducto();
   const desactivar = useDesactivarProducto();
@@ -36,7 +36,7 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
     setError(null);
 
     if (!categoriaId) {
-      setError("Selecciona una categorÃ­a.");
+      setError("Selecciona una categoría.");
       return;
     }
 
@@ -75,7 +75,7 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
         />
 
         <Select
-          label="CategorÃ­a"
+          label="Categoría"
           value={categoriaId}
           onChange={(e) => setCategoriaId(e.target.value)}
           options={opcionesCategorias}
@@ -130,4 +130,6 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
     </Modal>
   );
 }
+
+
 

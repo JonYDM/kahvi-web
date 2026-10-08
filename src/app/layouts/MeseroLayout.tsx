@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+﻿import { Outlet } from "react-router-dom";
 import { AppShell } from "@/components/organisms/AppShell";
 
 /**
@@ -13,3 +13,5 @@ export function MeseroLayout() {
     </AppShell>
   );
 }
+
+

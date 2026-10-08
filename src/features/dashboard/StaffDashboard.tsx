@@ -47,7 +47,7 @@ export function StaffDashboard() {
       }
     >
       <div className="flex flex-col gap-6">
-        {/* Acciones rÃ¡pidas â€” estaciones de trabajo */}
+        {/* Acciones rápidas â€” estaciones de trabajo */}
         <div className="grid grid-cols-2 gap-2.5">
           <AccionRapida
             to="/mesero"
@@ -83,7 +83,7 @@ export function StaffDashboard() {
           />
         </div>
 
-        {/* MÃ©tricas de ventas */}
+        {/* Métricas de ventas */}
         {esAdmin && (
           <section className="flex flex-col gap-3">
             <h2 className="text-label-lg font-bold text-on-surface">Hoy</h2>
@@ -142,7 +142,7 @@ export function StaffDashboard() {
                     {p.nombre}
                   </span>
                   <span className="tabular shrink-0 text-label-md font-bold text-primary-container">
-                    Ã—{p.cantidad}
+                    À—{p.cantidad}
                   </span>
                 </div>
               ))}
@@ -209,5 +209,7 @@ function MetricaCard({
     </div>
   );
 }
+
+
 
 

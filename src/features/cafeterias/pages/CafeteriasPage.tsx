@@ -26,7 +26,7 @@ export function CafeteriasPage() {
   async function toggleEstado(c: Cafeteria) {
     try {
       await cambiarEstado.mutateAsync({ id: c.id, activar: !c.activa });
-      toast.success(`CafeterÃ­a ${!c.activa ? "activada" : "desactivada"}`);
+      toast.success(`Cafetería ${!c.activa ? "activada" : "desactivada"}`);
     } catch {
       toast.error("No se pudo cambiar el estado");
     }
@@ -34,11 +34,11 @@ export function CafeteriasPage() {
 
   return (
     <PantallaConHeader
-      titulo="CafeterÃ­as"
+      titulo="Cafeterías"
       subtitulo={
         <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
           <Coffee weight='light' className="h-4 w-4 text-primary-container" aria-hidden />
-          GestiÃ³n de tenants
+          Gestión de tenants
         </p>
       }
       accion={
@@ -48,10 +48,10 @@ export function CafeteriasPage() {
         </Button>
       }
     >
-      {/* BÃºsqueda */}
+      {/* Búsqueda */}
       <input
         type="search"
-        placeholder="Buscar cafeterÃ­aâ€¦"
+        placeholder="Buscar cafeteríaâ€¦"
         value={busqueda}
         onChange={(e) => setBusqueda(e.target.value)}
         className="w-full rounded-2xl border border-outline-variant bg-surface-container-lowest px-4 py-2.5 text-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-2 focus:ring-primary-container"
@@ -67,7 +67,7 @@ export function CafeteriasPage() {
 
       {isError && (
         <p className="mt-4 rounded-2xl bg-error-container/40 p-4 text-body-sm text-on-error-container">
-          No se pudieron cargar las cafeterÃ­as. Intenta de nuevo.
+          No se pudieron cargar las cafeterías. Intenta de nuevo.
         </p>
       )}
 
@@ -77,7 +77,7 @@ export function CafeteriasPage() {
             <div className="flex flex-col items-center gap-3 py-10 text-center">
               <Buildings weight='light' className="h-10 w-10 text-on-surface-variant/40" aria-hidden />
               <p className="text-body-md text-on-surface-variant">
-                {busqueda ? "Sin resultados para esa bÃºsqueda" : "No hay cafeterÃ­as registradas"}
+                {busqueda ? "Sin resultados para esa búsqueda" : "No hay cafeterías registradas"}
               </p>
             </div>
           )}
@@ -130,4 +130,6 @@ function formatCurrencyLocal(n: number) {
   return formatCurrency(n);
 }
 void formatCurrencyLocal;
+
+
 

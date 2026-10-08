@@ -1,4 +1,4 @@
-import { CircleNotch } from "@phosphor-icons/react";
+﻿import { CircleNotch } from "@phosphor-icons/react";
 import { cn } from "@/lib/cn";
 
 /**
@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
  */
 export function Spinner({
   className,
-  label = "Cargando…",
+  label = "Cargandoâ€¦",
 }: {
   className?: string;
   label?: string;
@@ -22,3 +22,5 @@ export function Spinner({
     </span>
   );
 }
+
+

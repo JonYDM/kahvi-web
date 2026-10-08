@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 
 /** Devuelve el valor tras un retardo, para evitar disparar búsquedas en cada tecla. */
 export function useDebounce<T>(value: T, delay = 350): T {
@@ -9,3 +9,5 @@ export function useDebounce<T>(value: T, delay = 350): T {
   }, [value, delay]);
   return debounced;
 }
+
+

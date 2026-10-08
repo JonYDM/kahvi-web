@@ -1,4 +1,4 @@
-import toast from "react-hot-toast";
+﻿import toast from "react-hot-toast";
 
 /**
  * API de toasts estable de la app (envuelve react-hot-toast). Mantener esta
@@ -12,3 +12,5 @@ export function useToast() {
     mostrar: (mensaje: string) => toast(mensaje),
   };
 }
+
+

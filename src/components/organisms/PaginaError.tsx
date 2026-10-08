@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import { Button } from "@/components/ui";
 
 interface Props {
@@ -36,3 +36,5 @@ export function PaginaError({ codigo, titulo, descripcion, irA = "/", irATexto =
     </div>
   );
 }
+
+

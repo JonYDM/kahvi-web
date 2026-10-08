@@ -1,7 +1,7 @@
-import { useEffect, useRef, type ReactNode } from "react";
+﻿import { useEffect, useRef, type ReactNode } from "react";
 import anime from "animejs";
 
-/** ¿El usuario prefiere menos movimiento? (accesibilidad). */
+/** Â¿El usuario prefiere menos movimiento? (accesibilidad). */
 function reduceMotion(): boolean {
   return (
     typeof window !== "undefined" &&
@@ -71,3 +71,5 @@ export function Reveal({
     </div>
   );
 }
+
+

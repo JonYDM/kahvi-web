@@ -1,4 +1,4 @@
-import { type HTMLAttributes } from "react";
+﻿import { type HTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 
 /** Tarjeta base (Stitch): superficie blanca, borde outline-variant suave, radio 2xl. */
@@ -29,3 +29,5 @@ export function CardContent({ className, ...props }: HTMLAttributes<HTMLDivEleme
 export function CardFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("flex items-center gap-2 p-4 pt-0", className)} {...props} />;
 }
+
+

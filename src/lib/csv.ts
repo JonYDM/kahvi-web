@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Genera un CSV a partir de filas y dispara su descarga en el navegador.
  * Todo ocurre en el cliente (Blob), sin llamar al backend.
  */
@@ -31,3 +31,5 @@ export function descargarCsv(
   document.body.removeChild(enlace);
   URL.revokeObjectURL(url);
 }
+
+

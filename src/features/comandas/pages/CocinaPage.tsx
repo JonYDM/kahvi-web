@@ -119,7 +119,7 @@ function ComandaCard({
   })();
 
   const etiquetaBoton: Record<EstadoComanda, string> = {
-    Recibida: "â–¶ Iniciar preparaciÃ³n",
+    Recibida: "â–¶ Iniciar preparación",
     EnPreparacion: "âœ“ Marcar como lista",
     Lista: "âœ” Entregada",
     Entregada: "",
@@ -140,7 +140,7 @@ function ComandaCard({
       {/* Cabecera */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          {/* NÃºmero de folio destacado */}
+          {/* Número de folio destacado */}
           <span
             className={cn(
               "grid h-10 w-10 shrink-0 place-items-center rounded-xl text-label-lg font-black",
@@ -189,12 +189,12 @@ function ComandaCard({
         </div>
       </div>
 
-      {/* Ãtems */}
+      {/* Àtems */}
       <ul className="flex flex-col gap-1.5 rounded-xl bg-white/60 px-3 py-2.5">
         {comanda.items.map((item, i) => (
           <li key={i} className="flex items-start gap-2">
             <span className="shrink-0 min-w-[1.5rem] text-label-md font-black text-cafe-principal">
-              {item.cantidad}Ã—
+              {item.cantidad}À—
             </span>
             <div className="min-w-0 flex-1">
               <span className="text-label-md font-semibold text-cafe-intenso">{item.nombre}</span>
@@ -208,7 +208,7 @@ function ComandaCard({
         ))}
       </ul>
 
-      {/* AcciÃ³n */}
+      {/* Acción */}
       {comanda.estado !== "Entregada" && comanda.estado !== "Cancelada" && (
         <Button
           fullWidth
@@ -229,4 +229,6 @@ function ComandaCard({
     </div>
   );
 }
+
+
 

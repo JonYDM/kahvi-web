@@ -20,8 +20,8 @@ interface Props {
 }
 
 /**
- * Detalle del usuario con sus datos reales (= UsuarioDetalleDto): usuario copiable, telÃ©fono,
- * CURP enmascarada y veterinaria. Desde aquÃ­ se editan los datos (mismo formulario que el
+ * Detalle del usuario con sus datos reales (= UsuarioDetalleDto): usuario copiable, teléfono,
+ * CURP enmascarada y veterinaria. Desde aquí se editan los datos (mismo formulario que el
  * alta), se resetea el PIN y se activa/desactiva.
  */
 export function DetalleUsuarioDrawer({ open, onClose, usuarioId, veterinariaNombre, onResetearPin }: Props) {
@@ -102,7 +102,7 @@ export function DetalleUsuarioDrawer({ open, onClose, usuarioId, veterinariaNomb
 
           {/* Datos */}
           <dl className="divide-y divide-outline-variant/20 rounded-2xl bg-surface-container px-4">
-            <Fila icon={<Phone weight='light' className="h-4 w-4" aria-hidden />} label="TelÃ©fono" valor={u.telefono} />
+            <Fila icon={<Phone weight='light' className="h-4 w-4" aria-hidden />} label="Teléfono" valor={u.telefono} />
             <Fila icon={<File weight='light' className="h-4 w-4" aria-hidden />} label="CURP" valor={u.curpEnmascarada} vacio="No capturada" />
             {veterinariaNombre && (
               <Fila icon={<Buildings weight='light' className="h-4 w-4" aria-hidden />} label="Veterinaria" valor={veterinariaNombre} />
@@ -113,7 +113,7 @@ export function DetalleUsuarioDrawer({ open, onClose, usuarioId, veterinariaNomb
           {!u.apellidoPaterno && (
             <p className="flex items-start gap-2 rounded-xl bg-warning/10 px-4 py-3 text-body-sm text-[#B45309]">
               <Warning weight='light' className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-              Faltan apellidos y telÃ©fono. ComplÃ©talos en "Editar datos".
+              Faltan apellidos y teléfono. Complétalos en "Editar datos".
             </p>
           )}
 
@@ -161,7 +161,7 @@ function Fila({ icon, label, valor, vacio = "Sin capturar" }: { icon: ReactNode;
   );
 }
 
-/** EdiciÃ³n en 2 pasos (libre): nombre y apellidos â†’ telÃ©fono y CURP. El usuario de login no cambia. */
+/** Edición en 2 pasos (libre): nombre y apellidos â†’ teléfono y CURP. El usuario de login no cambia. */
 function EditarDatos({ usuario, onListo }: { usuario: UsuarioDetalle; onListo: () => void }) {
   const editar = useEditarDatosUsuario();
   const [datos, setDatos] = useState<DatosPersonales>({
@@ -228,7 +228,7 @@ function EditarDatos({ usuario, onListo }: { usuario: UsuarioDetalle; onListo: (
                 accionCurp={accionCurp}
               />
               {quitarCurp && (
-                <p className="text-body-sm text-[#B45309]">La CURP se quitarÃ¡ al guardar.</p>
+                <p className="text-body-sm text-[#B45309]">La CURP se quitará al guardar.</p>
               )}
               {error && (
                 <p role="alert" className="rounded-xl bg-error-container/60 px-4 py-3 text-body-sm font-medium text-on-error-container">
@@ -242,5 +242,7 @@ function EditarDatos({ usuario, onListo }: { usuario: UsuarioDetalle; onListo: (
     />
   );
 }
+
+
 
 

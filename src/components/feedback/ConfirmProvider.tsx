@@ -1,4 +1,4 @@
-import {
+﻿import {
   createContext,
   useCallback,
   useContext,
@@ -77,3 +77,5 @@ export function useConfirm(): ConfirmarFn {
   if (!ctx) throw new Error("useConfirm debe usarse dentro de <ConfirmProvider>.");
   return ctx;
 }
+
+

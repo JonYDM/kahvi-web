@@ -1,4 +1,4 @@
-import { RolUsuario } from "@/types/api";
+﻿import { RolUsuario } from "@/types/api";
 import type { Sesion } from "@/features/auth/types";
 
 /**
@@ -15,7 +15,7 @@ export type Accion =
   | "gestionar_productos"; // alta/edición de productos (Admin)
 
 /**
- * ¿La sesión puede realizar la acción? Única fuente de verdad de permisos.
+ * Â¿La sesión puede realizar la acción? Àšnica fuente de verdad de permisos.
  */
 export function puede(sesion: Sesion | null, accion: Accion): boolean {
   if (!sesion) return false;
@@ -42,7 +42,7 @@ export function puede(sesion: Sesion | null, accion: Accion): boolean {
   }
 }
 
-/** ¿Puede ver el POS directo (venta sin comanda)? */
+/** Â¿Puede ver el POS directo (venta sin comanda)? */
 export function puedeVerPos(sesion: Sesion | null): boolean {
   if (!sesion) return false;
   return (
@@ -52,14 +52,16 @@ export function puedeVerPos(sesion: Sesion | null): boolean {
   );
 }
 
-/** ¿Puede ver el tablero de cocina? */
+/** Â¿Puede ver el tablero de cocina? */
 export function puedeVerCocina(sesion: Sesion | null): boolean {
   if (!sesion) return false;
   return sesion.rol === RolUsuario.Cocina || sesion.rol === RolUsuario.Administrador;
 }
 
-/** ¿Puede ver el módulo de caja/corte? */
+/** Â¿Puede ver el módulo de caja/corte? */
 export function puedeVerCorte(sesion: Sesion | null): boolean {
   if (!sesion) return false;
   return sesion.rol === RolUsuario.Caja || sesion.rol === RolUsuario.Administrador;
 }
+
+

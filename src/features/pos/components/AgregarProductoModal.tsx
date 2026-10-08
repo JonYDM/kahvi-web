@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+﻿import { useState, type FormEvent } from "react";
 import { Button, Input, Modal, Select } from "@/components/ui";
 import { ApiError } from "@/lib/http";
 import { useCategorias } from "@/features/categorias";
@@ -118,3 +118,5 @@ export function AgregarProductoModal({ open, onClose }: Props) {
     </Modal>
   );
 }
+
+

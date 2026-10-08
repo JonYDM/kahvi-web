@@ -70,7 +70,7 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
       await navigator.clipboard.writeText(creado.nombreUsuario);
       toast.exito("Usuario copiado");
     } catch {
-      toast.error("No se pudo copiar; anÃ³talo a mano.");
+      toast.error("No se pudo copiar; anótalo a mano.");
     }
   }
 
@@ -122,7 +122,7 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
             maxLength={6}
             value={pin}
             onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
-            hint="6 dÃ­gitos. Si lo olvida, se le puede resetear."
+            hint="6 dígitos. Si lo olvida, se le puede resetear."
             required
           />
           {error && (
@@ -145,7 +145,7 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
           <div className="space-y-1">
             <p className="text-headline-sm font-bold text-on-surface">{creado.nombreCompleto}</p>
             <p className="text-body-md text-on-surface-variant">
-              EntrÃ©gale su usuario y el PIN que capturaste para que entre a Kahvi.
+              Entrégale su usuario y el PIN que capturaste para que entre a Kahvi.
             </p>
           </div>
           <div className="flex w-full items-center gap-3 rounded-2xl bg-primary-container/10 p-4 text-left">
@@ -172,5 +172,7 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
     </Drawer>
   );
 }
+
+
 
 

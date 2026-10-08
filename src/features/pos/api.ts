@@ -1,4 +1,4 @@
-import { http } from "@/lib/http";
+﻿import { http } from "@/lib/http";
 import type {
   AgregarProductoRequest,
   Producto,
@@ -71,3 +71,5 @@ export function desactivarProducto(productoId: string): Promise<unknown> {
 export function activarProducto(productoId: string): Promise<unknown> {
   return http.post(`/api/productos/${productoId}/activar`);
 }
+
+

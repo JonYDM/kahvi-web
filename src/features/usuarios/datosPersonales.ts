@@ -1,7 +1,7 @@
-/** Formato oficial de CURP (18 caracteres; sexo H, M o X). Igual que en el backend. */
+﻿/** Formato oficial de CURP (18 caracteres; sexo H, M o X). Igual que en el backend. */
 export const PATRON_CURP = /^[A-Z]{4}\d{6}[HMX][A-Z]{5}[A-Z0-9]\d$/;
 
-/** Minúsculas, sin acentos (ñ→n) y solo letras. Espejo de GeneradorNombreUsuario del backend. */
+/** Minúsculas, sin acentos (ñâ†’n) y solo letras. Espejo de GeneradorNombreUsuario del backend. */
 function limpiar(texto: string): string {
   return texto.trim().toLowerCase().normalize("NFD").replace(/[^a-z]/g, "");
 }
@@ -33,3 +33,5 @@ export const DATOS_VACIOS: DatosPersonales = { nombre: "", paterno: "", materno:
 export const curpInvalida = (curp: string) => curp.length > 0 && !PATRON_CURP.test(curp);
 export const nombreValido = (d: DatosPersonales) => d.nombre.trim().length > 0 && d.paterno.trim().length > 0;
 export const contactoValido = (d: DatosPersonales) => d.telefono.length === 10 && !curpInvalida(d.curp);
+
+

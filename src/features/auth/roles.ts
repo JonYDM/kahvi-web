@@ -1,4 +1,4 @@
-import { RolUsuario } from "@/types/api";
+﻿import { RolUsuario } from "@/types/api";
 
 /** Ruta "home" a la que se redirige cada rol tras iniciar sesión. */
 export function rutaInicialPorRol(rol: RolUsuario): string {
@@ -17,3 +17,5 @@ export function rutaInicialPorRol(rol: RolUsuario): string {
       return "/app";
   }
 }
+
+

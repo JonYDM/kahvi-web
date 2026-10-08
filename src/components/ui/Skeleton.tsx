@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+﻿import { cn } from "@/lib/cn";
 
 /** Placeholder de carga con shimmer sobre surface-container. */
 export function Skeleton({ className }: { className?: string }) {
@@ -17,3 +17,5 @@ export function SkeletonFila() {
     </div>
   );
 }
+
+

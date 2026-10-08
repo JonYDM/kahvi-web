@@ -1,4 +1,4 @@
-import { http } from "@/lib/http";
+﻿import { http } from "@/lib/http";
 import type { CategoriaDto } from "@/types/api";
 
 /** Lista todas las categorías de la cafetería (extraída del token por el backend). */
@@ -23,3 +23,5 @@ export function editarCategoria(
 export function eliminarCategoria(id: string): Promise<void> {
   return http.delete<void>(`/api/categorias/${id}`);
 }
+
+

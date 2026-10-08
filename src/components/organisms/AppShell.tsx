@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from "react";
+﻿import { type ReactNode, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Check, CaretDown, Key, SignOut, MapPin, DotsThreeOutline } from "@phosphor-icons/react";
 import { cn } from "@/lib/cn";
@@ -64,7 +64,7 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
 
   return (
     <div className="min-h-dvh bg-gradient-to-b from-[#FDFAF6] via-[#FAF5EE] to-[#F0E8DC]">
-      {/* HEADER — transparente para que el degradado sea continuo */}
+      {/* HEADER â€” transparente para que el degradado sea continuo */}
       <header
         className="fixed inset-x-0 top-0 z-40 backdrop-blur-md"
         style={{
@@ -112,7 +112,7 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
         {children}
       </main>
 
-      {/* BOTTOM-NAV — flotante */}
+      {/* BOTTOM-NAV â€” flotante */}
       <nav aria-label="Navegación principal" className="fixed inset-x-4 bottom-4 z-40"
         style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}
       >
@@ -133,7 +133,7 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
               >
                 {({ isActive }) =>
                   esInicio ? (
-                    /* Botón central elevado — sobresale del nav como app nativa */
+                    /* Botón central elevado â€” sobresale del nav como app nativa */
                     <span className="-mt-5 flex flex-col items-center gap-1">
                       <span
                         className={cn(
@@ -209,10 +209,10 @@ function VitoPopover() {
           <div className="absolute left-0 top-full z-50 mt-2 w-52 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-3 text-center shadow-lift">
             <img src="/vito.png" alt="Vito" className="mx-auto h-14 w-14 object-contain" />
             <p className="mt-1 font-marca text-base font-extrabold text-cafe-intenso">
-              ¡{saludoPorHora()}!
+              Â¡{saludoPorHora()}!
             </p>
             <p className="mt-0.5 text-body-sm leading-snug text-on-surface-variant">
-              Soy Vito, ¡qué gusto verte!
+              Soy Vito, Â¡qué gusto verte!
             </p>
           </div>
         </>
@@ -409,3 +409,5 @@ function PerfilMenu({
     </div>
   );
 }
+
+

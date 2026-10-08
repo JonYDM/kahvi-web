@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+﻿import { Outlet } from "react-router-dom";
 import { AppShell } from "@/components/organisms/AppShell";
 import { navCaja } from "@/app/navigation";
 
@@ -10,3 +10,5 @@ export function CajaLayout() {
     </AppShell>
   );
 }
+
+

@@ -44,7 +44,7 @@ function sugerenciasEfectivo(total: number): number[] {
 function descargarCSV(ventas: ReturnType<typeof useVentas>["data"]) {
   if (!ventas || ventas.length === 0) return;
   const fecha = new Date().toISOString().slice(0, 10);
-  const encabezado = "Folio,Hora,Productos,MÃ©todo,Total\n";
+  const encabezado = "Folio,Hora,Productos,Método,Total\n";
   const filas = ventas
     .slice()
     .sort((a, b) => new Date(a.fechaHora).getTime() - new Date(b.fechaHora).getTime())
@@ -184,7 +184,7 @@ function Cobrar({
         </span>
         <p className="mt-5 text-lg text-cafe-intenso/60">No hay pedidos por cobrar.</p>
         <p className="text-sm text-cafe-intenso/40">
-          Cuando cocina marque un pedido como listo, aparecerÃ¡ aquÃ­.
+          Cuando cocina marque un pedido como listo, aparecerá aquí.
         </p>
       </div>
     );
@@ -262,7 +262,7 @@ function ComandaCobro({
         {c.items.map((it, i) => (
           <li key={i} className="flex justify-between">
             <span>
-              {it.cantidad}Ã— {it.nombre}
+              {it.cantidad}À— {it.nombre}
             </span>
             <span>{formatCurrency(it.precioUnitario * it.cantidad)}</span>
           </li>
@@ -319,7 +319,7 @@ function ComandaCobro({
               }}
               className="text-xs text-cafe-intenso/50 hover:text-cafe-intenso"
             >
-              Cambiar mÃ©todo
+              Cambiar método
             </button>
           </div>
 
@@ -343,7 +343,7 @@ function ComandaCobro({
           {/* Input monto recibido */}
           <label className="mt-3 block">
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-cafe-intenso/50">
-              Con cuÃ¡nto paga
+              Con cuánto paga
             </span>
             <input
               value={recibido}
@@ -419,7 +419,7 @@ function Corte() {
 
   return (
     <div className="space-y-8">
-      {/* Tarjeta total del dÃ­a */}
+      {/* Tarjeta total del día */}
       <div className="rounded-3xl bg-cafe-intenso p-8 text-crema shadow-sm">
         <p className="text-sm text-crema/70">Vendido hoy</p>
         <p className="mt-1 text-5xl font-bold tracking-tight">
@@ -469,7 +469,7 @@ function Corte() {
           </div>
         ) : ventasOrdenadas.length === 0 ? (
           <p className="py-8 text-center text-sm text-cafe-intenso/45">
-            AÃºn no hay ventas hoy.
+            Aún no hay ventas hoy.
           </p>
         ) : (
           <div className="divide-y divide-cafe-intenso/5 rounded-2xl bg-white/70 px-5 shadow-sm">
@@ -504,5 +504,7 @@ function Corte() {
     </div>
   );
 }
+
+
 
 

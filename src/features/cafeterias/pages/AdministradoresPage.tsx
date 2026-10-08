@@ -13,7 +13,7 @@ export function AdministradoresPage() {
       subtitulo={
         <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
           <Users weight='light' className="h-4 w-4 text-primary-container" aria-hidden />
-          Admins de todas las cafeterÃ­as
+          Admins de todas las cafeterías
         </p>
       }
     >
@@ -66,4 +66,6 @@ export function AdministradoresPage() {
     </PantallaConHeader>
   );
 }
+
+
 

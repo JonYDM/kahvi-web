@@ -48,7 +48,7 @@ export function HistorialVentasPage() {
       v.lineas.map((l) => `${l.cantidad}x ${l.nombreProducto}`).join(" | "),
       v.total,
     ]);
-    descargarCsv(`ventas-${mes}.csv`, ["Fecha", "MÃ©todo", "Productos", "Total (MXN)"], filas);
+    descargarCsv(`ventas-${mes}.csv`, ["Fecha", "Método", "Productos", "Total (MXN)"], filas);
   }
 
   return (
@@ -85,7 +85,7 @@ export function HistorialVentasPage() {
           </span>
         </label>
 
-        {/* Resumen del perÃ­odo */}
+        {/* Resumen del período */}
         {resumen && (
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2 flex items-center justify-between rounded-2xl bg-primary-container p-4 text-on-primary shadow-soft">
@@ -103,12 +103,12 @@ export function HistorialVentasPage() {
                 <Package weight='light' className="h-5 w-5 text-on-surface-variant" aria-hidden />
               </span>
               <span className="tabular mt-1 text-label-lg font-bold leading-none text-on-surface">{resumen.numeroVentas}</span>
-              <span className="text-body-sm text-on-surface-variant">NÃºmero de ventas</span>
+              <span className="text-body-sm text-on-surface-variant">Número de ventas</span>
             </div>
           </div>
         )}
 
-        {/* Chips de mÃ©todo */}
+        {/* Chips de método */}
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {[
             { valor: null, label: "Todos" },
@@ -168,7 +168,7 @@ export function HistorialVentasPage() {
                   <ul className="flex flex-col gap-1 rounded-xl bg-surface-container-low px-3 py-2.5">
                     {v.lineas.map((l, i) => (
                       <li key={i} className="flex justify-between gap-2 text-body-md">
-                        <span className="min-w-0 truncate text-on-surface">{l.cantidad}Ã— {l.nombreProducto}</span>
+                        <span className="min-w-0 truncate text-on-surface">{l.cantidad}À— {l.nombreProducto}</span>
                         <span className="tabular shrink-0 text-on-surface-variant">{formatCurrency(l.subtotal)}</span>
                       </li>
                     ))}
@@ -179,10 +179,10 @@ export function HistorialVentasPage() {
           </div>
         ) : (
           <EmptyState
-            titulo={metodo !== null ? "Sin ventas con ese mÃ©todo" : "Sin ventas"}
+            titulo={metodo !== null ? "Sin ventas con ese método" : "Sin ventas"}
             descripcion={
               metodo !== null
-                ? "No hay ventas con ese mÃ©todo de pago en el mes."
+                ? "No hay ventas con ese método de pago en el mes."
                 : "No hay ventas registradas en el mes seleccionado."
             }
           />
@@ -215,4 +215,6 @@ function ResumenChip({
     </div>
   );
 }
+
+
 

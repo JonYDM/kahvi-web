@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+﻿import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { crearCategoria, editarCategoria, eliminarCategoria, getCategorias } from "./api";
 
 const KEY = ["categorias"] as const;
@@ -44,3 +44,5 @@ export function useEliminarCategoria() {
     },
   });
 }
+
+

@@ -1,4 +1,4 @@
-import { type HTMLAttributes } from "react";
+﻿import { type HTMLAttributes } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/cn";
 
@@ -31,3 +31,5 @@ export interface BadgeProps
 export function Badge({ className, tone, size, ...props }: BadgeProps) {
   return <span className={cn(badgeVariants({ tone, size }), className)} {...props} />;
 }
+
+

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+﻿import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   activarCafeteria,
   crearAdmin,
@@ -77,3 +77,5 @@ export function useCrearAdmin() {
     },
   });
 }
+
+

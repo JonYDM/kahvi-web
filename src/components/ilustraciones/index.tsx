@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+﻿import { cn } from "@/lib/cn";
 
 /**
  * Ilustraciones vectoriales propias (SVG), sin dependencias ni equipo gráfico.
@@ -55,3 +55,5 @@ export function MascotaVacio({ className }: { className?: string }) {
     </svg>
   );
 }
+
+

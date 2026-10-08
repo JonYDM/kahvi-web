@@ -1,4 +1,4 @@
-import { http, ApiError } from "@/lib/http";
+﻿import { http, ApiError } from "@/lib/http";
 import type { LoginRequest, LoginResponse } from "@/types/api";
 
 /** Llama al endpoint público de login. */
@@ -34,3 +34,5 @@ export async function identificar(nombreUsuario: string): Promise<IdentificarRes
     throw e;
   }
 }
+
+

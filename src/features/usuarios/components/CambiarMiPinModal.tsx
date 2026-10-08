@@ -1,4 +1,4 @@
-import { CheckExito } from "@/components/feedback/CheckExito";
+﻿import { CheckExito } from "@/components/feedback/CheckExito";
 import { useState } from "react";
 import { Button, Modal } from "@/components/ui";
 import { PinInput } from "@/components/molecules/PinInput";
@@ -86,3 +86,5 @@ export function CambiarMiPinModal({ open, onClose }: Props) {
     </Modal>
   );
 }
+
+

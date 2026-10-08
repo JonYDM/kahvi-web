@@ -1,2 +1,4 @@
-export { PosPage } from "./pages/PosPage";
+﻿export { PosPage } from "./pages/PosPage";
 export { HistorialVentasPage } from "./pages/HistorialVentasPage";
+
+

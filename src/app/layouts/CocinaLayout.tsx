@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+﻿import { Outlet } from "react-router-dom";
 import { AppShell } from "@/components/organisms/AppShell";
 import { navCocina } from "@/app/navigation";
 
@@ -10,3 +10,5 @@ export function CocinaLayout() {
     </AppShell>
   );
 }
+
+
