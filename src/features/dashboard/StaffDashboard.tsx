@@ -40,22 +40,13 @@ export function StaffDashboard() {
       }
       accion={
         <img
-          src="/vito.png"
-          alt="Vito"
+          src="/dashboard-hero.png"
+          alt="Kahvi"
           className="-my-3 h-16 w-16 shrink-0 object-contain drop-shadow-sm"
         />
       }
     >
       <div className="flex flex-col gap-6">
-        {/* Hero image — granos de café */}
-        <div className="flex justify-center">
-          <img
-            src="/dashboard-hero.png"
-            alt="Granos de café Kahvi"
-            className="h-36 w-36 object-contain drop-shadow-sm"
-          />
-        </div>
-
         {/* Acciones rápidas */}
         <div className="grid grid-cols-2 gap-2.5">
           <AccionRapida
