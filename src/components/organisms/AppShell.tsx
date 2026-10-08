@@ -63,7 +63,7 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
   const { titulo, subtitulo, accion } = useHeaderTitulo();
 
   return (
-    <div className="min-h-dvh bg-crema">
+    <div className="min-h-dvh bg-gradient-to-b from-white via-[#FAF6F0] to-[#F0E8DC]">
       {/* HEADER */}
       <header
         className="fixed inset-x-0 top-0 z-40 bg-crema/95 backdrop-blur-sm border-b border-outline-variant/30"
@@ -92,7 +92,7 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
 
       {/* MAIN */}
       <main
-        className="mx-auto w-[90%] max-w-2xl pb-28"
+        className="mx-auto w-[90%] max-w-2xl pb-32"
         style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 4.5rem)" }}
       >
         {(subtitulo || accion || titulo) && (
@@ -109,13 +109,14 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
         {children}
       </main>
 
-      {/* BOTTOM-NAV */}
-      <nav aria-label="Navegación principal" className="fixed inset-x-0 bottom-0 z-40">
+      {/* BOTTOM-NAV — flotante */}
+      <nav aria-label="Navegación principal" className="fixed inset-x-4 bottom-4 z-40"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}
+      >
         <div
-          className="flex items-center justify-around gap-1 rounded-t-3xl border-t border-cafe-principal/15 bg-surface-nav px-2 pt-2 backdrop-blur-xl"
+          className="flex items-center justify-around gap-1 rounded-2xl bg-[#FAF6F0]/95 px-2 py-2 backdrop-blur-xl"
           style={{
-            paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)",
-            boxShadow: "0 -8px 24px -12px rgba(43,31,25,0.18)",
+            boxShadow: "0 4px 24px -4px rgba(43,31,25,0.14), 0 1px 4px -1px rgba(43,31,25,0.08), inset 0 1px 0 rgba(255,255,255,0.8)",
           }}
         >
           {primarios.map((item) => {
