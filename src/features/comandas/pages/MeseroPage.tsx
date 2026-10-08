@@ -5,6 +5,7 @@ import {
   Check,
   Minus,
   Package,
+  PencilSimple,
   Plus,
   MagnifyingGlass,
   ShoppingBag,
@@ -471,7 +472,7 @@ export function MeseroPage() {
                         }}
                         className="mt-2 flex items-center gap-1.5 text-body-sm text-on-surface-variant hover:text-on-surface"
                       >
-                        <span className="text-xs">âœï¸</span>
+                        <PencilSimple weight="light" className="h-3.5 w-3.5" />
                         {l.nota
                           ? <span className="italic text-primary-container">"{l.nota}"</span>
                           : <span>Agregar nota</span>}
@@ -713,7 +714,7 @@ function ConfirmacionExito({
         <Check weight='light' className="h-12 w-12" strokeWidth={3} aria-hidden />
       </span>
 
-      <h2 className="mt-6 text-headline-md font-bold text-on-surface">Â¡Pedido confirmado!</h2>
+      <h2 className="mt-6 text-headline-md font-bold text-on-surface">¡Pedido confirmado!</h2>
       <p className="mt-1 text-body-md text-on-surface-variant">
         {folio ? `Comanda #${folio} enviada a cocina` : "Comanda enviada a cocina"}
       </p>
