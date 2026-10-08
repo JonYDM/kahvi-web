@@ -695,10 +695,13 @@ function ConfirmacionExito({
 
   return (
     <section className="mx-auto flex max-w-sm flex-col items-center py-12 text-center" aria-live="polite">
-      {/* Check animado */}
-      <span className="flex h-24 w-24 items-center justify-center rounded-full bg-primary-container/20 text-primary-container shadow-soft">
-        <Check weight='light' className="h-12 w-12" strokeWidth={3} aria-hidden />
-      </span>
+      {/* Imagen de confirmación */}
+      <img
+        src="/confirmed.webp"
+        alt=""
+        aria-hidden
+        className="h-40 w-40 object-contain drop-shadow-sm"
+      />
 
       <h2 className="mt-6 text-headline-md font-bold text-on-surface">¡Pedido confirmado!</h2>
       <p className="mt-1 text-body-md text-on-surface-variant">
