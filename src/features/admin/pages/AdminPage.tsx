@@ -155,7 +155,7 @@ function Resumen() {
                   {i + 1}
                 </span>
                 <span className="flex-1 text-sm text-cafe-intenso">{p.nombre}</span>
-                <span className="text-sm font-bold text-verde-menta">À—{p.cantidad}</span>
+                <span className="text-sm font-bold text-verde-menta">x{p.cantidad}</span>
               </div>
             ))}
           </div>
@@ -345,7 +345,7 @@ function Platillos() {
         <h2 className="text-lg font-bold text-cafe-intenso">
           Menú ({lista.length})
         </h2>
-        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar platilloâ€¦" />
+        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar platillo..." />
 
         {isLoading ? (
           <div className="space-y-2">
@@ -361,7 +361,7 @@ function Platillos() {
                 <div key={p.id} className="flex items-center gap-3 py-4">
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-cafe-intenso truncate">{p.nombre}</p>
-                    <p className="text-xs text-cafe-intenso/45">{cat?.nombre ?? "â€”"}</p>
+                    <p className="text-xs text-cafe-intenso/45">{cat?.nombre ?? "-"}</p>
                   </div>
                   <span className="text-sm font-bold text-verde-menta">
                     {formatCurrency(p.precio)}
@@ -456,7 +456,7 @@ function Categorias() {
         <h2 className="text-lg font-bold text-cafe-intenso">
           Categorías ({lista.length})
         </h2>
-        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar categoríaâ€¦" />
+        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar categoria..." />
 
         {isLoading ? (
           <div className="space-y-2">
@@ -657,7 +657,7 @@ function Personal() {
         <h2 className="text-lg font-bold text-cafe-intenso">
           Personal ({lista.length})
         </h2>
-        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar por nombre o rolâ€¦" />
+        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar por nombre o rol..." />
 
         {isLoading ? (
           <div className="space-y-2">

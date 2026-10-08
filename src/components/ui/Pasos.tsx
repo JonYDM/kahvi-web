@@ -14,15 +14,15 @@ interface PasosProps {
   pasos: Paso[];
   /** Se llama al confirmar el último paso. Debe devolver una promesa (guardado). */
   onFinalizar: () => Promise<void> | void;
-  /** Se llama tras mostrar "Â¡Listo!" (para cerrar el drawer). */
+  /** Se llama tras mostrar "¡Listo!" (para cerrar el drawer). */
   onCompletado?: () => void;
-  /** True mientras se guarda (muestra el estado "Guardandoâ€¦"). */
+  /** True mientras se guarda (muestra el estado "Guardando..."). */
   guardando?: boolean;
   /** Texto del botón final (por defecto "Guardar"). */
   textoFinal?: string;
-  /** Mensaje mientras guarda (por defecto "Guardandoâ€¦"). */
+  /** Mensaje mientras guarda (por defecto "Guardando..."). */
   textoGuardando?: string;
-  /** Mensaje de éxito (por defecto "Â¡Listo!"). */
+  /** Mensaje de éxito (por defecto "¡Listo!"). */
   textoCompletado?: string;
   /**
    * Si true (ej. edición), se puede tocar cualquier paso del indicador para saltar
@@ -36,7 +36,7 @@ interface PasosProps {
 /**
  * Wizard de pasos para formularios cortos dentro del Drawer: cada paso muestra pocos
  * campos, con indicador de progreso (clicable), navegación Atrás/Continuar y un estado
- * animado de "Guardandoâ€¦" al finalizar. Mantiene los formularios breves.
+ * animado de "Guardando..." al finalizar. Mantiene los formularios breves.
  */
 export function Pasos({
   pasos,
@@ -44,8 +44,8 @@ export function Pasos({
   onCompletado,
   guardando = false,
   textoFinal = "Guardar",
-  textoGuardando = "Guardandoâ€¦",
-  textoCompletado = "Â¡Listo!",
+  textoGuardando = "Guardando...",
+  textoCompletado = "¡Listo!",
   libre = false,
   pasoInicial = 0,
 }: PasosProps) {
@@ -84,7 +84,7 @@ export function Pasos({
     }
   }
 
-  // Estado de proceso tipo Nubank/Mercado Pago: Guardandoâ€¦ â†’ Â¡Listo!
+  // Estado de proceso tipo Nubank/Mercado Pago: Guardando... â†’ ¡Listo!
   if (fase === "guardando" || guardando) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">

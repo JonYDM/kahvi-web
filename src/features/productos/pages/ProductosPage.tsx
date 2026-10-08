@@ -115,7 +115,7 @@ export function ProductosPage() {
   async function handleDesactivar(p: Producto) {
     // Confirmación antes de desactivar (no antes de reactivar)
     if (p.activo) {
-      const ok = window.confirm(`Â¿Desactivar "${p.nombre}"? No aparecerá en el menú.`);
+      const ok = window.confirm(`¿Desactivar "${p.nombre}"? No aparecerá en el menú.`);
       if (!ok) return;
     }
     try {
@@ -280,7 +280,7 @@ export function ProductosPage() {
         <form key={`${drawer.modo}-${drawer.producto?.id ?? 'nuevo'}`} onSubmit={enviar} className="space-y-4">
           <Input
             label="Nombre"
-            placeholder="Ej: Latte, Chilaquilesâ€¦"
+            placeholder="Ej: Latte, Chilaquiles..."
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             required
@@ -297,7 +297,7 @@ export function ProductosPage() {
               required
               className="h-12 w-full rounded-xl border border-outline-variant/60 bg-surface-container-lowest px-3 text-body-md text-on-surface outline-none focus:border-primary-container"
             >
-              <option value="" disabled>Selecciona una categoríaâ€¦</option>
+              <option value="" disabled>Selecciona una categoría...</option>
               {categorias.map((c: CategoriaDto) => (
                 <option key={c.id} value={c.id}>{c.nombre}</option>
               ))}

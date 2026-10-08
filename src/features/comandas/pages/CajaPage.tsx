@@ -251,7 +251,7 @@ function ComandaCobro({
         <span className="rounded-full bg-white/70 px-2.5 py-0.5 text-xs font-semibold text-cafe-intenso">
           {c.esParaLlevar
             ? c.nombreCliente
-              ? `Para llevar Â· ${c.nombreCliente}`
+              ? `Para llevar \u00B7 ${c.nombreCliente}`
               : "Para llevar"
             : c.mesa}
         </span>
@@ -262,7 +262,7 @@ function ComandaCobro({
         {c.items.map((it, i) => (
           <li key={i} className="flex justify-between">
             <span>
-              {it.cantidad}À— {it.nombre}
+              {it.cantidad}\u00D7 {it.nombre}
             </span>
             <span>{formatCurrency(it.precioUnitario * it.cantidad)}</span>
           </li>
@@ -489,7 +489,7 @@ function Corte() {
                       </span>
                     </p>
                     <p className="text-xs text-cafe-intenso/45">
-                      {numProductos} productos Â· {metodoLabel(v.metodoPago)}
+                      {numProductos} productos \u00B7 {metodoLabel(v.metodoPago)}
                     </p>
                   </div>
                   <span className="text-sm font-bold text-cafe-intenso">
