@@ -63,11 +63,14 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
   const { titulo, subtitulo, accion } = useHeaderTitulo();
 
   return (
-    <div className="min-h-dvh bg-gradient-to-b from-white via-[#FAF6F0] to-[#F0E8DC]">
-      {/* HEADER */}
+    <div className="min-h-dvh bg-gradient-to-b from-[#FDFAF6] via-[#FAF5EE] to-[#F0E8DC]">
+      {/* HEADER — transparente para que el degradado sea continuo */}
       <header
-        className="fixed inset-x-0 top-0 z-40 bg-crema/95 backdrop-blur-sm border-b border-outline-variant/30"
-        style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+        className="fixed inset-x-0 top-0 z-40 backdrop-blur-md"
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          background: "linear-gradient(to bottom, rgba(253,250,246,0.92) 0%, rgba(253,250,246,0) 100%)",
+        }}
       >
         <div className="mx-auto w-[90%] max-w-2xl">
           <div className="flex h-14 items-center justify-between gap-3">
