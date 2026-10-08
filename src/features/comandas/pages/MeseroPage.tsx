@@ -502,17 +502,14 @@ export function MeseroPage() {
           style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 6.5rem)" }}
         >
           <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
-            {paso > 0 ? (
-              <button
-                onClick={() => irA((paso - 1) as Paso)}
-                aria-label="Paso anterior"
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-surface-container-low text-on-surface shadow-soft transition-transform active:scale-90"
-              >
-                <ArrowLeft weight='light' className="h-5 w-5" />
-              </button>
-            ) : (
-              <div className="w-12 shrink-0" />
-            )}
+            <button
+              onClick={() => paso > 0 && irA((paso - 1) as Paso)}
+              disabled={paso === 0}
+              aria-label="Paso anterior"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-surface-container-low text-on-surface shadow-soft transition-transform active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ArrowLeft weight='light' className="h-5 w-5" />
+            </button>
 
             {/* Resumen del ticket */}
             <div className="flex-1 min-w-0">
