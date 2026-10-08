@@ -2,6 +2,14 @@
   command = "npm run build"
   publish = "dist"
 
+# Proxy /api → backend Kahvi en Railway.
+# Esto evita CORS: el frontend llama a /api/... y Netlify lo redirige al backend.
+[[redirects]]
+  from = "/api/*"
+  to = "https://kahvi-api-production-2819.up.railway.app/api/:splat"
+  status = 200
+  force = true
+
 # SPA: todas las rutas caen en index.html (React Router las resuelve en cliente).
 [[redirects]]
   from = "/*"
