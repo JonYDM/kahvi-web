@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent, type DragEvent } from "react";
 import { Edit2, GripVertical, Plus, Trash2 } from "lucide-react";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
@@ -28,7 +28,7 @@ const DRAWER_CERRADO: EstadoDrawer = { abierto: false, modo: "crear", categoria:
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
-/** Gestión CRUD de categorías de productos. Solo Administrador. */
+/** Gestión CRUD de categorías con drag-and-drop para reordenar. Solo Administrador. */
 export function CategoriasPage() {
   const { data: categorias, isLoading, isError } = useCategorias();
   const crear = useCrearCategoria();
@@ -37,24 +37,30 @@ export function CategoriasPage() {
   const toast = useToast();
 
   const [drawer, setDrawer] = useState<EstadoDrawer>(DRAWER_CERRADO);
-
-  // Formulario del drawer
   const [nombre, setNombre] = useState("");
-  const [orden, setOrden] = useState("");
   const [errorForm, setErrorForm] = useState<string | null>(null);
 
-  const ordenadas = [...(categorias ?? [])].sort((a, b) => a.orden - b.orden);
+  // Estado local del orden mientras se arrastra (para preview inmediato)
+  const [ordenLocal, setOrdenLocal] = useState<CategoriaDto[] | null>(null);
+
+  // Refs para drag-and-drop
+  const draggingId = useRef<string | null>(null);
+  const dragOverId = useRef<string | null>(null);
+
+  // La lista que se muestra: orden local (durante drag) o del servidor
+  const ordenadas = ordenLocal
+    ?? [...(categorias ?? [])].sort((a, b) => a.orden - b.orden);
+
+  // ─── Drawer ────────────────────────────────────────────────────────────────
 
   function abrirCrear() {
     setNombre("");
-    setOrden(String((categorias?.length ?? 0) + 1));
     setErrorForm(null);
     setDrawer({ abierto: true, modo: "crear", categoria: null });
   }
 
   function abrirEditar(cat: CategoriaDto) {
     setNombre(cat.nombre);
-    setOrden(String(cat.orden));
     setErrorForm(null);
     setDrawer({ abierto: true, modo: "editar", categoria: cat });
   }
@@ -67,42 +73,96 @@ export function CategoriasPage() {
   async function enviar(e: FormEvent) {
     e.preventDefault();
     setErrorForm(null);
-    const data = { nombre: nombre.trim(), orden: Number(orden) };
 
-    if (!data.nombre) {
+    if (!nombre.trim()) {
       setErrorForm("El nombre es obligatorio.");
-      return;
-    }
-    if (isNaN(data.orden) || data.orden < 0) {
-      setErrorForm("El orden debe ser un número ≥ 0.");
       return;
     }
 
     try {
       if (drawer.modo === "crear") {
-        await crear.mutateAsync(data);
+        // El orden nuevo es el siguiente al último
+        const siguienteOrden = ordenadas.length + 1;
+        await crear.mutateAsync({ nombre: nombre.trim(), orden: siguienteOrden });
         toast.exito("Categoría creada.");
       } else if (drawer.categoria) {
-        await editar.mutateAsync({ id: drawer.categoria.id, data });
+        // Conserva el mismo orden, solo cambia el nombre
+        await editar.mutateAsync({
+          id: drawer.categoria.id,
+          data: { nombre: nombre.trim(), orden: drawer.categoria.orden },
+        });
         toast.exito("Categoría actualizada.");
       }
       cerrar();
     } catch (err) {
-      setErrorForm(
-        err instanceof ApiError ? err.message : "No se pudo guardar la categoría.",
-      );
+      setErrorForm(err instanceof ApiError ? err.message : "No se pudo guardar la categoría.");
     }
   }
 
   async function handleEliminar(cat: CategoriaDto) {
     try {
       await eliminar.mutateAsync(cat.id);
+      setOrdenLocal(null); // limpiar orden local tras eliminar
       toast.exito(`Categoría "${cat.nombre}" eliminada.`);
     } catch (err) {
-      toast.error(
-        err instanceof ApiError ? err.message : "No se pudo eliminar la categoría.",
-      );
+      toast.error(err instanceof ApiError ? err.message : "No se pudo eliminar la categoría.");
     }
+  }
+
+  // ─── Drag-and-drop ──────────────────────────────────────────────────────────
+
+  function onDragStart(e: DragEvent, id: string) {
+    draggingId.current = id;
+    e.dataTransfer.effectAllowed = "move";
+    // Opacidad en el elemento arrastrado via class (se añade en el render)
+  }
+
+  function onDragOver(e: DragEvent, id: string) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (dragOverId.current === id || draggingId.current === id) return;
+    dragOverId.current = id;
+
+    // Preview inmediato: reordena la lista local
+    const lista = [...ordenadas];
+    const fromIdx = lista.findIndex((c) => c.id === draggingId.current);
+    const toIdx = lista.findIndex((c) => c.id === id);
+    if (fromIdx === -1 || toIdx === -1) return;
+
+    const [movido] = lista.splice(fromIdx, 1);
+    lista.splice(toIdx, 0, movido);
+    // Re-asigna números de orden correlativos
+    setOrdenLocal(lista.map((c, i) => ({ ...c, orden: i + 1 })));
+  }
+
+  async function onDrop() {
+    draggingId.current = null;
+    dragOverId.current = null;
+    if (!ordenLocal) return;
+
+    // Guarda el nuevo orden en el backend — solo las que cambiaron
+    const original = [...(categorias ?? [])].sort((a, b) => a.orden - b.orden);
+    const cambiadas = ordenLocal.filter((c, i) => c.id !== original[i]?.id || c.orden !== original[i]?.orden);
+
+    if (cambiadas.length === 0) { setOrdenLocal(null); return; }
+
+    try {
+      await Promise.all(
+        cambiadas.map((c) =>
+          editar.mutateAsync({ id: c.id, data: { nombre: c.nombre, orden: c.orden } }),
+        ),
+      );
+      toast.exito("Orden guardado.");
+    } catch {
+      toast.error("No se pudo guardar el nuevo orden.");
+      setOrdenLocal(null); // revertir al orden del servidor
+    }
+  }
+
+  function onDragEnd() {
+    // Si se soltó fuera de un drop target válido, revertir
+    draggingId.current = null;
+    dragOverId.current = null;
   }
 
   const isPending = crear.isPending || editar.isPending;
@@ -141,28 +201,32 @@ export function CategoriasPage() {
       )}
 
       {!isLoading && !isError && ordenadas.length > 0 && (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-2" onDrop={onDrop} onDragOver={(e) => e.preventDefault()}>
           {ordenadas.map((cat) => (
             <CategoriaFila
               key={cat.id}
               categoria={cat}
+              dragging={draggingId.current === cat.id}
               onEditar={() => abrirEditar(cat)}
               onEliminar={() => handleEliminar(cat)}
               eliminando={eliminar.isPending}
+              onDragStart={(e) => onDragStart(e, cat.id)}
+              onDragOver={(e) => onDragOver(e, cat.id)}
+              onDragEnd={onDragEnd}
             />
           ))}
         </ul>
       )}
 
-      {/* Drawer de crear/editar */}
+      {/* Drawer crear/editar — sin campo de orden (lo gestiona el drag) */}
       <Drawer
         open={drawer.abierto}
         onClose={cerrar}
         title={drawer.modo === "crear" ? "Nueva categoría" : "Editar categoría"}
         descripcion={
           drawer.modo === "crear"
-            ? "Ingresa el nombre y el orden de visualización."
-            : "Modifica el nombre o el orden."
+            ? "Ingresa el nombre de la categoría."
+            : "Modifica el nombre de la categoría."
         }
       >
         <form onSubmit={enviar} className="space-y-4">
@@ -174,22 +238,9 @@ export function CategoriasPage() {
             required
             autoFocus
           />
-          <Input
-            label="Orden"
-            type="number"
-            min="0"
-            step="1"
-            placeholder="1"
-            value={orden}
-            onChange={(e) => setOrden(e.target.value)}
-            required
-          />
 
           {errorForm && (
-            <p
-              role="alert"
-              className="rounded-xl bg-error-container/60 px-4 py-3 text-body-sm font-medium text-on-error-container"
-            >
+            <p role="alert" className="rounded-xl bg-error-container/60 px-4 py-3 text-body-sm font-medium text-on-error-container">
               {errorForm}
             </p>
           )}
@@ -208,28 +259,45 @@ export function CategoriasPage() {
   );
 }
 
-// ─── Fila de categoría ────────────────────────────────────────────────────────
+// ─── Fila de categoría con drag-and-drop ──────────────────────────────────────
 
 function CategoriaFila({
   categoria,
+  dragging,
   onEditar,
   onEliminar,
   eliminando,
+  onDragStart,
+  onDragOver,
+  onDragEnd,
 }: {
   categoria: CategoriaDto;
+  dragging: boolean;
   onEditar: () => void;
   onEliminar: () => void;
   eliminando: boolean;
+  onDragStart: (e: DragEvent<HTMLLIElement>) => void;
+  onDragOver: (e: DragEvent<HTMLLIElement>) => void;
+  onDragEnd: () => void;
 }) {
   return (
     <li
+      draggable
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDragEnd={onDragEnd}
       className={cn(
         "flex items-center gap-3 rounded-2xl border border-outline-variant/40",
         "bg-surface-container-lowest px-4 py-3 shadow-soft",
+        "transition-all duration-150",
+        dragging ? "opacity-40 scale-[0.98] border-primary-container" : "cursor-grab active:cursor-grabbing",
       )}
     >
-      {/* Icono de orden/drag (visual únicamente) */}
-      <span className="shrink-0 text-on-surface-variant/40" aria-hidden>
+      {/* Handle de drag */}
+      <span
+        className="shrink-0 cursor-grab touch-none text-on-surface-variant/40 active:cursor-grabbing"
+        aria-hidden
+      >
         <GripVertical className="h-5 w-5" />
       </span>
 
