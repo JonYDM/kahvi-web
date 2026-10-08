@@ -150,6 +150,37 @@ export function ProductosPage() {
         )}
       </div>
 
+      {/* Chips de categoría — siempre visibles */}
+      {categorias.length > 0 && (
+        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <button
+            onClick={() => setFiltroCat(null)}
+            className={cn(
+              "shrink-0 rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+              filtroCat === null
+                ? "bg-primary-container text-on-primary"
+                : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
+            )}
+          >
+            Todos
+          </button>
+          {[...(categorias ?? [])].sort((a, b) => a.orden - b.orden).map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setFiltroCat(cat.id === filtroCat ? null : cat.id)}
+              className={cn(
+                "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+                filtroCat === cat.id
+                  ? "bg-primary-container text-on-primary"
+                  : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
+              )}
+            >
+              {cat.nombre}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Estados de carga y error */}
       {isLoading && (
         <div className="flex flex-col gap-3">
@@ -178,37 +209,6 @@ export function ProductosPage() {
               ? `No encontramos "${busqueda}" en el menú.`
               : "Toca el botón + para agregar el primer producto."}
           </p>
-        </div>
-      )}
-
-      {/* Chips de categoría */}
-      {!isLoading && !isError && categorias.length > 0 && (
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <button
-            onClick={() => setFiltroCat(null)}
-            className={cn(
-              "shrink-0 rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
-              filtroCat === null
-                ? "bg-primary-container text-on-primary"
-                : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
-            )}
-          >
-            Todos
-          </button>
-          {[...(categorias ?? [])].sort((a, b) => a.orden - b.orden).map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setFiltroCat(cat.id === filtroCat ? null : cat.id)}
-              className={cn(
-                "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
-                filtroCat === cat.id
-                  ? "bg-primary-container text-on-primary"
-                  : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
-              )}
-            >
-              {cat.nombre}
-            </button>
-          ))}
         </div>
       )}
 
