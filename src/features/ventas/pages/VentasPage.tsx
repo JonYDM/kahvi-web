@@ -98,6 +98,14 @@ export function VentasPage() {
           {resumen ? "Este mes" : "Registradas"}
         </p>
       }
+      accion={
+        <img
+          src="/sale.png"
+          alt=""
+          aria-hidden
+          className="-my-3 h-16 w-16 shrink-0 object-contain drop-shadow-sm"
+        />
+      }
     >
       <div className="flex flex-col gap-6">
 
