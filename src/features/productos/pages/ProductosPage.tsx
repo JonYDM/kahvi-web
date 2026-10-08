@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from "react";
 import { Edit2, GripVertical, Plus, Search, Trash2, X } from "lucide-react";
-import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Button, Drawer, Input, SkeletonFila } from "@/components/ui";
 import { useToast } from "@/components/feedback/useToast";
@@ -162,14 +161,21 @@ export function ProductosPage() {
       )}
 
       {!isLoading && !isError && lista.length === 0 && (
-        <EmptyState
-          titulo={busqueda ? "Sin resultados" : "Sin productos"}
-          descripcion={
-            busqueda
-              ? `No hay productos para "${busqueda}".`
-              : "Toca el botón + para agregar el primer producto del menú."
-          }
-        />
+        <div className="flex flex-col items-center py-10 text-center">
+          <img
+            src="/spil.png"
+            alt="No hay productos"
+            className="h-40 w-40 object-contain"
+          />
+          <p className="mt-4 text-label-lg font-semibold text-on-surface">
+            {busqueda ? "Sin resultados" : "Aún no hay productos"}
+          </p>
+          <p className="mt-1 text-body-sm text-on-surface-variant">
+            {busqueda
+              ? `No encontramos "${busqueda}" en el menú.`
+              : "Toca el botón + para agregar el primer producto."}
+          </p>
+        </div>
       )}
 
       {/* Lista de productos */}

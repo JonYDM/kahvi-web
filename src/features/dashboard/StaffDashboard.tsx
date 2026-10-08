@@ -47,6 +47,15 @@ export function StaffDashboard() {
       }
     >
       <div className="flex flex-col gap-6">
+        {/* Hero image — granos de café */}
+        <div className="flex justify-center">
+          <img
+            src="/dashboard-hero.png"
+            alt="Granos de café Kahvi"
+            className="h-36 w-36 object-contain drop-shadow-sm"
+          />
+        </div>
+
         {/* Acciones rápidas */}
         <div className="grid grid-cols-2 gap-2.5">
           <AccionRapida
