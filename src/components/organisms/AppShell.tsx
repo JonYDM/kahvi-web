@@ -130,16 +130,29 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
               >
                 {({ isActive }) =>
                   esInicio ? (
-                    <span
-                      className={cn(
-                        "flex flex-col items-center gap-0.5 rounded-full px-3 py-1 text-[9px] font-bold transition-colors",
-                        isActive
-                          ? "bg-primary-container text-on-primary shadow-primary-glow"
-                          : "text-primary-container",
-                      )}
-                    >
-                      <item.icon className="h-[20px] w-[20px]" aria-hidden />
-                      <span>{item.label}</span>
+                    /* Botón central elevado — sobresale del nav como app nativa */
+                    <span className="-mt-5 flex flex-col items-center gap-1">
+                      <span
+                        className={cn(
+                          "flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                          isActive
+                            ? "bg-cafe-intenso text-crema scale-110"
+                            : "bg-cafe-intenso text-crema",
+                        )}
+                        style={{
+                          boxShadow: isActive
+                            ? "0 8px 24px -4px rgba(43,31,25,0.45), 0 2px 8px -2px rgba(43,31,25,0.25)"
+                            : "0 4px 16px -4px rgba(43,31,25,0.30), 0 2px 6px -2px rgba(43,31,25,0.15)",
+                        }}
+                      >
+                        <item.icon className="h-6 w-6" aria-hidden />
+                      </span>
+                      <span className={cn(
+                        "text-[9px] font-bold transition-colors",
+                        isActive ? "text-cafe-intenso" : "text-on-surface-variant",
+                      )}>
+                        {item.label}
+                      </span>
                     </span>
                   ) : (
                     <span
