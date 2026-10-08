@@ -47,6 +47,9 @@ const CajaLayout = lazy(() =>
 const StaffDashboard = lazy(() =>
   import("@/features/dashboard/StaffDashboard").then((m) => ({ default: m.StaffDashboard })),
 );
+const AdminPage = lazy(() =>
+  import("@/features/admin").then((m) => ({ default: m.AdminPage })),
+);
 const PosPage = lazy(() =>
   import("@/features/pos").then((m) => ({ default: m.PosPage })),
 );
@@ -127,6 +130,7 @@ const router = createBrowserRouter([
     element: <Protegida roles={STAFF_ROLES}><StaffLayout /></Protegida>,
     children: [
       { index: true, element: <StaffDashboard /> },
+      { path: "admin", element: <AdminPage /> },
       { path: "pos", element: <PosPage /> },
       {
         path: "ventas",

@@ -4,6 +4,7 @@ import {
   Coffee,
   Home,
   Receipt,
+  Settings,
   ShoppingCart,
   Tag,
   UserCog,
@@ -31,12 +32,13 @@ export interface NavItem {
 
 /**
  * Navegación del Administrador (/app/*).
- * Barra inferior: Inicio · POS (ventas directas).
- * Menú "Más": Historial de ventas · Equipo · Categorías.
+ * Barra inferior: Inicio · Gestión (AdminPage con tabs).
+ * Menú "Más": POS · Historial · Equipo · Categorías (mantenidos para backward compat).
  */
 export const navStaff: NavItem[] = [
-  { to: "/app/pos", label: "Ventas", icon: ShoppingCart, permiso: "usar_pos" },
   { to: "/app", label: "Inicio", icon: Home, permiso: null },
+  { to: "/app/admin", label: "Gestión", icon: Settings, permiso: "gestionar_productos" },
+  { to: "/app/pos", label: "Ventas", icon: ShoppingCart, permiso: "usar_pos", secundario: true },
   { to: "/app/ventas", label: "Historial", icon: Receipt, permiso: "ver_metricas", secundario: true },
   { to: "/app/equipo", label: "Equipo", icon: UserCog, permiso: "gestionar_equipo", secundario: true },
   { to: "/app/categorias", label: "Categorías", icon: Tag, permiso: "gestionar_productos", secundario: true },
