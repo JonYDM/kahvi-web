@@ -1,4 +1,4 @@
-import { Users } from "lucide-react";
+﻿import { Users } from "@phosphor-icons/react";
 import { SkeletonFila } from "@/components/ui";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { useAdministradores } from "@/features/usuarios/hooks";
@@ -12,8 +12,8 @@ export function AdministradoresPage() {
       titulo="Administradores"
       subtitulo={
         <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
-          <Users className="h-4 w-4 text-primary-container" aria-hidden />
-          Admins de todas las cafeterías
+          <Users weight='light' className="h-4 w-4 text-primary-container" aria-hidden />
+          Admins de todas las cafeterÃ­as
         </p>
       }
     >
@@ -31,7 +31,7 @@ export function AdministradoresPage() {
 
       {admins && admins.length === 0 && (
         <div className="flex flex-col items-center gap-3 py-10 text-center">
-          <Users className="h-10 w-10 text-on-surface-variant/40" aria-hidden />
+          <Users weight='light' className="h-10 w-10 text-on-surface-variant/40" aria-hidden />
           <p className="text-body-md text-on-surface-variant">No hay administradores registrados</p>
         </div>
       )}
@@ -66,3 +66,4 @@ export function AdministradoresPage() {
     </PantallaConHeader>
   );
 }
+

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { LogOut, KeyRound } from "lucide-react";
+import { SignOut, Key } from "@phosphor-icons/react";
 import { useAuth } from "@/features/auth";
 import { rolLabel } from "@/lib/enums";
 import { Avatar } from "@/components/ui";
@@ -64,7 +64,7 @@ export function EstacionLayout() {
                     onClick={() => { setPinAbierto(true); setMenuAbierto(false); }}
                     className="flex w-full items-center gap-2.5 px-4 py-3 text-body-sm text-on-surface hover:bg-surface-container transition-colors"
                   >
-                    <KeyRound className="h-4 w-4 text-on-surface-variant" />
+                    <Key weight='light' className="h-4 w-4 text-on-surface-variant" />
                     Cambiar PIN
                   </button>
                   <div className="border-t border-outline-variant/20" />
@@ -72,7 +72,7 @@ export function EstacionLayout() {
                     onClick={() => { cerrarSesion(); setMenuAbierto(false); }}
                     className="flex w-full items-center gap-2.5 px-4 py-3 text-body-sm text-error-st hover:bg-error-container/20 transition-colors"
                   >
-                    <LogOut className="h-4 w-4" />
+                    <SignOut weight='light' className="h-4 w-4" />
                     Cerrar sesión
                   </button>
                 </div>

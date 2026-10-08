@@ -1,5 +1,5 @@
-import { useState, type FormEvent } from "react";
-import { Edit2, Plus, Search, Trash2, X } from "lucide-react";
+﻿import { useState, type FormEvent } from "react";
+import { PencilSimple, Plus, MagnifyingGlass, Trash, X } from "@phosphor-icons/react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Button, Drawer, Input, SkeletonFila } from "@/components/ui";
 import { useToast } from "@/components/feedback/useToast";
@@ -16,7 +16,7 @@ import {
 import { useCategorias } from "@/features/categorias/hooks";
 import type { Producto, CategoriaDto } from "@/types/api";
 
-// ─── Tipos del drawer ────────────────────────────────────────────────────────
+// â”€â”€â”€ Tipos del drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 type ModoDrawer = "crear" | "editar";
 
@@ -28,9 +28,9 @@ interface EstadoDrawer {
 
 const DRAWER_CERRADO: EstadoDrawer = { abierto: false, modo: "crear", producto: null };
 
-// ─── Componente principal ────────────────────────────────────────────────────
+// â”€â”€â”€ Componente principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-/** Gestión CRUD de productos del menú. Solo Administrador. */
+/** GestiÃ³n CRUD de productos del menÃº. Solo Administrador. */
 export function ProductosPage() {
   const { data: productos, isLoading, isError } = useCatalogoTodos();
   const { data: categorias = [] } = useCategorias();
@@ -96,7 +96,7 @@ export function ProductosPage() {
 
     if (!nombre.trim()) { setErrorForm("El nombre es obligatorio."); return; }
     if (isNaN(precioNum) || precioNum <= 0) { setErrorForm("El precio debe ser mayor que cero."); return; }
-    if (!catId) { setErrorForm("Selecciona una categoría."); return; }
+    if (!catId) { setErrorForm("Selecciona una categorÃ­a."); return; }
 
     try {
       if (drawer.modo === "crear") {
@@ -113,9 +113,9 @@ export function ProductosPage() {
   }
 
   async function handleDesactivar(p: Producto) {
-    // Confirmación antes de desactivar (no antes de reactivar)
+    // ConfirmaciÃ³n antes de desactivar (no antes de reactivar)
     if (p.activo) {
-      const ok = window.confirm(`¿Desactivar "${p.nombre}"? No aparecerá en el menú.`);
+      const ok = window.confirm(`Â¿Desactivar "${p.nombre}"? No aparecerÃ¡ en el menÃº.`);
       if (!ok) return;
     }
     try {
@@ -143,31 +143,31 @@ export function ProductosPage() {
       }
       accion={
         <Button size="icon" onClick={abrirCrear} aria-label="Nuevo producto">
-          <Plus className="h-5 w-5" aria-hidden />
+          <Plus weight='light' className="h-5 w-5" aria-hidden />
         </Button>
       }
     >
       {/* Buscador */}
       <div className="relative mb-4">
-        <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" aria-hidden />
+        <MagnifyingGlass weight='light' className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" aria-hidden />
         <input
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
-          placeholder="Buscar producto…"
+          placeholder="Buscar productoâ€¦"
           className="w-full rounded-2xl border border-outline-variant/40 bg-surface-container-lowest py-3 pl-11 pr-10 text-body-md text-on-surface shadow-soft outline-none placeholder:text-on-surface-variant/50 focus:border-primary-container"
         />
         {busqueda && (
           <button
             onClick={() => setBusqueda("")}
-            aria-label="Limpiar búsqueda"
+            aria-label="Limpiar bÃºsqueda"
             className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container"
           >
-            <X className="h-4 w-4" />
+            <X weight='light' className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      {/* Chips de categoría — siempre visibles */}
+      {/* Chips de categorÃ­a â€” siempre visibles */}
       {categorias.length > 0 && (
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <button
@@ -233,12 +233,12 @@ export function ProductosPage() {
             className="h-40 w-40 object-contain"
           />
           <p className="mt-4 text-label-lg font-semibold text-on-surface">
-            {busqueda ? "Sin resultados" : "Aún no hay productos"}
+            {busqueda ? "Sin resultados" : "AÃºn no hay productos"}
           </p>
           <p className="mt-1 text-body-sm text-on-surface-variant">
             {busqueda
-              ? `No encontramos "${busqueda}" en el menú.`
-              : "Toca el botón + para agregar el primer producto."}
+              ? `No encontramos "${busqueda}" en el menÃº.`
+              : "Toca el botÃ³n + para agregar el primer producto."}
           </p>
         </div>
       )}
@@ -280,7 +280,7 @@ export function ProductosPage() {
         <form key={`${drawer.modo}-${drawer.producto?.id ?? 'nuevo'}`} onSubmit={enviar} className="space-y-4">
           <Input
             label="Nombre"
-            placeholder="Ej: Latte, Chilaquiles…"
+            placeholder="Ej: Latte, Chilaquilesâ€¦"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             required
@@ -289,7 +289,7 @@ export function ProductosPage() {
 
           <div className="flex flex-col gap-1.5">
             <label className="text-label-sm font-semibold text-on-surface-variant">
-              Categoría
+              CategorÃ­a
             </label>
             <select
               value={categoriaId}
@@ -297,7 +297,7 @@ export function ProductosPage() {
               required
               className="h-12 w-full rounded-xl border border-outline-variant/60 bg-surface-container-lowest px-3 text-body-md text-on-surface outline-none focus:border-primary-container"
             >
-              <option value="" disabled>Selecciona una categoría…</option>
+              <option value="" disabled>Selecciona una categorÃ­aâ€¦</option>
               {categorias.map((c: CategoriaDto) => (
                 <option key={c.id} value={c.id}>{c.nombre}</option>
               ))}
@@ -346,7 +346,7 @@ export function ProductosPage() {
   );
 }
 
-// ─── Card de producto — editorial luxury ──────────────────────────────────────
+// â”€â”€â”€ Card de producto â€” editorial luxury â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function ProductoCard({
   producto: p,
@@ -364,7 +364,7 @@ function ProductoCard({
   desactivando: boolean;
 }) {
   return (
-    /* Outer shell — double-bezel */
+    /* Outer shell â€” double-bezel */
     <div
       className={cn(
         "group relative rounded-[1.25rem] p-[3px]",
@@ -380,9 +380,9 @@ function ProductoCard({
       {/* Inner core */}
       <div className="overflow-hidden rounded-[calc(1.25rem-3px)] bg-surface-container-lowest">
 
-        {/* Zona imagen — full bleed */}
+        {/* Zona imagen â€” full bleed */}
         <div className="relative h-[6.5rem] w-full overflow-hidden bg-[#F0EBE3]">
-          {/* Placeholder: gradiente cálido sutil */}
+          {/* Placeholder: gradiente cÃ¡lido sutil */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#EDE4D8] to-[#D9CFC3]" />
           {/* Shimmer decorativo */}
           <div className="absolute -left-8 top-3 h-16 w-16 rounded-full bg-white/30 blur-2xl" />
@@ -390,7 +390,7 @@ function ProductoCard({
 
         {/* Contenido */}
         <div className="px-3 pb-3 pt-2.5">
-          {/* Categoría — eyebrow tag */}
+          {/* CategorÃ­a â€” eyebrow tag */}
           {categoriaNombre && (
             <span className="mb-1.5 inline-block rounded-full bg-surface-container px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-on-surface-variant/70">
               {categoriaNombre}
@@ -438,7 +438,7 @@ function ProductoCard({
               aria-label={`Editar ${p.nombre}`}
               className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant/50 transition-all duration-200 hover:bg-surface-container hover:text-on-surface"
             >
-              <Edit2 className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
+              <PencilSimple weight='light' className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
             </button>
             <button
               onClick={onToggleActivo}
@@ -446,7 +446,7 @@ function ProductoCard({
               aria-label={`Desactivar ${p.nombre}`}
               className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant/50 transition-all duration-200 hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
             >
-              <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
+              <Trash weight='light' className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
             </button>
           </div>
         </div>
@@ -454,3 +454,4 @@ function ProductoCard({
     </div>
   );
 }
+

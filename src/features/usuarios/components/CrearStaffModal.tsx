@@ -1,4 +1,4 @@
-import { Coffee, ChefHat, Wallet } from "lucide-react";
+import { Coffee, ChefHat, Wallet } from "@phosphor-icons/react";
 import { RolUsuario } from "@/types/api";
 import { useCrearStaff } from "../hooks";
 import { AltaStaffDrawer, type OpcionRol } from "./AltaStaffDrawer";

@@ -1,17 +1,17 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Check,
   Package,
   Pencil,
-  PieChart,
+  ChartPie,
   Plus,
-  Search,
+  MagnifyingGlass,
   Tag,
-  Trash2,
+  Trash,
   User,
   Users,
   X,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { formatCurrency } from "@/lib/format";
 import { useMetricas, useResumenCajaHoy } from "@/features/dashboard/hooks";
 import { useCatalogo, useAgregarProducto, useEditarProducto, useDesactivarProducto } from "@/features/pos/hooks";
@@ -24,14 +24,14 @@ import { useStaff, useCrearStaff, useGestionarUsuario } from "@/features/usuario
 import { RolUsuario } from "@/types/api";
 import type { Producto, CategoriaDto, UsuarioDto } from "@/types/api";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 type Tab = "resumen" | "platillos" | "categorias" | "personal";
 
-const TABS: { id: Tab; label: string; icon: typeof PieChart }[] = [
-  { id: "resumen", label: "Resumen", icon: PieChart },
+const TABS: { id: Tab; label: string; icon: typeof ChartPie }[] = [
+  { id: "resumen", label: "Resumen", icon: ChartPie },
   { id: "platillos", label: "Platillos", icon: Package },
-  { id: "categorias", label: "Categorías", icon: Tag },
+  { id: "categorias", label: "CategorÃ­as", icon: Tag },
   { id: "personal", label: "Personal", icon: Users },
 ];
 
@@ -41,7 +41,7 @@ const ROL_LABELS: Record<number, string> = {
   [RolUsuario.Caja]: "Caja",
 };
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function AdminPage() {
   const [tab, setTab] = useState<Tab>("resumen");
@@ -62,7 +62,7 @@ export function AdminPage() {
                     : "text-cafe-intenso/60 hover:text-cafe-intenso"
                 }`}
               >
-                <Icon className="text-base" /> {label}
+                <Icon weight='light' className="text-base" /> {label}
               </button>
             ))}
           </div>
@@ -79,7 +79,7 @@ export function AdminPage() {
   );
 }
 
-// ─── Buscador reutilizable ────────────────────────────────────────────────────
+// â”€â”€â”€ Buscador reutilizable â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function Buscador({
   valor,
@@ -92,7 +92,7 @@ function Buscador({
 }) {
   return (
     <div className="relative">
-      <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cafe-intenso/40" />
+      <MagnifyingGlass weight='light' className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cafe-intenso/40" />
       <input
         value={valor}
         onChange={(e) => onChange(e.target.value)}
@@ -105,14 +105,14 @@ function Buscador({
           className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-cafe-intenso/40 hover:bg-cafe-principal/20 hover:text-cafe-intenso"
           aria-label="Limpiar"
         >
-          <X />
+          <X weight='light' />
         </button>
       )}
     </div>
   );
 }
 
-// ─── Resumen ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Resumen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function Resumen() {
   const { data: metricas, isLoading } = useMetricas();
@@ -147,7 +147,7 @@ function Resumen() {
       {/* Top productos */}
       {metricas?.topProductos && metricas.topProductos.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-lg font-bold text-cafe-intenso">Más vendidos hoy</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">MÃ¡s vendidos hoy</h2>
           <div className="divide-y divide-cafe-intenso/5 rounded-2xl bg-white/70 px-5 shadow-sm">
             {metricas.topProductos.slice(0, 6).map((p, i) => (
               <div key={p.nombre} className="flex items-center gap-3 py-4">
@@ -155,17 +155,17 @@ function Resumen() {
                   {i + 1}
                 </span>
                 <span className="flex-1 text-sm text-cafe-intenso">{p.nombre}</span>
-                <span className="text-sm font-bold text-verde-menta">×{p.cantidad}</span>
+                <span className="text-sm font-bold text-verde-menta">Ã—{p.cantidad}</span>
               </div>
             ))}
           </div>
         </section>
       )}
 
-      {/* Breakdown por método si hay datos */}
+      {/* Breakdown por mÃ©todo si hay datos */}
       {caja && (
         <section className="space-y-4">
-          <h2 className="text-lg font-bold text-cafe-intenso">Por método de pago</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">Por mÃ©todo de pago</h2>
           <div className="grid grid-cols-3 gap-3">
             {[
               { label: "Efectivo", valor: caja.efectivo },
@@ -198,7 +198,7 @@ function Metrica({ etiqueta, valor }: { etiqueta: string; valor: string }) {
   );
 }
 
-// ─── Platillos ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Platillos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function Platillos() {
   const { data: productos = [], isLoading } = useCatalogo();
@@ -325,7 +325,7 @@ function Platillos() {
               disabled={crearProducto.isPending || editarProducto.isPending}
               className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-cafe-intenso px-4 py-3 text-sm font-semibold text-crema transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-50"
             >
-              {editId ? <Check /> : <Plus />}
+              {editId ? <Check weight='light' /> : <Plus weight='light' />}
               {editId ? "Guardar cambios" : "Agregar platillo"}
             </button>
             {editId && (
@@ -333,7 +333,7 @@ function Platillos() {
                 onClick={cancelar}
                 className="flex items-center justify-center gap-2 rounded-2xl border border-cafe-intenso/20 px-4 py-3 text-sm font-semibold text-cafe-intenso transition-colors hover:bg-cafe-principal/10"
               >
-                <X /> Cancelar
+                <X weight='light' /> Cancelar
               </button>
             )}
           </div>
@@ -343,9 +343,9 @@ function Platillos() {
       {/* Lista */}
       <section className="space-y-3">
         <h2 className="text-lg font-bold text-cafe-intenso">
-          Menú ({lista.length})
+          MenÃº ({lista.length})
         </h2>
-        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar platillo…" />
+        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar platilloâ€¦" />
 
         {isLoading ? (
           <div className="space-y-2">
@@ -361,7 +361,7 @@ function Platillos() {
                 <div key={p.id} className="flex items-center gap-3 py-4">
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-cafe-intenso truncate">{p.nombre}</p>
-                    <p className="text-xs text-cafe-intenso/45">{cat?.nombre ?? "—"}</p>
+                    <p className="text-xs text-cafe-intenso/45">{cat?.nombre ?? "â€”"}</p>
                   </div>
                   <span className="text-sm font-bold text-verde-menta">
                     {formatCurrency(p.precio)}
@@ -381,14 +381,14 @@ function Platillos() {
                     className="flex h-9 w-9 items-center justify-center rounded-full text-cafe-intenso/45 hover:bg-cafe-principal/20 hover:text-cafe-intenso"
                     aria-label="Editar"
                   >
-                    <Pencil />
+                    <Pencil weight='light' />
                   </button>
                   <button
                     onClick={() => desactivarProducto.mutate(p.id)}
                     className="flex h-9 w-9 items-center justify-center rounded-full text-cafe-intenso/40 hover:bg-red-50 hover:text-red-500"
                     aria-label="Eliminar"
                   >
-                    <Trash2 />
+                    <Trash weight='light' />
                   </button>
                 </div>
               );
@@ -403,7 +403,7 @@ function Platillos() {
   );
 }
 
-// ─── Categorías ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ CategorÃ­as â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function Categorias() {
   const { data: categorias = [], isLoading } = useCategorias();
@@ -432,13 +432,13 @@ function Categorias() {
     <div className="space-y-8">
       {/* Formulario */}
       <div className="rounded-3xl bg-white/70 p-5 shadow-sm">
-        <h2 className="text-lg font-bold text-cafe-intenso">Nueva categoría</h2>
+        <h2 className="text-lg font-bold text-cafe-intenso">Nueva categorÃ­a</h2>
         <div className="mt-4 flex gap-3">
           <input
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && crear()}
-            placeholder="Ej. Panadería"
+            placeholder="Ej. PanaderÃ­a"
             className="flex-1 rounded-2xl border border-cafe-intenso/10 bg-white px-4 py-3 text-sm text-cafe-intenso shadow-sm outline-none placeholder:text-cafe-intenso/35 focus:border-verde-menta"
           />
           <button
@@ -446,7 +446,7 @@ function Categorias() {
             disabled={crearCategoria.isPending || !nombre.trim()}
             className="flex items-center gap-2 rounded-2xl bg-cafe-intenso px-4 py-3 text-sm font-semibold text-crema transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-50"
           >
-            <Plus /> Agregar
+            <Plus weight='light' /> Agregar
           </button>
         </div>
       </div>
@@ -454,9 +454,9 @@ function Categorias() {
       {/* Lista */}
       <section className="space-y-3">
         <h2 className="text-lg font-bold text-cafe-intenso">
-          Categorías ({lista.length})
+          CategorÃ­as ({lista.length})
         </h2>
-        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar categoría…" />
+        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar categorÃ­aâ€¦" />
 
         {isLoading ? (
           <div className="space-y-2">
@@ -481,7 +481,7 @@ function Categorias() {
                     title={usados > 0 ? "No se puede eliminar: tiene platillos" : "Eliminar"}
                     aria-label="Eliminar"
                   >
-                    <Trash2 />
+                    <Trash weight='light' />
                   </button>
                 </div>
               );
@@ -496,7 +496,7 @@ function Categorias() {
   );
 }
 
-// ─── Personal ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Personal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const ROLES_STAFF: { id: RolUsuario.Mesero | RolUsuario.Cocina | RolUsuario.Caja; label: string }[] = [
   { id: RolUsuario.Mesero, label: "Mesero" },
@@ -598,7 +598,7 @@ function Personal() {
               <input
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
-                placeholder="Teléfono"
+                placeholder="TelÃ©fono"
                 className="w-full rounded-2xl border border-cafe-intenso/10 bg-white px-4 py-3 text-sm text-cafe-intenso shadow-sm outline-none placeholder:text-cafe-intenso/35 focus:border-verde-menta"
               />
             </>
@@ -622,14 +622,14 @@ function Personal() {
               value={pin}
               onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
               inputMode="numeric"
-              placeholder="PIN (6 dígitos)"
+              placeholder="PIN (6 dÃ­gitos)"
               className={`flex-1 rounded-2xl border bg-white px-4 py-3 text-sm text-cafe-intenso shadow-sm outline-none placeholder:text-cafe-intenso/35 focus:border-verde-menta ${
                 pinInvalido ? "border-red-300" : "border-cafe-intenso/10"
               }`}
             />
           </div>
           {pinInvalido && (
-            <p className="text-xs text-red-500">El PIN debe ser de 6 dígitos.</p>
+            <p className="text-xs text-red-500">El PIN debe ser de 6 dÃ­gitos.</p>
           )}
           <div className="flex gap-2 pt-1">
             <button
@@ -637,7 +637,7 @@ function Personal() {
               disabled={crearStaff.isPending || gestionarUsuario.isPending}
               className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-cafe-intenso px-4 py-3 text-sm font-semibold text-crema transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-50"
             >
-              {editId ? <Check /> : <Plus />}
+              {editId ? <Check weight='light' /> : <Plus weight='light' />}
               {editId ? "Guardar cambios" : "Registrar integrante"}
             </button>
             {editId && (
@@ -645,7 +645,7 @@ function Personal() {
                 onClick={resetForm}
                 className="flex items-center justify-center gap-2 rounded-2xl border border-cafe-intenso/20 px-4 py-3 text-sm font-semibold text-cafe-intenso transition-colors hover:bg-cafe-principal/10"
               >
-                <X /> Cancelar
+                <X weight='light' /> Cancelar
               </button>
             )}
           </div>
@@ -657,7 +657,7 @@ function Personal() {
         <h2 className="text-lg font-bold text-cafe-intenso">
           Personal ({lista.length})
         </h2>
-        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar por nombre o rol…" />
+        <Buscador valor={busqueda} onChange={setBusqueda} placeholder="Buscar por nombre o rolâ€¦" />
 
         {isLoading ? (
           <div className="space-y-2">
@@ -672,7 +672,7 @@ function Personal() {
               return (
                 <div key={u.id} className="flex items-center gap-3 py-4">
                   <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-cafe-principal/20 text-cafe-intenso">
-                    <User />
+                    <User weight='light' />
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-cafe-intenso truncate">{u.nombre}</p>
@@ -683,7 +683,7 @@ function Personal() {
                     className="flex h-9 w-9 items-center justify-center rounded-full text-cafe-intenso/45 hover:bg-cafe-principal/20 hover:text-cafe-intenso"
                     aria-label="Editar"
                   >
-                    <Pencil />
+                    <Pencil weight='light' />
                   </button>
                 </div>
               );
@@ -697,4 +697,5 @@ function Personal() {
     </div>
   );
 }
+
 

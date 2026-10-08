@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -6,13 +6,13 @@ import {
   Minus,
   Package,
   Plus,
-  Search,
+  MagnifyingGlass,
   ShoppingBag,
-  StickyNote,
-  Store,
-  Trash2,
+  Note,
+  Storefront,
+  Trash,
   X,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Button, Input, SkeletonFila } from "@/components/ui";
@@ -26,7 +26,7 @@ import { formatCurrency } from "@/lib/format";
 import type { Producto } from "@/types/api";
 import { useEnviarComanda } from "../hooks";
 
-// ─── Tipos locales ──────────────────────────────────────────────────────────
+// â”€â”€â”€ Tipos locales â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 type Paso = 0 | 1 | 2 | 3;
 type TipoServicio = "mesa" | "llevar";
@@ -40,9 +40,9 @@ interface LineaCarrito {
   nota: string;
 }
 
-// ─── Componente principal ────────────────────────────────────────────────────
+// â”€â”€â”€ Componente principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-/** Pantalla del mesero con flujo en 4 pasos: Servicio → Productos → Revisar → Confirmación */
+/** Pantalla del mesero con flujo en 4 pasos: Servicio â†’ Productos â†’ Revisar â†’ ConfirmaciÃ³n */
 export function MeseroPage() {
   const { sesion } = useAuth();
   const { data: productos, isLoading, isError } = useCatalogo();
@@ -53,19 +53,19 @@ export function MeseroPage() {
   // Estado del flujo
   const [paso, setPaso] = useState<Paso>(0);
 
-  // Paso 0 — tipo de servicio
+  // Paso 0 â€” tipo de servicio
   const [tipo, setTipo] = useState<TipoServicio>("mesa");
   const [mesa, setMesa] = useState("1");
   const [nombreCliente, setNombreCliente] = useState("");
 
-  // Paso 1 — productos
+  // Paso 1 â€” productos
   const [categoriaId, setCategoriaId] = useState<string | null>(null);
   const [busqueda, setBusqueda] = useState("");
   const [carrito, setCarrito] = useState<Record<string, LineaCarrito>>({});
   const [editandoNota, setEditandoNota] = useState<string | null>(null);
   const [notaTemp, setNotaTemp] = useState("");
 
-  // Paso 3 — confirmación
+  // Paso 3 â€” confirmaciÃ³n
   const [folioConfirmado, setFolioConfirmado] = useState<number | null>(null);
 
   // Derivados
@@ -76,7 +76,7 @@ export function MeseroPage() {
     [lineas],
   );
 
-  // Categorías ordenadas para los chips
+  // CategorÃ­as ordenadas para los chips
   const categoriasOrdenadas = useMemo(
     () => [...(categorias ?? [])].sort((a, b) => a.orden - b.orden),
     [categorias],
@@ -94,7 +94,7 @@ export function MeseroPage() {
   // Texto de referencia de mesa para mostrar en la UI
   const refMesa = tipo === "llevar" ? "Para llevar" : `Mesa ${mesa}`;
 
-  // ─── Acciones del carrito ──────────────────────────────────────────────────
+  // â”€â”€â”€ Acciones del carrito â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   function agregar(p: Producto) {
     setCarrito((prev) => {
@@ -127,7 +127,7 @@ export function MeseroPage() {
     setEditandoNota(null);
   }
 
-  // ─── Envío ─────────────────────────────────────────────────────────────────
+  // â”€â”€â”€ EnvÃ­o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   async function confirmar() {
     if (lineas.length === 0 || enviarComanda.isPending) return;
@@ -145,10 +145,10 @@ export function MeseroPage() {
         esParaLlevar: tipo === "llevar",
         nombreCliente: tipo === "llevar" ? nombreCliente.trim() || null : null,
       });
-      // El backend devuelve { id } — el folio lo extraemos de las comandas activas,
-      // pero para la confirmación usamos un número derivado del id.
+      // El backend devuelve { id } â€” el folio lo extraemos de las comandas activas,
+      // pero para la confirmaciÃ³n usamos un nÃºmero derivado del id.
       // Como fallback, usamos un folio ficticio para mostrar al usuario.
-      setFolioConfirmado(null); // se mostrará el mensaje sin folio específico
+      setFolioConfirmado(null); // se mostrarÃ¡ el mensaje sin folio especÃ­fico
       void resp; // La data no tiene folio directo, solo id
       setPaso(3);
     } catch (err) {
@@ -168,7 +168,7 @@ export function MeseroPage() {
     setPaso(0);
   }
 
-  // ─── Validaciones por paso ─────────────────────────────────────────────────
+  // â”€â”€â”€ Validaciones por paso â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   function puedeAvanzar(): boolean {
     if (paso === 0) {
@@ -184,7 +184,7 @@ export function MeseroPage() {
     setPaso(destino);
   }
 
-  // ─── Render ────────────────────────────────────────────────────────────────
+  // â”€â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   return (
     <PantallaConHeader
@@ -197,10 +197,10 @@ export function MeseroPage() {
     >
       <div className="flex flex-col gap-4 pb-32">
 
-        {/* ══════════════════ PASO 0: TIPO DE SERVICIO ══════════════════════ */}
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 0: TIPO DE SERVICIO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 0 && (
           <section aria-label="Tipo de servicio">
-            <PasoTitulo icon={Store} titulo="¿Dónde es el pedido?" sub="Elige mesa o para llevar" />
+            <PasoTitulo icon={Storefront} titulo="Â¿DÃ³nde es el pedido?" sub="Elige mesa o para llevar" />
 
             {/* Selector Mesa / Para llevar */}
             <div className="mt-5 grid grid-cols-2 gap-3">
@@ -213,7 +213,7 @@ export function MeseroPage() {
                     : "border-outline-variant/40 bg-surface-container-lowest",
                 )}
               >
-                <Store
+                <Storefront
                   className={cn(
                     "h-7 w-7",
                     tipo === "mesa" ? "text-primary-container" : "text-on-surface-variant",
@@ -221,7 +221,7 @@ export function MeseroPage() {
                   aria-hidden
                 />
                 <p className="mt-3 text-label-lg font-bold text-on-surface">En mesa</p>
-                <p className="text-body-sm text-on-surface-variant">El cliente consume aquí</p>
+                <p className="text-body-sm text-on-surface-variant">El cliente consume aquÃ­</p>
               </button>
 
               <button
@@ -249,7 +249,7 @@ export function MeseroPage() {
             {tipo === "mesa" && (
               <div className="mt-5">
                 <p className="mb-2 text-label-md font-semibold text-on-surface-variant">
-                  Número de mesa
+                  NÃºmero de mesa
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {MESAS_RAPIDAS.map((n) => (
@@ -271,7 +271,7 @@ export function MeseroPage() {
                 <div className="mt-3">
                   <Input
                     label="Otra mesa"
-                    placeholder="Ej: Barra, Terraza, 9…"
+                    placeholder="Ej: Barra, Terraza, 9â€¦"
                     value={MESAS_RAPIDAS.includes(mesa) ? "" : mesa}
                     onChange={(e) => setMesa(e.target.value)}
                   />
@@ -284,7 +284,7 @@ export function MeseroPage() {
               <div className="mt-5">
                 <Input
                   label="Nombre del cliente (opcional)"
-                  placeholder="¿Cómo se llama?"
+                  placeholder="Â¿CÃ³mo se llama?"
                   value={nombreCliente}
                   onChange={(e) => setNombreCliente(e.target.value)}
                 />
@@ -293,9 +293,9 @@ export function MeseroPage() {
           </section>
         )}
 
-        {/* ══════════════════ PASO 1: PRODUCTOS ════════════════════════════ */}
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 1: PRODUCTOS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 1 && (
-          <section aria-label="Selección de productos">
+          <section aria-label="SelecciÃ³n de productos">
             <PasoTitulo
               icon={ShoppingBag}
               titulo="Agrega productos"
@@ -304,14 +304,14 @@ export function MeseroPage() {
 
             {/* Buscador */}
             <div className="relative mt-5">
-              <Search
+              <MagnifyingGlass
                 className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
                 aria-hidden
               />
               <Input
                 variant="soft"
                 aria-label="Buscar productos"
-                placeholder="Buscar producto…"
+                placeholder="Buscar productoâ€¦"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 className="h-12 pl-12"
@@ -319,15 +319,15 @@ export function MeseroPage() {
               {busqueda && (
                 <button
                   onClick={() => setBusqueda("")}
-                  aria-label="Limpiar búsqueda"
+                  aria-label="Limpiar bÃºsqueda"
                   className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container"
                 >
-                  <X className="h-4 w-4" />
+                  <X weight='light' className="h-4 w-4" />
                 </button>
               )}
             </div>
 
-            {/* Chips de categoría (se ocultan al buscar) */}
+            {/* Chips de categorÃ­a (se ocultan al buscar) */}
             {!busqueda.trim() && (
               <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <button
@@ -366,7 +366,7 @@ export function MeseroPage() {
                 </div>
               ) : isError ? (
                 <div className="rounded-2xl bg-surface-container-lowest p-8 text-center text-body-sm text-error-st shadow-soft">
-                  No se pudo cargar el catálogo.
+                  No se pudo cargar el catÃ¡logo.
                 </div>
               ) : visibles.length > 0 ? (
                 <div className="grid grid-cols-2 gap-3">
@@ -384,7 +384,7 @@ export function MeseroPage() {
                 <EmptyState
                   titulo="Sin resultados"
                   descripcion={
-                    busqueda ? `No hay productos para "${busqueda}".` : "No hay productos en esta categoría."
+                    busqueda ? `No hay productos para "${busqueda}".` : "No hay productos en esta categorÃ­a."
                   }
                 />
               )}
@@ -392,13 +392,13 @@ export function MeseroPage() {
           </section>
         )}
 
-        {/* ══════════════════ PASO 2: REVISAR ══════════════════════════════ */}
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 2: REVISAR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 2 && (
-          <section aria-label="Revisión del pedido">
+          <section aria-label="RevisiÃ³n del pedido">
             <PasoTitulo
-              icon={StickyNote}
+              icon={Note}
               titulo="Revisa el pedido"
-              sub={`${refMesa} · ${totalArticulos} producto${totalArticulos !== 1 ? "s" : ""}`}
+              sub={`${refMesa} Â· ${totalArticulos} producto${totalArticulos !== 1 ? "s" : ""}`}
             />
 
             {lineas.length === 0 ? (
@@ -425,7 +425,7 @@ export function MeseroPage() {
                           aria-label="Quitar uno"
                           className="grid h-9 w-9 place-items-center rounded-xl bg-surface-container text-on-surface-variant active:scale-90"
                         >
-                          <Minus className="h-4 w-4" />
+                          <Minus weight='light' className="h-4 w-4" />
                         </button>
                         <span className="w-6 text-center text-label-lg font-bold">{l.cantidad}</span>
                         <button
@@ -433,26 +433,26 @@ export function MeseroPage() {
                           aria-label="Agregar uno"
                           className="grid h-9 w-9 place-items-center rounded-xl bg-surface-container text-on-surface-variant active:scale-90"
                         >
-                          <Plus className="h-4 w-4" />
+                          <Plus weight='light' className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => quitar(l.producto.id) /* quitar hasta cero elimina */}
                           aria-label="Eliminar del carrito"
                           className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant hover:bg-error-container/40 hover:text-on-error-container active:scale-90"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash weight='light' className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
 
-                    {/* Nota del ítem */}
+                    {/* Nota del Ã­tem */}
                     {editandoNota === l.producto.id ? (
                       <div className="mt-3 flex gap-2">
                         <input
                           autoFocus
                           value={notaTemp}
                           onChange={(e) => setNotaTemp(e.target.value)}
-                          placeholder="Ej: sin azúcar, extra caliente…"
+                          placeholder="Ej: sin azÃºcar, extra calienteâ€¦"
                           className="flex-1 rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2 text-body-sm text-on-surface outline-none focus:border-primary-container"
                           onKeyDown={(e) => e.key === "Enter" && guardarNota()}
                         />
@@ -471,7 +471,7 @@ export function MeseroPage() {
                         }}
                         className="mt-2 flex items-center gap-1.5 text-body-sm text-on-surface-variant hover:text-on-surface"
                       >
-                        <span className="text-xs">✏️</span>
+                        <span className="text-xs">âœï¸</span>
                         {l.nota
                           ? <span className="italic text-primary-container">"{l.nota}"</span>
                           : <span>Agregar nota</span>}
@@ -484,7 +484,7 @@ export function MeseroPage() {
           </section>
         )}
 
-        {/* ══════════════════ PASO 3: CONFIRMACIÓN ═════════════════════════ */}
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 3: CONFIRMACIÃ“N â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 3 && (
           <ConfirmacionExito
             refMesa={refMesa}
@@ -496,7 +496,7 @@ export function MeseroPage() {
         )}
       </div>
 
-      {/* ══════════════════ BARRA DE NAVEGACIÓN FIJA ═════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• BARRA DE NAVEGACIÃ“N FIJA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {paso < 3 && (
         <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-outline-variant/20 bg-surface/95 backdrop-blur-sm">
           <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
@@ -506,7 +506,7 @@ export function MeseroPage() {
                 aria-label="Paso anterior"
                 className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-surface-container-low text-on-surface shadow-soft transition-transform active:scale-90"
               >
-                <ArrowLeft className="h-5 w-5" />
+                <ArrowLeft weight='light' className="h-5 w-5" />
               </button>
             ) : (
               <div className="w-12 shrink-0" />
@@ -517,10 +517,10 @@ export function MeseroPage() {
               <p className="text-body-sm text-on-surface-variant">{ETIQUETAS_PASO[paso]}</p>
               <p className="truncate text-label-lg font-bold text-on-surface">
                 {totalArticulos > 0
-                  ? `${totalArticulos} prod · ${formatCurrency(total)}`
+                  ? `${totalArticulos} prod Â· ${formatCurrency(total)}`
                   : paso === 0
                     ? refMesa
-                    : "Ticket vacío"}
+                    : "Ticket vacÃ­o"}
               </p>
             </div>
 
@@ -531,7 +531,7 @@ export function MeseroPage() {
                 className="shrink-0"
               >
                 Continuar
-                <ArrowRight className="h-4 w-4" aria-hidden />
+                <ArrowRight weight='light' className="h-4 w-4" aria-hidden />
               </Button>
             )}
             {paso === 1 && (
@@ -541,7 +541,7 @@ export function MeseroPage() {
                 className="shrink-0"
               >
                 Revisar
-                <ArrowRight className="h-4 w-4" aria-hidden />
+                <ArrowRight weight='light' className="h-4 w-4" aria-hidden />
               </Button>
             )}
             {paso === 2 && (
@@ -551,7 +551,7 @@ export function MeseroPage() {
                 loading={enviarComanda.isPending}
                 className="shrink-0 bg-cafe-intenso text-crema hover:bg-cafe-intenso/90"
               >
-                <Check className="h-4 w-4" aria-hidden />
+                <Check weight='light' className="h-4 w-4" aria-hidden />
                 <span className="sm:hidden">Enviar</span>
                 <span className="hidden sm:inline">Enviar a cocina</span>
               </Button>
@@ -563,21 +563,21 @@ export function MeseroPage() {
   );
 }
 
-// ─── Sub-componentes ─────────────────────────────────────────────────────────
+// â”€â”€â”€ Sub-componentes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function PasoTitulo({
   icon: Icon,
   titulo,
   sub,
 }: {
-  icon: typeof Store;
+  icon: typeof Storefront;
   titulo: string;
   sub: string;
 }) {
   return (
     <div className="flex items-center gap-3">
       <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-container/15 text-primary-container">
-        <Icon className="h-5 w-5" aria-hidden />
+        <Icon weight='light' className="h-5 w-5" aria-hidden />
       </span>
       <div>
         <h1 className="text-headline-sm font-bold text-on-surface">{titulo}</h1>
@@ -602,7 +602,7 @@ function PasosIndicador({ paso }: { paso: number }) {
                   : "bg-surface-container text-on-surface-variant/50",
             )}
           >
-            {i < paso ? <Check className="h-3 w-3" aria-hidden /> : <span>{i + 1}</span>}
+            {i < paso ? <Check weight='light' className="h-3 w-3" aria-hidden /> : <span>{i + 1}</span>}
             <span className={i === paso ? "inline" : "hidden sm:inline"}>{label}</span>
           </span>
           {i < ETIQUETAS_PASO.length - 1 && (
@@ -644,7 +644,7 @@ function ProductoCard({
         className="flex flex-1 flex-col items-start text-left"
       >
         <div className="grid h-10 w-10 place-items-center rounded-xl bg-caramelo/20 text-cafe-principal">
-          <Package className="h-5 w-5" aria-hidden />
+          <Package weight='light' className="h-5 w-5" aria-hidden />
         </div>
         <p className="mt-2 line-clamp-2 text-label-lg font-bold text-on-surface">{producto.nombre}</p>
         <p className="mt-1 tabular text-headline-sm font-bold text-primary-container">
@@ -659,7 +659,7 @@ function ProductoCard({
             aria-label={`Quitar uno de ${producto.nombre}`}
             className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container-lowest text-primary-container shadow-soft active:scale-95"
           >
-            {enCarrito <= 1 ? <Trash2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
+            {enCarrito <= 1 ? <Trash weight='light' className="h-4 w-4" /> : <Minus weight='light' className="h-4 w-4" />}
           </button>
           <span className="tabular text-label-lg font-bold text-primary-container">{enCarrito}</span>
           <button
@@ -667,7 +667,7 @@ function ProductoCard({
             aria-label={`Agregar uno de ${producto.nombre}`}
             className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container-lowest text-primary-container shadow-soft active:scale-95"
           >
-            <Plus className="h-4 w-4" />
+            <Plus weight='light' className="h-4 w-4" />
           </button>
         </div>
       )}
@@ -711,10 +711,10 @@ function ConfirmacionExito({
     <section className="mx-auto flex max-w-sm flex-col items-center py-12 text-center" aria-live="polite">
       {/* Check animado */}
       <span className="flex h-24 w-24 items-center justify-center rounded-full bg-primary-container/20 text-primary-container shadow-soft">
-        <Check className="h-12 w-12" strokeWidth={3} aria-hidden />
+        <Check weight='light' className="h-12 w-12" strokeWidth={3} aria-hidden />
       </span>
 
-      <h2 className="mt-6 text-headline-md font-bold text-on-surface">¡Pedido confirmado!</h2>
+      <h2 className="mt-6 text-headline-md font-bold text-on-surface">Â¡Pedido confirmado!</h2>
       <p className="mt-1 text-body-md text-on-surface-variant">
         {folio ? `Comanda #${folio} enviada a cocina` : "Comanda enviada a cocina"}
       </p>
@@ -731,7 +731,7 @@ function ConfirmacionExito({
         onClick={onNuevo}
         className="mt-10 bg-cafe-intenso text-crema hover:bg-cafe-intenso/90"
       >
-        <Plus className="h-4 w-4" aria-hidden />
+        <Plus weight='light' className="h-4 w-4" aria-hidden />
         <span className="sm:hidden">Nuevo pedido</span>
         <span className="hidden sm:inline">Tomar otro pedido</span>
       </Button>
@@ -749,3 +749,4 @@ function ConfirmacionExito({
     </section>
   );
 }
+

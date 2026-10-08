@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { AtSign, Check, Copy, type LucideIcon } from "lucide-react";
+﻿import { useState } from "react";
+import { At, Check, Copy, type Icon } from "@phosphor-icons/react";
 import { Button, Drawer, Input, Pasos, type Paso } from "@/components/ui";
 import { ApiError } from "@/lib/http";
 import { cn } from "@/lib/cn";
@@ -12,7 +12,7 @@ export interface OpcionRol {
   valor: RolUsuario;
   label: string;
   detalle: string;
-  icon: LucideIcon;
+  icon: Icon;
 }
 
 export interface AltaStaffPayload {
@@ -33,7 +33,7 @@ interface Props {
 }
 
 /**
- * Alta de staff en pasos cortos: [rol] → nombre y apellidos → contacto → PIN.
+ * Alta de staff en pasos cortos: [rol] â†’ nombre y apellidos â†’ contacto â†’ PIN.
  * El usuario lo genera el backend (nombre.apellidopaterno) y se muestra al final con Copiar.
  */
 export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, guardando, onCrear }: Props) {
@@ -70,7 +70,7 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
       await navigator.clipboard.writeText(creado.nombreUsuario);
       toast.exito("Usuario copiado");
     } catch {
-      toast.error("No se pudo copiar; anótalo a mano.");
+      toast.error("No se pudo copiar; anÃ³talo a mano.");
     }
   }
 
@@ -96,7 +96,7 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
                       : "border-outline-variant/40 bg-surface-container-lowest text-on-surface-variant",
                   )}
                 >
-                  <r.icon className="h-5 w-5" aria-hidden />
+                  <r.icon weight='light' className="h-5 w-5" aria-hidden />
                   <span className="text-label-md font-bold">{r.label}</span>
                   <span className="text-body-sm opacity-80">{r.detalle}</span>
                 </button>
@@ -122,7 +122,7 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
             maxLength={6}
             value={pin}
             onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
-            hint="6 dígitos. Si lo olvida, se le puede resetear."
+            hint="6 dÃ­gitos. Si lo olvida, se le puede resetear."
             required
           />
           {error && (
@@ -140,17 +140,17 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
       {creado ? (
         <div className="flex flex-col items-center gap-5 pt-2 text-center">
           <span className="grid h-16 w-16 place-items-center rounded-full bg-success/15 text-success">
-            <Check className="h-9 w-9" strokeWidth={3} aria-hidden />
+            <Check weight='light' className="h-9 w-9" strokeWidth={3} aria-hidden />
           </span>
           <div className="space-y-1">
             <p className="text-headline-sm font-bold text-on-surface">{creado.nombreCompleto}</p>
             <p className="text-body-md text-on-surface-variant">
-              Entrégale su usuario y el PIN que capturaste para que entre a Kahvi.
+              EntrÃ©gale su usuario y el PIN que capturaste para que entre a Kahvi.
             </p>
           </div>
           <div className="flex w-full items-center gap-3 rounded-2xl bg-primary-container/10 p-4 text-left">
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary-container text-on-primary">
-              <AtSign className="h-5 w-5" aria-hidden />
+              <At weight='light' className="h-5 w-5" aria-hidden />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block text-label-md font-semibold text-on-surface-variant">Usuario</span>
@@ -159,7 +159,7 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
               </span>
             </span>
             <Button variant="soft" size="icon" onClick={copiarUsuario} aria-label="Copiar usuario">
-              <Copy className="h-4 w-4" aria-hidden />
+              <Copy weight='light' className="h-4 w-4" aria-hidden />
             </Button>
           </div>
           <Button fullWidth onClick={cerrar}>
@@ -172,3 +172,5 @@ export function AltaStaffDrawer({ open, onClose, titulo, descripcion, roles, gua
     </Drawer>
   );
 }
+
+

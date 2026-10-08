@@ -1,8 +1,8 @@
-import {
-  Building2,
+﻿import {
+  Buildings,
   Coffee,
-  TrendingUp,
-} from "lucide-react";
+  TrendUp,
+} from "@phosphor-icons/react";
 import { SkeletonFila } from "@/components/ui";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { fechaHoyLarga, formatCurrency } from "@/lib/format";
@@ -14,10 +14,10 @@ export function ResumenSuperAdminPage() {
 
   return (
     <PantallaConHeader
-      titulo={`${saludoPorHora()}…`}
+      titulo={`${saludoPorHora()}â€¦`}
       subtitulo={
         <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
-          <Coffee className="h-4 w-4 text-primary-container" aria-hidden />
+          <Coffee weight='light' className="h-4 w-4 text-primary-container" aria-hidden />
           {fechaHoyLarga()}
         </p>
       }
@@ -30,25 +30,25 @@ export function ResumenSuperAdminPage() {
 
       {isError && (
         <p className="rounded-2xl bg-error-container/40 p-4 text-body-sm text-on-error-container">
-          No se pudieron cargar las métricas. Intenta de nuevo.
+          No se pudieron cargar las mÃ©tricas. Intenta de nuevo.
         </p>
       )}
 
       {m && (
         <div className="flex flex-col gap-4">
-          {/* Tarjetas de métricas */}
+          {/* Tarjetas de mÃ©tricas */}
           <div className="grid grid-cols-2 gap-3">
             <MetricCard
-              icon={<Building2 className="h-5 w-5" aria-hidden />}
-              label="Cafeterías activas"
+              icon={<Buildings weight='light' className="h-5 w-5" aria-hidden />}
+              label="CafeterÃ­as activas"
               value={String(m.cafeteriasActivas)}
               sub={`${m.totalCafeterias} en total`}
             />
             <MetricCard
-              icon={<TrendingUp className="h-5 w-5" aria-hidden />}
+              icon={<TrendUp weight='light' className="h-5 w-5" aria-hidden />}
               label="Ingresos del mes"
               value={formatCurrency(m.ganadoMes)}
-              sub={`${formatCurrency(m.ganadoHistorico)} histórico`}
+              sub={`${formatCurrency(m.ganadoHistorico)} histÃ³rico`}
             />
           </div>
 
@@ -101,3 +101,5 @@ function StatusRow({ label, value, color }: { label: string; value: number; colo
     </div>
   );
 }
+
+

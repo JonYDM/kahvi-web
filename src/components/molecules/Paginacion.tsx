@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { Button } from "@/components/ui";
 
 interface Props {
@@ -20,7 +20,7 @@ export function Paginacion({ pagina, totalPaginas, onCambio }: Props) {
         disabled={pagina <= 1}
         aria-label="Página anterior"
       >
-        <ChevronLeft className="h-4 w-4" aria-hidden />
+        <CaretLeft weight='light' className="h-4 w-4" aria-hidden />
       </Button>
       <span className="text-body-sm font-medium text-on-surface-variant">
         Página {pagina} de {totalPaginas}
@@ -32,7 +32,7 @@ export function Paginacion({ pagina, totalPaginas, onCambio }: Props) {
         disabled={pagina >= totalPaginas}
         aria-label="Página siguiente"
       >
-        <ChevronRight className="h-4 w-4" aria-hidden />
+        <CaretRight weight='light' className="h-4 w-4" aria-hidden />
       </Button>
     </div>
   );

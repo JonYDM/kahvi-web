@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { AtSign, Building2, Copy, FileText, KeyRound, Pencil, Phone, Power, TriangleAlert } from "lucide-react";
+﻿import { useState, type ReactNode } from "react";
+import { At, Buildings, Copy, File, Key, Pencil, Phone, Power, Warning } from "@phosphor-icons/react";
 import { Avatar, Badge, Button, Drawer, Pasos, SkeletonFila } from "@/components/ui";
 import { ApiError } from "@/lib/http";
 import { rolLabel } from "@/lib/enums";
@@ -20,8 +20,8 @@ interface Props {
 }
 
 /**
- * Detalle del usuario con sus datos reales (= UsuarioDetalleDto): usuario copiable, teléfono,
- * CURP enmascarada y veterinaria. Desde aquí se editan los datos (mismo formulario que el
+ * Detalle del usuario con sus datos reales (= UsuarioDetalleDto): usuario copiable, telÃ©fono,
+ * CURP enmascarada y veterinaria. Desde aquÃ­ se editan los datos (mismo formulario que el
  * alta), se resetea el PIN y se activa/desactiva.
  */
 export function DetalleUsuarioDrawer({ open, onClose, usuarioId, veterinariaNombre, onResetearPin }: Props) {
@@ -89,31 +89,31 @@ export function DetalleUsuarioDrawer({ open, onClose, usuarioId, veterinariaNomb
           {/* Usuario (login) */}
           <div className="flex items-center gap-3 rounded-2xl bg-primary-container/10 p-4">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary-container text-on-primary">
-              <AtSign className="h-5 w-5" aria-hidden />
+              <At weight='light' className="h-5 w-5" aria-hidden />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block text-label-md font-semibold text-on-surface-variant">Usuario</span>
               <span className="block truncate text-label-lg font-bold text-primary-container">{u.nombreUsuario}</span>
             </span>
             <Button variant="soft" size="icon" onClick={() => copiar(u.nombreUsuario)} aria-label="Copiar usuario">
-              <Copy className="h-4 w-4" aria-hidden />
+              <Copy weight='light' className="h-4 w-4" aria-hidden />
             </Button>
           </div>
 
           {/* Datos */}
           <dl className="divide-y divide-outline-variant/20 rounded-2xl bg-surface-container px-4">
-            <Fila icon={<Phone className="h-4 w-4" aria-hidden />} label="Teléfono" valor={u.telefono} />
-            <Fila icon={<FileText className="h-4 w-4" aria-hidden />} label="CURP" valor={u.curpEnmascarada} vacio="No capturada" />
+            <Fila icon={<Phone weight='light' className="h-4 w-4" aria-hidden />} label="TelÃ©fono" valor={u.telefono} />
+            <Fila icon={<File weight='light' className="h-4 w-4" aria-hidden />} label="CURP" valor={u.curpEnmascarada} vacio="No capturada" />
             {veterinariaNombre && (
-              <Fila icon={<Building2 className="h-4 w-4" aria-hidden />} label="Veterinaria" valor={veterinariaNombre} />
+              <Fila icon={<Buildings weight='light' className="h-4 w-4" aria-hidden />} label="Veterinaria" valor={veterinariaNombre} />
             )}
           </dl>
 
           {/* Usuarios creados antes de HU-SA4: faltan datos */}
           {!u.apellidoPaterno && (
             <p className="flex items-start gap-2 rounded-xl bg-warning/10 px-4 py-3 text-body-sm text-[#B45309]">
-              <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-              Faltan apellidos y teléfono. Complétalos en "Editar datos".
+              <Warning weight='light' className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+              Faltan apellidos y telÃ©fono. ComplÃ©talos en "Editar datos".
             </p>
           )}
 
@@ -121,12 +121,12 @@ export function DetalleUsuarioDrawer({ open, onClose, usuarioId, veterinariaNomb
           <div className="space-y-2">
             <div className="flex gap-2">
               <Button variant="soft" size="sm" fullWidth onClick={() => setModo("editar")}>
-                  <Pencil className="h-4 w-4" aria-hidden />
+                  <Pencil weight='light' className="h-4 w-4" aria-hidden />
                   Editar datos
                 </Button>
               {onResetearPin && (
                 <Button variant="soft" size="sm" fullWidth onClick={onResetearPin}>
-                  <KeyRound className="h-4 w-4" aria-hidden />
+                  <Key weight='light' className="h-4 w-4" aria-hidden />
                   Resetear PIN
                 </Button>
               )}
@@ -139,7 +139,7 @@ export function DetalleUsuarioDrawer({ open, onClose, usuarioId, veterinariaNomb
               loading={gestionar.isPending}
               onClick={cambiarEstado}
             >
-              <Power className="h-4 w-4" aria-hidden />
+              <Power weight='light' className="h-4 w-4" aria-hidden />
               {u.activo ? "Desactivar acceso" : "Activar acceso"}
             </Button>
           </div>
@@ -161,7 +161,7 @@ function Fila({ icon, label, valor, vacio = "Sin capturar" }: { icon: ReactNode;
   );
 }
 
-/** Edición en 2 pasos (libre): nombre y apellidos → teléfono y CURP. El usuario de login no cambia. */
+/** EdiciÃ³n en 2 pasos (libre): nombre y apellidos â†’ telÃ©fono y CURP. El usuario de login no cambia. */
 function EditarDatos({ usuario, onListo }: { usuario: UsuarioDetalle; onListo: () => void }) {
   const editar = useEditarDatosUsuario();
   const [datos, setDatos] = useState<DatosPersonales>({
@@ -212,7 +212,7 @@ function EditarDatos({ usuario, onListo }: { usuario: UsuarioDetalle; onListo: (
       libre
       guardando={editar.isPending}
       textoFinal="Guardar cambios"
-      textoCompletado="¡Datos actualizados!"
+      textoCompletado="Â¡Datos actualizados!"
       onFinalizar={guardar}
       onCompletado={onListo}
       pasos={[
@@ -228,7 +228,7 @@ function EditarDatos({ usuario, onListo }: { usuario: UsuarioDetalle; onListo: (
                 accionCurp={accionCurp}
               />
               {quitarCurp && (
-                <p className="text-body-sm text-[#B45309]">La CURP se quitará al guardar.</p>
+                <p className="text-body-sm text-[#B45309]">La CURP se quitarÃ¡ al guardar.</p>
               )}
               {error && (
                 <p role="alert" className="rounded-xl bg-error-container/60 px-4 py-3 text-body-sm font-medium text-on-error-container">
@@ -242,3 +242,5 @@ function EditarDatos({ usuario, onListo }: { usuario: UsuarioDetalle; onListo: (
     />
   );
 }
+
+

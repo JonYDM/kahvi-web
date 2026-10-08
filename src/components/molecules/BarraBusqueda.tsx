@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 import { Input } from "@/components/ui";
 
 interface Props {
@@ -13,7 +13,8 @@ interface Props {
 export function BarraBusqueda({ valor, onChange, placeholder, etiqueta }: Props) {
   return (
     <div className="relative">
-      <Search
+      <MagnifyingGlass
+        weight='light'
         className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
         aria-hidden
       />

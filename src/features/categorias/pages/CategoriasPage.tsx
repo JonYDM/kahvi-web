@@ -1,5 +1,5 @@
-import { useState, useRef, type FormEvent, type DragEvent } from "react";
-import { Edit2, GripVertical, Plus, Trash2 } from "lucide-react";
+﻿import { useState, useRef, type FormEvent, type DragEvent } from "react";
+import { PencilSimple, DotsSixVertical, Plus, Trash } from "@phosphor-icons/react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Button, Drawer, Input, SkeletonFila } from "@/components/ui";
 import { useToast } from "@/components/feedback/useToast";
@@ -13,7 +13,7 @@ import {
   useEliminarCategoria,
 } from "../hooks";
 
-// ─── Tipos del drawer ────────────────────────────────────────────────────────
+// â”€â”€â”€ Tipos del drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 type ModoDrawer = "crear" | "editar";
 
@@ -25,9 +25,9 @@ interface EstadoDrawer {
 
 const DRAWER_CERRADO: EstadoDrawer = { abierto: false, modo: "crear", categoria: null };
 
-// ─── Componente principal ────────────────────────────────────────────────────
+// â”€â”€â”€ Componente principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-/** Gestión CRUD de categorías con drag-and-drop para reordenar. Solo Administrador. */
+/** GestiÃ³n CRUD de categorÃ­as con drag-and-drop para reordenar. Solo Administrador. */
 export function CategoriasPage() {
   const { data: categorias, isLoading, isError } = useCategorias();
   const crear = useCrearCategoria();
@@ -50,7 +50,7 @@ export function CategoriasPage() {
   const ordenadas = ordenLocal
     ?? [...(categorias ?? [])].sort((a, b) => a.orden - b.orden);
 
-  // ─── Drawer ────────────────────────────────────────────────────────────────
+  // â”€â”€â”€ Drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   function abrirCrear() {
     setNombre("");
@@ -80,21 +80,21 @@ export function CategoriasPage() {
 
     try {
       if (drawer.modo === "crear") {
-        // El orden nuevo es el siguiente al último
+        // El orden nuevo es el siguiente al Ãºltimo
         const siguienteOrden = ordenadas.length + 1;
         await crear.mutateAsync({ nombre: nombre.trim(), orden: siguienteOrden });
-        toast.exito("Categoría creada.");
+        toast.exito("CategorÃ­a creada.");
       } else if (drawer.categoria) {
         // Conserva el mismo orden, solo cambia el nombre
         await editar.mutateAsync({
           id: drawer.categoria.id,
           data: { nombre: nombre.trim(), orden: drawer.categoria.orden },
         });
-        toast.exito("Categoría actualizada.");
+        toast.exito("CategorÃ­a actualizada.");
       }
       cerrar();
     } catch (err) {
-      setErrorForm(err instanceof ApiError ? err.message : "No se pudo guardar la categoría.");
+      setErrorForm(err instanceof ApiError ? err.message : "No se pudo guardar la categorÃ­a.");
     }
   }
 
@@ -102,18 +102,18 @@ export function CategoriasPage() {
     try {
       await eliminar.mutateAsync(cat.id);
       setOrdenLocal(null); // limpiar orden local tras eliminar
-      toast.exito(`Categoría "${cat.nombre}" eliminada.`);
+      toast.exito(`CategorÃ­a "${cat.nombre}" eliminada.`);
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : "No se pudo eliminar la categoría.");
+      toast.error(err instanceof ApiError ? err.message : "No se pudo eliminar la categorÃ­a.");
     }
   }
 
-  // ─── Drag-and-drop ──────────────────────────────────────────────────────────
+  // â”€â”€â”€ Drag-and-drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   function onDragStart(e: DragEvent, id: string) {
     draggingId.current = id;
     e.dataTransfer.effectAllowed = "move";
-    // Opacidad en el elemento arrastrado via class (se añade en el render)
+    // Opacidad en el elemento arrastrado via class (se aÃ±ade en el render)
   }
 
   function onDragOver(e: DragEvent, id: string) {
@@ -130,7 +130,7 @@ export function CategoriasPage() {
 
     const [movido] = lista.splice(fromIdx, 1);
     lista.splice(toIdx, 0, movido);
-    // Re-asigna números de orden correlativos
+    // Re-asigna nÃºmeros de orden correlativos
     setOrdenLocal(lista.map((c, i) => ({ ...c, orden: i + 1 })));
   }
 
@@ -139,7 +139,7 @@ export function CategoriasPage() {
     dragOverId.current = null;
     if (!ordenLocal) return;
 
-    // Guarda el nuevo orden en el backend — solo las que cambiaron
+    // Guarda el nuevo orden en el backend â€” solo las que cambiaron
     const original = [...(categorias ?? [])].sort((a, b) => a.orden - b.orden);
     const cambiadas = ordenLocal.filter((c, i) => c.id !== original[i]?.id || c.orden !== original[i]?.orden);
 
@@ -159,7 +159,7 @@ export function CategoriasPage() {
   }
 
   function onDragEnd() {
-    // Si se soltó fuera de un drop target válido, revertir
+    // Si se soltÃ³ fuera de un drop target vÃ¡lido, revertir
     draggingId.current = null;
     dragOverId.current = null;
   }
@@ -168,15 +168,15 @@ export function CategoriasPage() {
 
   return (
     <PantallaConHeader
-      titulo="Categorías"
+      titulo="CategorÃ­as"
       subtitulo={
         <p className="text-body-sm text-on-surface-variant">
-          {ordenadas.length} categoría{ordenadas.length !== 1 ? "s" : ""}
+          {ordenadas.length} categorÃ­a{ordenadas.length !== 1 ? "s" : ""}
         </p>
       }
       accion={
-        <Button size="icon" onClick={abrirCrear} aria-label="Nueva categoría">
-          <Plus className="h-5 w-5" aria-hidden />
+        <Button size="icon" onClick={abrirCrear} aria-label="Nueva categorÃ­a">
+          <Plus weight='light' className="h-5 w-5" aria-hidden />
         </Button>
       }
     >
@@ -188,7 +188,7 @@ export function CategoriasPage() {
 
       {isError && (
         <div className="rounded-2xl bg-error-container/40 p-6 text-center text-body-sm text-on-error-container">
-          No se pudieron cargar las categorías.
+          No se pudieron cargar las categorÃ­as.
         </div>
       )}
 
@@ -196,14 +196,14 @@ export function CategoriasPage() {
         <div className="flex flex-col items-center py-10 text-center">
           <img
             src="/spil.png"
-            alt="Sin categorías"
+            alt="Sin categorÃ­as"
             className="h-40 w-40 object-contain"
           />
           <p className="mt-4 text-label-lg font-semibold text-on-surface">
-            Sin categorías
+            Sin categorÃ­as
           </p>
           <p className="mt-1 text-body-sm text-on-surface-variant">
-            Crea la primera categoría para organizar tus productos.
+            Crea la primera categorÃ­a para organizar tus productos.
           </p>
         </div>
       )}
@@ -226,21 +226,21 @@ export function CategoriasPage() {
         </ul>
       )}
 
-      {/* Drawer crear/editar — sin campo de orden (lo gestiona el drag) */}
+      {/* Drawer crear/editar â€” sin campo de orden (lo gestiona el drag) */}
       <Drawer
         open={drawer.abierto}
         onClose={cerrar}
-        title={drawer.modo === "crear" ? "Nueva categoría" : "Editar categoría"}
+        title={drawer.modo === "crear" ? "Nueva categorÃ­a" : "Editar categorÃ­a"}
         descripcion={
           drawer.modo === "crear"
-            ? "Ingresa el nombre de la categoría."
-            : "Modifica el nombre de la categoría."
+            ? "Ingresa el nombre de la categorÃ­a."
+            : "Modifica el nombre de la categorÃ­a."
         }
       >
         <form onSubmit={enviar} className="space-y-4">
           <Input
             label="Nombre"
-            placeholder="Ej: Café, Postres, Bebidas…"
+            placeholder="Ej: CafÃ©, Postres, Bebidasâ€¦"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             required
@@ -267,7 +267,7 @@ export function CategoriasPage() {
   );
 }
 
-// ─── Fila de categoría con drag-and-drop ──────────────────────────────────────
+// â”€â”€â”€ Fila de categorÃ­a con drag-and-drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function CategoriaFila({
   categoria,
@@ -306,10 +306,10 @@ function CategoriaFila({
         className="shrink-0 cursor-grab touch-none text-on-surface-variant/40 active:cursor-grabbing"
         aria-hidden
       >
-        <GripVertical className="h-5 w-5" />
+        <DotsSixVertical weight='light' className="h-5 w-5" />
       </span>
 
-      {/* Número de orden */}
+      {/* NÃºmero de orden */}
       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary-container/15 text-label-md font-bold text-primary-container">
         {categoria.orden}
       </span>
@@ -323,20 +323,21 @@ function CategoriaFila({
       <div className="flex shrink-0 items-center gap-1">
         <button
           onClick={onEditar}
-          aria-label={`Editar categoría ${categoria.nombre}`}
+          aria-label={`Editar categorÃ­a ${categoria.nombre}`}
           className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-surface-container"
         >
-          <Edit2 className="h-4 w-4" aria-hidden />
+          <PencilSimple weight='light' className="h-4 w-4" aria-hidden />
         </button>
         <button
           onClick={onEliminar}
           disabled={eliminando}
-          aria-label={`Eliminar categoría ${categoria.nombre}`}
+          aria-label={`Eliminar categorÃ­a ${categoria.nombre}`}
           className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-error-container/40 hover:text-on-error-container disabled:opacity-50"
         >
-          <Trash2 className="h-4 w-4" aria-hidden />
+          <Trash weight='light' className="h-4 w-4" aria-hidden />
         </button>
       </div>
     </li>
   );
 }
+

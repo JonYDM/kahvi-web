@@ -1,11 +1,11 @@
-import { useMemo } from "react";
-import { CreditCard, DollarSign, Receipt, Smartphone } from "lucide-react";
+﻿import { useMemo } from "react";
+import { CreditCard, CurrencyDollar, Receipt, DeviceMobile } from "@phosphor-icons/react";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import { useVentas, useResumenVentas } from "@/features/pos/hooks";
 import { MetodoPago } from "@/types/api";
 import type { VentaHistorial } from "@/types/api";
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 /** Rango del mes actual en ISO. */
 function rangoMesActual(): { desde: string; hasta: string } {
@@ -15,9 +15,9 @@ function rangoMesActual(): { desde: string; hasta: string } {
   return { desde: inicio.toISOString(), hasta: fin.toISOString() };
 }
 
-const DIAS_SEMANA = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+const DIAS_SEMANA = ["Dom", "Lun", "Mar", "MiÃ©", "Jue", "Vie", "SÃ¡b"];
 
-/** Agrupa ventas por día de la semana (últimos 7 días, índice 0 = hoy). */
+/** Agrupa ventas por dÃ­a de la semana (Ãºltimos 7 dÃ­as, Ã­ndice 0 = hoy). */
 function agruparPorDia(ventas: VentaHistorial[]): { label: string; total: number }[] {
   const ahora = new Date();
   const dias: { label: string; total: number }[] = [];
@@ -49,12 +49,12 @@ const METODO_LABEL: Record<MetodoPago, string> = {
 };
 
 const METODO_ICON = {
-  [MetodoPago.Efectivo]: DollarSign,
+  [MetodoPago.Efectivo]: CurrencyDollar,
   [MetodoPago.Tarjeta]: CreditCard,
-  [MetodoPago.Transferencia]: Smartphone,
+  [MetodoPago.Transferencia]: DeviceMobile,
 };
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function VentasPage() {
   const { desde, hasta } = rangoMesActual();
@@ -62,7 +62,7 @@ export function VentasPage() {
   const { data: ventas = [], isLoading: cargandoVentas } = useVentas(desde, hasta);
   const { data: resumen, isLoading: cargandoResumen } = useResumenVentas(desde, hasta);
 
-  // Totales calculados a partir de ventas si resumen no está disponible
+  // Totales calculados a partir de ventas si resumen no estÃ¡ disponible
   const totalCalculado = useMemo(
     () => ventas.reduce((acc, v) => acc + v.total, 0),
     [ventas],
@@ -71,7 +71,7 @@ export function VentasPage() {
   const totalMes = resumen?.total ?? totalCalculado;
   const numeroVentas = resumen?.numeroVentas ?? ventas.length;
 
-  // Desglose por método — desde resumen si existe, sino calculado
+  // Desglose por mÃ©todo â€” desde resumen si existe, sino calculado
   const porMetodo = useMemo(() => {
     if (resumen) {
       return [
@@ -95,11 +95,11 @@ export function VentasPage() {
     ];
   }, [resumen, ventas]);
 
-  // Datos para la gráfica de barras (últimos 7 días)
+  // Datos para la grÃ¡fica de barras (Ãºltimos 7 dÃ­as)
   const diasGrafica = useMemo(() => agruparPorDia(ventas), [ventas]);
   const maxDia = Math.max(...diasGrafica.map((d) => d.total), 1);
 
-  // Últimas 5 ventas
+  // Ãšltimas 5 ventas
   const ultimas5 = useMemo(
     () =>
       [...ventas]
@@ -118,14 +118,14 @@ export function VentasPage() {
       <header className="sticky top-0 z-20 bg-crema/90 backdrop-blur-sm px-4 py-3 shadow-[0_1px_0_0_rgba(43,31,25,0.08)]">
         <div className="mx-auto max-w-3xl">
           <div className="flex items-center gap-2 px-1">
-            <Receipt className="text-cafe-intenso" />
+            <Receipt weight='light' className="text-cafe-intenso" />
             <h1 className="text-base font-bold text-cafe-intenso">Ventas</h1>
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-3xl space-y-6 px-4 py-6 sm:px-6">
-        {/* ── Tarjeta grande total del mes ── */}
+        {/* â”€â”€ Tarjeta grande total del mes â”€â”€ */}
         {cargando ? (
           <div className="h-44 animate-pulse rounded-3xl bg-cafe-intenso/20" />
         ) : (
@@ -149,9 +149,9 @@ export function VentasPage() {
           </div>
         )}
 
-        {/* ── Desglose por método de pago ── */}
+        {/* â”€â”€ Desglose por mÃ©todo de pago â”€â”€ */}
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-cafe-intenso">Por método de pago</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">Por mÃ©todo de pago</h2>
           {cargando ? (
             <div className="grid grid-cols-3 gap-3">
               {[1, 2, 3].map((i) => (
@@ -168,7 +168,7 @@ export function VentasPage() {
                     className="rounded-2xl bg-white/70 px-4 py-4 shadow-sm text-center"
                   >
                     <div className="flex justify-center mb-1">
-                      <Icon className="h-4 w-4 text-verde-menta" />
+                      <Icon weight='light' className="h-4 w-4 text-verde-menta" />
                     </div>
                     <p className="text-xs text-cafe-intenso/50">{METODO_LABEL[metodo]}</p>
                     <p className="mt-1 text-sm font-bold text-cafe-intenso">
@@ -181,9 +181,9 @@ export function VentasPage() {
           )}
         </section>
 
-        {/* ── Gráfica de barras últimos 7 días ── */}
+        {/* â”€â”€ GrÃ¡fica de barras Ãºltimos 7 dÃ­as â”€â”€ */}
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-cafe-intenso">Últimos 7 días</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">Ãšltimos 7 dÃ­as</h2>
           {cargando ? (
             <div className="h-40 animate-pulse rounded-2xl bg-white/50" />
           ) : (
@@ -209,7 +209,7 @@ export function VentasPage() {
                           title={formatCurrency(dia.total)}
                         />
                       </div>
-                      {/* etiqueta día */}
+                      {/* etiqueta dÃ­a */}
                       <span
                         className={`text-[10px] font-medium ${
                           esHoy ? "text-cafe-intenso font-bold" : "text-cafe-intenso/50"
@@ -230,9 +230,9 @@ export function VentasPage() {
           )}
         </section>
 
-        {/* ── Últimas 5 ventas ── */}
+        {/* â”€â”€ Ãšltimas 5 ventas â”€â”€ */}
         <section className="space-y-3">
-          <h2 className="text-lg font-bold text-cafe-intenso">Últimas ventas</h2>
+          <h2 className="text-lg font-bold text-cafe-intenso">Ãšltimas ventas</h2>
           {cargando ? (
             <div className="space-y-2">
               {[1, 2, 3, 4, 5].map((i) => (
@@ -249,7 +249,7 @@ export function VentasPage() {
                 const Icon = METODO_ICON[v.metodoPago as MetodoPago] ?? Receipt;
                 return (
                   <div key={v.id} className="flex items-center gap-3 py-4">
-                    {/* índice / folio visual */}
+                    {/* Ã­ndice / folio visual */}
                     <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-cafe-principal/20 text-xs font-bold text-cafe-intenso">
                       #{idx + 1}
                     </span>
@@ -258,8 +258,8 @@ export function VentasPage() {
                         {formatDateTime(v.fechaHora)}
                       </p>
                       <p className="flex items-center gap-1 text-xs text-cafe-intenso/50">
-                        <Icon className="h-3 w-3" />
-                        {METODO_LABEL[v.metodoPago as MetodoPago] ?? "—"}
+                        <Icon weight='light' className="h-3 w-3" />
+                        {METODO_LABEL[v.metodoPago as MetodoPago] ?? "â€”"}
                       </p>
                     </div>
                     <span className="text-sm font-bold text-verde-menta">
@@ -275,3 +275,4 @@ export function VentasPage() {
     </div>
   );
 }
+

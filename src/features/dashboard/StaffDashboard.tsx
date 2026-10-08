@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import {
   CalendarCheck,
   Coffee,
   ShoppingCart,
-  TrendingUp,
+  TrendUp,
   Wallet,
   ChefHat,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { useAuth } from "@/features/auth";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { SkeletonFila } from "@/components/ui";
@@ -31,10 +31,10 @@ export function StaffDashboard() {
 
   return (
     <PantallaConHeader
-      titulo={`${saludoPorHora()}…`}
+      titulo={`${saludoPorHora()}â€¦`}
       subtitulo={
         <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
-          <CalendarCheck className="h-4 w-4 text-primary-container" aria-hidden />
+          <CalendarCheck weight='light' className="h-4 w-4 text-primary-container" aria-hidden />
           {fechaHoyLarga()}
         </p>
       }
@@ -47,7 +47,7 @@ export function StaffDashboard() {
       }
     >
       <div className="flex flex-col gap-6">
-        {/* Acciones rápidas — estaciones de trabajo */}
+        {/* Acciones rÃ¡pidas â€” estaciones de trabajo */}
         <div className="grid grid-cols-2 gap-2.5">
           <AccionRapida
             to="/mesero"
@@ -75,7 +75,7 @@ export function StaffDashboard() {
           />
           <AccionRapida
             to="/app/ventas"
-            icon={TrendingUp}
+            icon={TrendUp}
             titulo="Ventas"
             sub="Resumen del mes"
             className="bg-primary-container/15 text-on-surface"
@@ -83,7 +83,7 @@ export function StaffDashboard() {
           />
         </div>
 
-        {/* Métricas de ventas */}
+        {/* MÃ©tricas de ventas */}
         {esAdmin && (
           <section className="flex flex-col gap-3">
             <h2 className="text-label-lg font-bold text-on-surface">Hoy</h2>
@@ -93,13 +93,13 @@ export function StaffDashboard() {
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 <MetricaCard
-                  icon={<TrendingUp className="h-5 w-5" aria-hidden />}
+                  icon={<TrendUp weight='light' className="h-5 w-5" aria-hidden />}
                   label="Ventas hoy"
                   valor={formatCurrency(metricas?.ventasHoy ?? 0)}
                   sub={`${metricas?.numeroVentasMes ?? 0} ventas este mes`}
                 />
                 <MetricaCard
-                  icon={<Coffee className="h-5 w-5" aria-hidden />}
+                  icon={<Coffee weight='light' className="h-5 w-5" aria-hidden />}
                   label="En cocina"
                   valor={String(comandasActivas)}
                   sub="comandas activas"
@@ -107,13 +107,13 @@ export function StaffDashboard() {
                 {caja && (
                   <>
                     <MetricaCard
-                      icon={<ShoppingCart className="h-5 w-5" aria-hidden />}
+                      icon={<ShoppingCart weight='light' className="h-5 w-5" aria-hidden />}
                       label="Efectivo"
                       valor={formatCurrency(caja.efectivo)}
                       sub="hoy"
                     />
                     <MetricaCard
-                      icon={<Wallet className="h-5 w-5" aria-hidden />}
+                      icon={<Wallet weight='light' className="h-5 w-5" aria-hidden />}
                       label="Tarjeta"
                       valor={formatCurrency(caja.tarjeta)}
                       sub="hoy"
@@ -142,7 +142,7 @@ export function StaffDashboard() {
                     {p.nombre}
                   </span>
                   <span className="tabular shrink-0 text-label-md font-bold text-primary-container">
-                    ×{p.cantidad}
+                    Ã—{p.cantidad}
                   </span>
                 </div>
               ))}
@@ -175,7 +175,7 @@ function AccionRapida({
       className={`flex flex-col gap-2 rounded-2xl p-3.5 shadow-soft transition-transform active:scale-[0.97] ${className}`}
     >
       <span className={`grid h-9 w-9 place-items-center rounded-xl ${iconWrap}`}>
-        <Icon className="h-5 w-5" aria-hidden />
+        <Icon weight='light' className="h-5 w-5" aria-hidden />
       </span>
       <div>
         <p className="text-label-lg font-bold leading-tight">{titulo}</p>
@@ -209,3 +209,5 @@ function MetricaCard({
     </div>
   );
 }
+
+

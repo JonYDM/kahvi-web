@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { CircleNotch } from "@phosphor-icons/react";
 import { cn } from "@/lib/cn";
 
 /**
@@ -13,7 +13,8 @@ export function Spinner({
 }) {
   return (
     <span role="status" aria-live="polite" className="inline-flex items-center">
-      <Loader2
+      <CircleNotch
+        weight='light'
         className={cn("h-5 w-5 animate-spin text-primary", className)}
         aria-hidden
       />

@@ -1,15 +1,15 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import {
-  Banknote,
+  Money,
   CreditCard,
   Minus,
   Package,
   Plus,
-  Search,
-  Settings2,
-  Smartphone,
-  Trash2,
-} from "lucide-react";
+  MagnifyingGlass,
+  Sliders,
+  DeviceMobile,
+  Trash,
+} from "@phosphor-icons/react";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import {
@@ -34,10 +34,10 @@ interface LineaCarrito {
   cantidad: number;
 }
 
-const METODOS: { valor: MetodoPago; label: string; icon: typeof Banknote }[] = [
-  { valor: MetodoPago.Efectivo, label: "Efectivo", icon: Banknote },
+const METODOS: { valor: MetodoPago; label: string; icon: typeof Money }[] = [
+  { valor: MetodoPago.Efectivo, label: "Efectivo", icon: Money },
   { valor: MetodoPago.Tarjeta, label: "Tarjeta", icon: CreditCard },
-  { valor: MetodoPago.Transferencia, label: "Transfer.", icon: Smartphone },
+  { valor: MetodoPago.Transferencia, label: "Transfer.", icon: DeviceMobile },
 ];
 
 /** Punto de venta para ventas directas (sin comanda). Solo Admin. */
@@ -61,13 +61,13 @@ export function PosPage() {
 
   const esAdmin = sesion?.rol === RolUsuario.Administrador;
 
-  // Categorías ordenadas para los chips
+  // CategorÃ­as ordenadas para los chips
   const categoriasOrdenadas = useMemo(
     () => [...(categorias ?? [])].sort((a, b) => a.orden - b.orden),
     [categorias],
   );
 
-  // Mapa id→nombre para mostrar en los chips de producto
+  // Mapa idâ†’nombre para mostrar en los chips de producto
   const categoriaNombrePorId = useMemo(() => {
     const map: Record<string, string> = {};
     for (const c of categorias ?? []) map[c.id] = c.nombre;
@@ -144,7 +144,7 @@ export function PosPage() {
       accion={
         esAdmin ? (
           <Button size="icon" onClick={() => setModalProducto(true)} aria-label="Nuevo producto">
-            <Plus className="h-5 w-5" aria-hidden />
+            <Plus weight='light' className="h-5 w-5" aria-hidden />
           </Button>
         ) : undefined
       }
@@ -152,7 +152,7 @@ export function PosPage() {
       <div className="flex flex-col gap-4 pb-20">
         {/* Buscador */}
         <div className="relative">
-          <Search
+          <MagnifyingGlass
             className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
             aria-hidden
           />
@@ -166,7 +166,7 @@ export function PosPage() {
           />
         </div>
 
-        {/* Chips de categoría dinámica */}
+        {/* Chips de categorÃ­a dinÃ¡mica */}
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <button
             onClick={() => setCategoriaId(null)}
@@ -195,14 +195,14 @@ export function PosPage() {
           ))}
         </div>
 
-        {/* Catálogo */}
+        {/* CatÃ¡logo */}
         {isLoading ? (
           <div className="grid grid-cols-2 gap-3">
             {Array.from({ length: 6 }).map((_, i) => <SkeletonFila key={i} />)}
           </div>
         ) : isError ? (
           <div className="rounded-2xl bg-surface-container-lowest p-8 text-center text-body-sm text-error-st shadow-soft">
-            No se pudo cargar el catálogo.
+            No se pudo cargar el catÃ¡logo.
           </div>
         ) : visibles.length > 0 ? (
           <div className="grid grid-cols-2 gap-3">
@@ -221,13 +221,13 @@ export function PosPage() {
           </div>
         ) : (
           <EmptyState
-            titulo={texto || categoriaId !== null ? "Sin resultados" : "Catálogo vacío"}
+            titulo={texto || categoriaId !== null ? "Sin resultados" : "CatÃ¡logo vacÃ­o"}
             descripcion={
               texto || categoriaId !== null
                 ? "No hay productos que coincidan."
                 : esAdmin
                   ? "Agrega tu primer producto para empezar a vender."
-                  : "Aún no hay productos en el catálogo."
+                  : "AÃºn no hay productos en el catÃ¡logo."
             }
           />
         )}
@@ -287,7 +287,7 @@ export function PosPage() {
                       aria-label="Quitar uno"
                       className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container text-on-surface-variant"
                     >
-                      {l.cantidad <= 1 ? <Trash2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
+                      {l.cantidad <= 1 ? <Trash weight='light' className="h-4 w-4" /> : <Minus weight='light' className="h-4 w-4" />}
                     </button>
                     <span className="w-5 text-center text-label-md font-bold">{l.cantidad}</span>
                     <button
@@ -295,16 +295,16 @@ export function PosPage() {
                       aria-label="Agregar uno"
                       className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container text-on-surface-variant"
                     >
-                      <Plus className="h-4 w-4" />
+                      <Plus weight='light' className="h-4 w-4" />
                     </button>
                   </div>
                 </li>
               ))}
             </ul>
 
-            {/* Método de pago */}
+            {/* MÃ©todo de pago */}
             <div>
-              <p className="mb-1.5 text-label-md font-semibold text-on-surface-variant">Método de pago</p>
+              <p className="mb-1.5 text-label-md font-semibold text-on-surface-variant">MÃ©todo de pago</p>
               <div className="grid grid-cols-3 gap-2">
                 {METODOS.map((m) => {
                   const activo = metodoPago === m.valor;
@@ -320,7 +320,7 @@ export function PosPage() {
                           : "border-outline-variant/40 bg-surface-container-lowest text-on-surface-variant",
                       )}
                     >
-                      <m.icon className="h-5 w-5" aria-hidden />
+                      <m.icon weight='light' className="h-5 w-5" aria-hidden />
                       <span className="text-label-sm font-bold">{m.label}</span>
                     </button>
                   );
@@ -412,7 +412,7 @@ function ProductoCard({
         className="flex flex-1 flex-col items-start text-left"
       >
         <div className="grid h-10 w-10 place-items-center rounded-xl bg-caramelo/20 text-cafe-principal">
-          <Package className="h-5 w-5" aria-hidden />
+          <Package weight='light' className="h-5 w-5" aria-hidden />
         </div>
         <p className="mt-2 line-clamp-2 text-label-lg font-bold text-on-surface">{producto.nombre}</p>
         {categoriaNombre && (
@@ -424,7 +424,7 @@ function ProductoCard({
         {/* Costo y margen: solo visible para Admin */}
         {esAdmin && producto.costo != null && (
           <p className="text-body-sm text-on-surface-variant">
-            Costo: {formatCurrency(producto.costo)} · Margen: {formatCurrency(producto.precio - producto.costo)}
+            Costo: {formatCurrency(producto.costo)} Â· Margen: {formatCurrency(producto.precio - producto.costo)}
           </p>
         )}
       </button>
@@ -437,7 +437,7 @@ function ProductoCard({
               aria-label={`Quitar uno de ${producto.nombre}`}
               className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container-lowest text-primary-container shadow-soft active:scale-95"
             >
-              {enCarrito <= 1 ? <Trash2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
+              {enCarrito <= 1 ? <Trash weight='light' className="h-4 w-4" /> : <Minus weight='light' className="h-4 w-4" />}
             </button>
             <span className="tabular text-label-lg font-bold text-primary-container">{enCarrito}</span>
             <button
@@ -445,7 +445,7 @@ function ProductoCard({
               aria-label={`Agregar uno de ${producto.nombre}`}
               className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container-lowest text-primary-container shadow-soft active:scale-95"
             >
-              <Plus className="h-4 w-4" />
+              <Plus weight='light' className="h-4 w-4" />
             </button>
           </div>
         ) : (
@@ -459,7 +459,7 @@ function ProductoCard({
                 aria-label={`Editar ${producto.nombre}`}
                 className="grid h-8 w-8 place-items-center rounded-lg text-on-surface-variant hover:bg-surface-container"
               >
-                <Settings2 className="h-4 w-4" aria-hidden />
+                <Sliders weight='light' className="h-4 w-4" aria-hidden />
               </button>
             )}
           </div>
@@ -497,7 +497,7 @@ function CobroExitoso({
       </div>
       <div className="cobro-datos flex w-full flex-col items-center gap-4">
         <div>
-          <p className="text-headline-sm font-bold text-on-surface">¡Cobro realizado!</p>
+          <p className="text-headline-sm font-bold text-on-surface">Â¡Cobro realizado!</p>
           <p className="mt-1 text-body-sm text-on-surface-variant">Total cobrado</p>
           <p className="tabular text-headline-lg font-bold text-on-surface">{formatCurrency(total)}</p>
         </div>
@@ -512,3 +512,4 @@ function CobroExitoso({
     </div>
   );
 }
+

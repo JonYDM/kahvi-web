@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { ChefHat, Coffee, KeyRound, Plus, Search, Settings2, Wallet } from "lucide-react";
+﻿import { useMemo, useState } from "react";
+import { ChefHat, Coffee, Key, Plus, MagnifyingGlass, Sliders, Wallet } from "@phosphor-icons/react";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Avatar, Badge, Button, Input, SkeletonFila } from "@/components/ui";
@@ -13,7 +13,7 @@ import { DetalleUsuarioDrawer } from "../components/DetalleUsuarioDrawer";
 
 const ROLES_STAFF = [RolUsuario.Mesero, RolUsuario.Cocina, RolUsuario.Caja];
 
-/** Gestión del equipo del Administrador (buscar, listar, crear, resetear PIN, gestionar). */
+/** GestiÃ³n del equipo del Administrador (buscar, listar, crear, resetear PIN, gestionar). */
 export function StaffPage() {
   const { data: usuarios, isLoading, isError } = useStaff();
   const [crearAbierto, setCrearAbierto] = useState(false);
@@ -48,17 +48,17 @@ export function StaffPage() {
   return (
     <PantallaConHeader
       titulo="Equipo"
-      subtitulo={<p className="text-body-sm text-on-surface-variant">Personal de la cafetería</p>}
+      subtitulo={<p className="text-body-sm text-on-surface-variant">Personal de la cafeterÃ­a</p>}
       accion={
         <Button size="icon" onClick={() => setCrearAbierto(true)} aria-label="Nuevo integrante">
-          <Plus className="h-5 w-5" aria-hidden />
+          <Plus weight='light' className="h-5 w-5" aria-hidden />
         </Button>
       }
     >
       <div className="flex flex-col gap-4">
         {/* Buscador */}
         <div className="relative">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant" aria-hidden />
+          <MagnifyingGlass weight='light' className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant" aria-hidden />
           <Input
             variant="soft"
             aria-label="Buscar en el equipo"
@@ -100,11 +100,11 @@ export function StaffPage() {
                 </div>
                 <div className="flex gap-2 border-t border-outline-variant/20 pt-3">
                   <Button variant="soft" size="sm" fullWidth onClick={() => setResetUsuario(u)}>
-                    <KeyRound className="h-4 w-4" aria-hidden />
+                    <Key weight='light' className="h-4 w-4" aria-hidden />
                     Resetear PIN
                   </Button>
                   <Button variant="soft" size="sm" fullWidth onClick={() => setGestionUsuario(u)}>
-                    <Settings2 className="h-4 w-4" aria-hidden />
+                    <Sliders weight='light' className="h-4 w-4" aria-hidden />
                     Gestionar
                   </Button>
                 </div>
@@ -148,10 +148,11 @@ function CardRol({ icon: Icon, label, conteo, activo, onClick }: {
       }
     >
       <span className={"grid h-9 w-9 place-items-center rounded-lg " + (activo ? "bg-primary-container/15 text-primary-container" : "bg-surface-container-lowest text-on-surface-variant")}>
-        <Icon className="h-5 w-5" aria-hidden />
+        <Icon weight='light' className="h-5 w-5" aria-hidden />
       </span>
       <span className={"text-label-sm font-bold " + (activo ? "text-primary-container" : "text-on-surface")}>{label}</span>
       <span className="tabular text-body-sm text-on-surface-variant">{conteo}</span>
     </button>
   );
 }
+

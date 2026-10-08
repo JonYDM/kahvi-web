@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Banknote, CalendarDays, CreditCard, Download, Package, Receipt, Smartphone, Store } from "lucide-react";
+﻿import { useMemo, useState } from "react";
+import { Money, CalendarDots, CreditCard, DownloadSimple, Package, Receipt, DeviceMobile, Storefront } from "@phosphor-icons/react";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Button, SkeletonFila } from "@/components/ui";
@@ -22,9 +22,9 @@ function rangoDelMes(mes: string): { desde: string; hasta: string } {
 }
 
 const ICONO_METODO = {
-  [MetodoPago.Efectivo]: Banknote,
+  [MetodoPago.Efectivo]: Money,
   [MetodoPago.Tarjeta]: CreditCard,
-  [MetodoPago.Transferencia]: Smartphone,
+  [MetodoPago.Transferencia]: DeviceMobile,
 } as const;
 
 export function HistorialVentasPage() {
@@ -48,7 +48,7 @@ export function HistorialVentasPage() {
       v.lineas.map((l) => `${l.cantidad}x ${l.nombreProducto}`).join(" | "),
       v.total,
     ]);
-    descargarCsv(`ventas-${mes}.csv`, ["Fecha", "Método", "Productos", "Total (MXN)"], filas);
+    descargarCsv(`ventas-${mes}.csv`, ["Fecha", "MÃ©todo", "Productos", "Total (MXN)"], filas);
   }
 
   return (
@@ -56,13 +56,13 @@ export function HistorialVentasPage() {
       titulo="Historial de ventas"
       subtitulo={
         <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
-          <Receipt className="h-4 w-4 text-primary-container" aria-hidden />
+          <Receipt weight='light' className="h-4 w-4 text-primary-container" aria-hidden />
           {ventas ? `${ventas.length} venta${ventas.length === 1 ? "" : "s"} en el mes` : "Ventas del negocio"}
         </p>
       }
       accion={
         <Button variant="soft" size="sm" onClick={exportar} disabled={!ventas || ventas.length === 0}>
-          <Download className="h-4 w-4" aria-hidden />
+          <DownloadSimple weight='light' className="h-4 w-4" aria-hidden />
           CSV
         </Button>
       }
@@ -71,7 +71,7 @@ export function HistorialVentasPage() {
         {/* Filtro por mes */}
         <label className="flex items-center gap-3 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-3 shadow-soft">
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-caramelo/20 text-cafe-principal">
-            <CalendarDays className="h-5 w-5" aria-hidden />
+            <CalendarDots weight='light' className="h-5 w-5" aria-hidden />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-body-sm text-on-surface-variant">Mostrando ventas de</span>
@@ -85,30 +85,30 @@ export function HistorialVentasPage() {
           </span>
         </label>
 
-        {/* Resumen del período */}
+        {/* Resumen del perÃ­odo */}
         {resumen && (
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2 flex items-center justify-between rounded-2xl bg-primary-container p-4 text-on-primary shadow-soft">
               <span className="flex items-center gap-1.5 text-label-md font-bold">
-                <Store className="h-[18px] w-[18px]" aria-hidden />
+                <Storefront weight='light' className="h-[18px] w-[18px]" aria-hidden />
                 Total del mes
               </span>
               <span className="tabular text-headline-md font-bold">{formatCurrency(resumen.total)}</span>
             </div>
-            <ResumenChip icon={Banknote} label="Efectivo" valor={resumen.efectivo} className="bg-verde-menta/20 text-cafe-intenso" iconWrap="bg-verde-menta/30 text-cafe-principal" />
+            <ResumenChip icon={Money} label="Efectivo" valor={resumen.efectivo} className="bg-verde-menta/20 text-cafe-intenso" iconWrap="bg-verde-menta/30 text-cafe-principal" />
             <ResumenChip icon={CreditCard} label="Tarjeta" valor={resumen.tarjeta} className="bg-caramelo/20 text-cafe-intenso" iconWrap="bg-caramelo/30 text-cafe-principal" />
-            <ResumenChip icon={Smartphone} label="Transferencia" valor={resumen.transferencia} className="bg-cafe-principal/10 text-cafe-intenso" iconWrap="bg-cafe-principal/20 text-cafe-principal" />
+            <ResumenChip icon={DeviceMobile} label="Transferencia" valor={resumen.transferencia} className="bg-cafe-principal/10 text-cafe-intenso" iconWrap="bg-cafe-principal/20 text-cafe-principal" />
             <div className="flex flex-col gap-1 rounded-2xl bg-surface-container p-3.5 shadow-soft">
               <span className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container-high">
-                <Package className="h-5 w-5 text-on-surface-variant" aria-hidden />
+                <Package weight='light' className="h-5 w-5 text-on-surface-variant" aria-hidden />
               </span>
               <span className="tabular mt-1 text-label-lg font-bold leading-none text-on-surface">{resumen.numeroVentas}</span>
-              <span className="text-body-sm text-on-surface-variant">Número de ventas</span>
+              <span className="text-body-sm text-on-surface-variant">NÃºmero de ventas</span>
             </div>
           </div>
         )}
 
-        {/* Chips de método */}
+        {/* Chips de mÃ©todo */}
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {[
             { valor: null, label: "Todos" },
@@ -154,7 +154,7 @@ export function HistorialVentasPage() {
                 >
                   <div className="flex items-center gap-3">
                     <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-caramelo/20 text-cafe-principal">
-                      <IconoMetodo className="h-5 w-5" aria-hidden />
+                      <IconoMetodo weight='light' className="h-5 w-5" aria-hidden />
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="text-label-lg font-bold text-on-surface">{metodoPagoLabel[v.metodoPago]}</p>
@@ -168,7 +168,7 @@ export function HistorialVentasPage() {
                   <ul className="flex flex-col gap-1 rounded-xl bg-surface-container-low px-3 py-2.5">
                     {v.lineas.map((l, i) => (
                       <li key={i} className="flex justify-between gap-2 text-body-md">
-                        <span className="min-w-0 truncate text-on-surface">{l.cantidad}× {l.nombreProducto}</span>
+                        <span className="min-w-0 truncate text-on-surface">{l.cantidad}Ã— {l.nombreProducto}</span>
                         <span className="tabular shrink-0 text-on-surface-variant">{formatCurrency(l.subtotal)}</span>
                       </li>
                     ))}
@@ -179,10 +179,10 @@ export function HistorialVentasPage() {
           </div>
         ) : (
           <EmptyState
-            titulo={metodo !== null ? "Sin ventas con ese método" : "Sin ventas"}
+            titulo={metodo !== null ? "Sin ventas con ese mÃ©todo" : "Sin ventas"}
             descripcion={
               metodo !== null
-                ? "No hay ventas con ese método de pago en el mes."
+                ? "No hay ventas con ese mÃ©todo de pago en el mes."
                 : "No hay ventas registradas en el mes seleccionado."
             }
           />
@@ -199,7 +199,7 @@ function ResumenChip({
   className,
   iconWrap,
 }: {
-  icon: typeof Banknote;
+  icon: typeof Money;
   label: string;
   valor: number;
   className: string;
@@ -208,10 +208,11 @@ function ResumenChip({
   return (
     <div className={`flex flex-col gap-1 rounded-2xl p-3.5 shadow-soft ${className}`}>
       <span className={`grid h-8 w-8 place-items-center rounded-lg ${iconWrap}`}>
-        <Icon className="h-5 w-5" aria-hidden />
+        <Icon weight='light' className="h-5 w-5" aria-hidden />
       </span>
       <span className="tabular mt-1 text-label-lg font-bold leading-none">{formatCurrency(valor)}</span>
       <span className="text-body-sm opacity-80">{label}</span>
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { ChefHat, Clock, Flame, RefreshCw } from "lucide-react";
+﻿import { ChefHat, Clock, Fire, ArrowsClockwise } from "@phosphor-icons/react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Button, SkeletonFila } from "@/components/ui";
 import { useToast } from "@/components/feedback/useToast";
@@ -41,7 +41,7 @@ export function CocinaPage() {
   async function handleAvanzar(comanda: ComandaDto) {
     try {
       const res = await avanzar.mutateAsync(comanda.id);
-      toast.exito(`Comanda #${comanda.folio} → ${estadoComandaLabel[res.nuevoEstado]}`);
+      toast.exito(`Comanda #${comanda.folio} â†’ ${estadoComandaLabel[res.nuevoEstado]}`);
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : "No se pudo avanzar la comanda.");
     }
@@ -56,9 +56,9 @@ export function CocinaPage() {
       titulo="Cocina"
       subtitulo={
         <p className="flex items-center gap-1.5 text-body-sm text-on-surface-variant">
-          <RefreshCw className="h-3.5 w-3.5 text-primary-container" aria-hidden />
-          {ultimaActualizacion ? `Actualizado ${ultimaActualizacion}` : "Cargando…"}
-          <span className="mx-1">·</span>
+          <ArrowsClockwise weight='light' className="h-3.5 w-3.5 text-primary-container" aria-hidden />
+          {ultimaActualizacion ? `Actualizado ${ultimaActualizacion}` : "Cargandoâ€¦"}
+          <span className="mx-1">Â·</span>
           <span className="font-semibold text-on-surface">{activas.length}</span> comanda{activas.length !== 1 ? "s" : ""}
         </p>
       }
@@ -77,7 +77,7 @@ export function CocinaPage() {
 
       {!isLoading && !isError && activas.length === 0 && (
         <div className="flex flex-col items-center gap-4 py-16 text-center">
-          <span className="text-6xl" aria-hidden>☕</span>
+          <span className="text-6xl" aria-hidden>â˜•</span>
           <div>
             <p className="text-headline-sm font-bold text-cafe-intenso">Todo listo</p>
             <p className="mt-1 text-body-md text-on-surface-variant">
@@ -119,9 +119,9 @@ function ComandaCard({
   })();
 
   const etiquetaBoton: Record<EstadoComanda, string> = {
-    Recibida: "▶ Iniciar preparación",
-    EnPreparacion: "✓ Marcar como lista",
-    Lista: "✔ Entregada",
+    Recibida: "â–¶ Iniciar preparaciÃ³n",
+    EnPreparacion: "âœ“ Marcar como lista",
+    Lista: "âœ” Entregada",
     Entregada: "",
     Cancelada: "",
   };
@@ -140,7 +140,7 @@ function ComandaCard({
       {/* Cabecera */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          {/* Número de folio destacado */}
+          {/* NÃºmero de folio destacado */}
           <span
             className={cn(
               "grid h-10 w-10 shrink-0 place-items-center rounded-xl text-label-lg font-black",
@@ -156,7 +156,7 @@ function ComandaCard({
               </p>
               {comanda.esParaLlevar && (
                 <span className="rounded-full bg-caramelo/20 px-2 py-0.5 text-label-sm font-bold text-cafe-intenso">
-                  🛍️ Llevar
+                  ðŸ›ï¸ Llevar
                 </span>
               )}
               {comanda.esParaLlevar && comanda.nombreCliente && (
@@ -183,18 +183,18 @@ function ComandaCard({
               esUrgente ? "text-red-600 font-bold" : "text-on-surface-variant",
             )}
           >
-            {esUrgente ? <Flame className="h-3.5 w-3.5" aria-hidden /> : <Clock className="h-3.5 w-3.5" aria-hidden />}
+            {esUrgente ? <Fire weight='light' className="h-3.5 w-3.5" aria-hidden /> : <Clock weight='light' className="h-3.5 w-3.5" aria-hidden />}
             {tiempo}
           </span>
         </div>
       </div>
 
-      {/* Ítems */}
+      {/* Ãtems */}
       <ul className="flex flex-col gap-1.5 rounded-xl bg-white/60 px-3 py-2.5">
         {comanda.items.map((item, i) => (
           <li key={i} className="flex items-start gap-2">
             <span className="shrink-0 min-w-[1.5rem] text-label-md font-black text-cafe-principal">
-              {item.cantidad}×
+              {item.cantidad}Ã—
             </span>
             <div className="min-w-0 flex-1">
               <span className="text-label-md font-semibold text-cafe-intenso">{item.nombre}</span>
@@ -208,7 +208,7 @@ function ComandaCard({
         ))}
       </ul>
 
-      {/* Acción */}
+      {/* AcciÃ³n */}
       {comanda.estado !== "Entregada" && comanda.estado !== "Cancelada" && (
         <Button
           fullWidth
@@ -222,10 +222,11 @@ function ComandaCard({
               : "bg-cafe-intenso text-crema hover:bg-cafe-intenso/90",
           )}
         >
-          <ChefHat className="h-4 w-4" aria-hidden />
+          <ChefHat weight='light' className="h-4 w-4" aria-hidden />
           {etiquetaBoton[comanda.estado]}
         </Button>
       )}
     </div>
   );
 }
+

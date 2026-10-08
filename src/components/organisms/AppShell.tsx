@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Check, ChevronDown, KeyRound, LogOut, MapPin, MoreHorizontal } from "lucide-react";
+import { Check, CaretDown, Key, SignOut, MapPin, DotsThreeOutline } from "@phosphor-icons/react";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/features/auth";
 import { rolLabel } from "@/lib/enums";
@@ -259,7 +259,8 @@ function SelectorSucursal() {
           <span className="block truncate font-marca text-headline-sm font-extrabold text-cafe-intenso">Kahvi</span>
           <span className="flex items-center gap-1 text-[11px] font-medium text-on-surface-variant">
             <span className="truncate">{activa.zona}</span>
-            <ChevronDown
+            <CaretDown
+              weight='light'
               className={cn("h-3.5 w-3.5 shrink-0 transition-transform", abierto && "rotate-180")}
               aria-hidden
             />
@@ -281,13 +282,13 @@ function SelectorSucursal() {
                 className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-surface-container"
               >
                 <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface-container text-primary-container">
-                  <MapPin className="h-4 w-4" aria-hidden />
+                  <MapPin weight='light' className="h-4 w-4" aria-hidden />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-label-lg font-semibold text-on-surface">{s.zona}</span>
                   <span className="block text-body-sm text-on-surface-variant">{s.nombre}</span>
                 </span>
-                {s.id === activa.id && <Check className="h-4 w-4 text-primary-container" aria-hidden />}
+                {s.id === activa.id && <Check weight='light' className="h-4 w-4 text-primary-container" aria-hidden />}
               </button>
             ))}
           </div>
@@ -317,7 +318,7 @@ function MenuMas({ items }: { items: NavItem[] }) {
             abierto && "bg-primary-container/10",
           )}
         >
-          <MoreHorizontal className="h-[18px] w-[18px]" aria-hidden />
+          <DotsThreeOutline weight='light' className="h-[18px] w-[18px]" aria-hidden />
         </span>
         <span>Más</span>
       </button>
@@ -392,14 +393,14 @@ function PerfilMenu({
               onClick={() => { setAbierto(false); onPin(); }}
               className="flex w-full items-center gap-2 rounded-xl px-2.5 py-2 text-label-md font-medium text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface"
             >
-              <KeyRound className="h-4 w-4" aria-hidden />
+              <Key weight='light' className="h-4 w-4" aria-hidden />
               Cambiar mi PIN
             </button>
             <button
               onClick={onSalir}
               className="flex w-full items-center gap-2 rounded-xl px-2.5 py-2 text-label-md font-medium text-error-st transition-colors hover:bg-error-container/40"
             >
-              <LogOut className="h-4 w-4" aria-hidden />
+              <SignOut weight='light' className="h-4 w-4" aria-hidden />
               Cerrar sesión
             </button>
           </div>

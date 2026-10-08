@@ -1,75 +1,76 @@
-import type { LucideIcon } from "lucide-react";
+﻿import type { Icon } from "@phosphor-icons/react";
 import {
   ChefHat,
   Coffee,
-  Home,
+  House,
   Package,
   Receipt,
   ShoppingCart,
   Tag,
-  TrendingUp,
-  UserCog,
+  TrendUp,
+  UserGear,
   Users,
   Wallet,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import type { Accion } from "@/lib/permisos";
 
 export interface NavItem {
   /** Ruta absoluta. */
   to: string;
-  /** Etiqueta corta para el menú. */
+  /** Etiqueta corta para el menÃº. */
   label: string;
-  icon: LucideIcon;
+  icon: Icon;
   /**
-   * Acción/permiso requerido para ver el ítem. Si es null, lo ven todos los
-   * usuarios del área (ej: Inicio). El AppShell filtra con `puede`.
+   * AcciÃ³n/permiso requerido para ver el Ã­tem. Si es null, lo ven todos los
+   * usuarios del Ã¡rea (ej: Inicio). El AppShell filtra con `puede`.
    */
   permiso: Accion | null;
   /**
-   * Si true, el ítem NO va en la barra inferior sino en el menú "Más".
+   * Si true, el Ã­tem NO va en la barra inferior sino en el menÃº "MÃ¡s".
    */
   secundario?: boolean;
 }
 
 /**
- * Navegación del Administrador (/app/*).
- * Barra inferior: Categorías · Productos · Inicio · Ventas · Más
- * Menú "Más": Mesero, Cocina, Caja, Equipo, Histórico
+ * NavegaciÃ³n del Administrador (/app/*).
+ * Barra inferior: CategorÃ­as Â· Productos Â· Inicio Â· Ventas Â· MÃ¡s
+ * MenÃº "MÃ¡s": Mesero, Cocina, Caja, Equipo, HistÃ³rico
  * El Admin tiene acceso a TODAS las estaciones.
  */
 export const navStaff: NavItem[] = [
-  { to: "/app/categorias", label: "Categorías", icon: Tag, permiso: "gestionar_productos" },
+  { to: "/app/categorias", label: "CategorÃ­as", icon: Tag, permiso: "gestionar_productos" },
   { to: "/app/productos", label: "Productos", icon: Package, permiso: "gestionar_productos" },
-  { to: "/app", label: "Inicio", icon: Home, permiso: null },
-  { to: "/app/ventas", label: "Ventas", icon: TrendingUp, permiso: "ver_metricas" },
-  // Estaciones — el Admin puede operar cualquiera
+  { to: "/app", label: "Inicio", icon: House, permiso: null },
+  { to: "/app/ventas", label: "Ventas", icon: TrendUp, permiso: "ver_metricas" },
+  // Estaciones â€” el Admin puede operar cualquiera
   { to: "/mesero", label: "Mesero", icon: ShoppingCart, permiso: null, secundario: true },
   { to: "/cocina", label: "Cocina", icon: ChefHat, permiso: null, secundario: true },
   { to: "/caja", label: "Caja", icon: Wallet, permiso: null, secundario: true },
-  { to: "/app/equipo", label: "Equipo", icon: UserCog, permiso: "gestionar_equipo", secundario: true },
-  { to: "/app/historico", label: "Histórico", icon: Receipt, permiso: "ver_metricas", secundario: true },
+  { to: "/app/equipo", label: "Equipo", icon: UserGear, permiso: "gestionar_equipo", secundario: true },
+  { to: "/app/historico", label: "HistÃ³rico", icon: Receipt, permiso: "ver_metricas", secundario: true },
 ];
 
 /**
- * Navegación del panel SuperAdmin (/admin/*).
+ * NavegaciÃ³n del panel SuperAdmin (/admin/*).
  */
 export const navAdmin: NavItem[] = [
-  { to: "/admin", label: "Inicio", icon: Home, permiso: "gestionar_cafeterias" },
-  { to: "/admin/cafeterias", label: "Cafeterías", icon: Coffee, permiso: "gestionar_cafeterias" },
+  { to: "/admin", label: "Inicio", icon: House, permiso: "gestionar_cafeterias" },
+  { to: "/admin/cafeterias", label: "CafeterÃ­as", icon: Coffee, permiso: "gestionar_cafeterias" },
   { to: "/admin/administradores", label: "Admins", icon: Users, permiso: "gestionar_cafeterias" },
 ];
 
-/** Navegación del Mesero (/mesero): pantalla única de comandas. */
+/** NavegaciÃ³n del Mesero (/mesero): pantalla Ãºnica de comandas. */
 export const navMesero: NavItem[] = [
   { to: "/mesero", label: "Comanda", icon: ShoppingCart, permiso: null },
 ];
 
-/** Navegación de Cocina (/cocina): tablero. */
+/** NavegaciÃ³n de Cocina (/cocina): tablero. */
 export const navCocina: NavItem[] = [
   { to: "/cocina", label: "Cocina", icon: ChefHat, permiso: null },
 ];
 
-/** Navegación de Caja (/caja): cobros. */
+/** NavegaciÃ³n de Caja (/caja): cobros. */
 export const navCaja: NavItem[] = [
   { to: "/caja", label: "Caja", icon: Wallet, permiso: null },
 ];
+

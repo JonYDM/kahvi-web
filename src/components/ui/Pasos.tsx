@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CircleNotch } from "@phosphor-icons/react";
 import { cn } from "@/lib/cn";
 import { Button } from "./Button";
 
@@ -89,7 +89,7 @@ export function Pasos({
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
         <span className="grid h-16 w-16 place-items-center rounded-full bg-primary-fixed/40 text-primary-container">
-          <Loader2 className="h-8 w-8 animate-spin" aria-hidden />
+          <CircleNotch weight='light' className="h-8 w-8 animate-spin" aria-hidden />
         </span>
         <p className="text-label-lg font-semibold text-on-surface">{textoGuardando}</p>
       </div>
@@ -100,7 +100,7 @@ export function Pasos({
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
         <span className="grid h-16 w-16 animate-[scaleIn_300ms_ease-out] place-items-center rounded-full bg-success/15 text-success">
-          <Check className="h-9 w-9" aria-hidden strokeWidth={3} />
+          <Check weight='light' className="h-9 w-9" aria-hidden />
         </span>
         <p className="text-headline-sm font-bold text-on-surface">{textoCompletado}</p>
       </div>
@@ -139,20 +139,20 @@ export function Pasos({
       <div className="flex gap-2 pt-1">
         {actual > 0 && (
           <Button type="button" variant="ghost" onClick={() => irA(actual - 1)}>
-            <ArrowLeft className="h-4 w-4" aria-hidden />
+            <ArrowLeft weight='light' className="h-4 w-4" aria-hidden />
             Atrás
           </Button>
         )}
         <Button type="button" onClick={siguiente} disabled={!puedeAvanzar} fullWidth>
           {esUltimo ? (
             <>
-              <Check className="h-4 w-4" aria-hidden />
+              <Check weight='light' className="h-4 w-4" aria-hidden />
               {textoFinal}
             </>
           ) : (
             <>
               Continuar
-              <ArrowRight className="h-4 w-4" aria-hidden />
+              <ArrowRight weight='light' className="h-4 w-4" aria-hidden />
             </>
           )}
         </Button>

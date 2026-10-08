@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@phosphor-icons/react";
 import { useHeaderTitulo } from "./headerTitulo";
 
 interface Props {
@@ -57,7 +57,7 @@ export function PantallaConHeader({
         }
         className="inline-flex items-center gap-1 text-body-sm font-medium text-primary-container"
       >
-        <ArrowLeft className="h-4 w-4" aria-hidden />
+        <ArrowLeft weight='light' className="h-4 w-4" aria-hidden />
         {volverTexto}
       </button>
     ) : (

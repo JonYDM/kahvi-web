@@ -1,6 +1,6 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import { Button, Input } from "@/components/ui";
 import { PinInput } from "@/components/molecules/PinInput";
 import { Reveal } from "@/lib/anim";
@@ -46,7 +46,7 @@ export function LoginPage() {
       setNombreReal(r.nombre ?? null);
       setPaso("pin");
     } catch {
-      setErrorId("No se pudo verificar. Revisa tu conexión e intenta de nuevo.");
+      setErrorId("No se pudo verificar. Revisa tu conexiÃ³n e intenta de nuevo.");
     } finally {
       setVerificando(false);
     }
@@ -105,14 +105,14 @@ export function LoginPage() {
                 Kahvi
               </span>
               <p className="mt-0.5 text-body-md text-cafe-principal font-medium">
-                Tu cafetería, en buenas manos
+                Tu cafeterÃ­a, en buenas manos
               </p>
             </div>
 
-            {/* Saludo cálido */}
+            {/* Saludo cÃ¡lido */}
             <div className="mt-8 text-center">
               <h1 className="text-h1 font-bold tracking-tight text-cafe-intenso">
-                ¡{saludoPorHora()}!
+                Â¡{saludoPorHora()}!
               </h1>
               <p className="mt-1.5 text-body-lg text-on-surface-variant">
                 Ingresa para continuar
@@ -150,7 +150,7 @@ export function LoginPage() {
                 className="h-14 text-base bg-verde-menta hover:bg-verde-menta/90 text-cafe-intenso font-bold"
               >
                 Continuar
-                <ArrowRight className="h-5 w-5" aria-hidden />
+                <ArrowRight weight='light' className="h-5 w-5" aria-hidden />
               </Button>
             </form>
           </Reveal>
@@ -160,7 +160,7 @@ export function LoginPage() {
               onClick={volver}
               className="absolute left-6 top-6 flex w-fit items-center gap-1.5 rounded-full bg-surface-container px-3 py-1.5 text-label-md font-medium text-on-surface-variant transition-colors hover:text-on-surface"
             >
-              <ArrowLeft className="h-4 w-4" aria-hidden />
+              <ArrowLeft weight='light' className="h-4 w-4" aria-hidden />
               {identificador}
             </button>
 
@@ -172,12 +172,12 @@ export function LoginPage() {
                 className="h-28 w-28 object-contain drop-shadow-md"
               />
               <h1 className="mt-3 text-h1 font-bold tracking-tight text-cafe-intenso">
-                {nombreReal ? `¡Hola, ${nombreReal.split(" ")[0]}!` : "Tu PIN"}
+                {nombreReal ? `Â¡Hola, ${nombreReal.split(" ")[0]}!` : "Tu PIN"}
               </h1>
               <p className="mt-1.5 text-body-lg text-on-surface-variant">
                 {nombreReal
                   ? "Ingresa tu PIN para entrar"
-                  : `Ingresa tu PIN de ${PIN_LENGTH} dígitos`}
+                  : `Ingresa tu PIN de ${PIN_LENGTH} dÃ­gitos`}
               </p>
             </div>
 
@@ -222,3 +222,4 @@ export function LoginPage() {
     </main>
   );
 }
+

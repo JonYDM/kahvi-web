@@ -1,5 +1,5 @@
-import { useState, type FormEvent } from "react";
-import { Trash2 } from "lucide-react";
+﻿import { useState, type FormEvent } from "react";
+import { Trash } from "@phosphor-icons/react";
 import { Button, Input, Modal, Select } from "@/components/ui";
 import { ApiError } from "@/lib/http";
 import { useCategorias } from "@/features/categorias";
@@ -12,7 +12,7 @@ interface Props {
   producto: Producto;
 }
 
-/** Modal para editar un producto o darlo de baja lógica. */
+/** Modal para editar un producto o darlo de baja lÃ³gica. */
 export function EditarProductoModal({ open, onClose, producto }: Props) {
   const editar = useEditarProducto();
   const desactivar = useDesactivarProducto();
@@ -36,7 +36,7 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
     setError(null);
 
     if (!categoriaId) {
-      setError("Selecciona una categoría.");
+      setError("Selecciona una categorÃ­a.");
       return;
     }
 
@@ -75,7 +75,7 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
         />
 
         <Select
-          label="Categoría"
+          label="CategorÃ­a"
           value={categoriaId}
           onChange={(e) => setCategoriaId(e.target.value)}
           options={opcionesCategorias}
@@ -119,7 +119,7 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
             onClick={darDeBaja}
             loading={desactivar.isPending}
           >
-            <Trash2 className="h-4 w-4" aria-hidden />
+            <Trash weight='light' className="h-4 w-4" aria-hidden />
             Dar de baja
           </Button>
           <Button type="submit" fullWidth loading={editar.isPending}>
@@ -130,3 +130,4 @@ export function EditarProductoModal({ open, onClose, producto }: Props) {
     </Modal>
   );
 }
+

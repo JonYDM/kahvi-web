@@ -1,5 +1,5 @@
 import { forwardRef, useId, type SelectHTMLAttributes } from "react";
-import { ChevronDown } from "lucide-react";
+import { CaretDown } from "@phosphor-icons/react";
 import { cn } from "@/lib/cn";
 
 export interface SelectOption {
@@ -46,7 +46,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          <ChevronDown
+          <CaretDown
+            weight='light'
             className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant"
             aria-hidden
           />

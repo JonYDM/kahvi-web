@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import { AtSign } from "lucide-react";
+﻿import type { ReactNode } from "react";
+import { At } from "@phosphor-icons/react";
 import { Input } from "@/components/ui";
 import {
   curpInvalida,
@@ -40,9 +40,9 @@ export function CamposNombre({ datos, onChange, mostrarUsuario = false }: Props 
       </div>
       {sugerido && (
         <p className="flex items-center gap-2 rounded-xl bg-surface-container px-4 py-3 text-body-sm text-on-surface-variant">
-          <AtSign className="h-4 w-4 shrink-0 text-primary-container" aria-hidden />
+          <At weight='light' className="h-4 w-4 shrink-0 text-primary-container" aria-hidden />
           <span>
-            Su usuario será <strong className="font-bold text-on-surface">{sugerido}</strong>
+            Su usuario serÃ¡ <strong className="font-bold text-on-surface">{sugerido}</strong>
           </span>
         </p>
       )}
@@ -51,8 +51,8 @@ export function CamposNombre({ datos, onChange, mostrarUsuario = false }: Props 
 }
 
 /**
- * Paso "Contacto": teléfono + CURP opcional. En edición, `curpActual` muestra la CURP
- * enmascarada y el campo vacío significa "conservarla"; `accionCurp` permite quitarla.
+ * Paso "Contacto": telÃ©fono + CURP opcional. En ediciÃ³n, `curpActual` muestra la CURP
+ * enmascarada y el campo vacÃ­o significa "conservarla"; `accionCurp` permite quitarla.
  */
 export function CamposContacto({
   datos,
@@ -61,17 +61,17 @@ export function CamposContacto({
   accionCurp,
 }: Props & { curpActual?: string | null; accionCurp?: ReactNode }) {
   const invalida = curpInvalida(datos.curp);
-  const hintCurp = curpActual ? `Actual: ${curpActual}. Déjala vacía para conservarla.` : "18 caracteres";
+  const hintCurp = curpActual ? `Actual: ${curpActual}. DÃ©jala vacÃ­a para conservarla.` : "18 caracteres";
   return (
     <div className="space-y-4">
       <Input
-        label="Teléfono"
+        label="TelÃ©fono"
         type="tel"
         inputMode="numeric"
         autoComplete="tel-national"
         value={datos.telefono}
         onChange={(e) => onChange({ ...datos, telefono: normalizarTelefono(e.target.value) })}
-        hint="10 dígitos"
+        hint="10 dÃ­gitos"
         required
       />
       <div className="space-y-1.5">
@@ -89,3 +89,5 @@ export function CamposContacto({
     </div>
   );
 }
+
+

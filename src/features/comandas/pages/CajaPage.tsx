@@ -1,14 +1,14 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import {
-  Banknote,
+  Money,
   Check,
   CreditCard,
-  Download,
-  PieChart,
+  DownloadSimple,
+  ChartPie,
   Receipt,
-  Smartphone,
+  DeviceMobile,
   XCircle,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import { MetodoPago, type ComandaDto } from "@/types/api";
 import { useComandasActivas, useCobrarComanda, useCancelarComanda } from "../hooks";
@@ -16,11 +16,11 @@ import { useVentas, useResumenVentas } from "@/features/pos/hooks";
 import { useToast } from "@/components/feedback/useToast";
 import { ApiError } from "@/lib/http";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 type Tab = "cobrar" | "corte";
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function rangoHoy(): { desde: string; hasta: string } {
   const inicio = new Date();
@@ -44,7 +44,7 @@ function sugerenciasEfectivo(total: number): number[] {
 function descargarCSV(ventas: ReturnType<typeof useVentas>["data"]) {
   if (!ventas || ventas.length === 0) return;
   const fecha = new Date().toISOString().slice(0, 10);
-  const encabezado = "Folio,Hora,Productos,Método,Total\n";
+  const encabezado = "Folio,Hora,Productos,MÃ©todo,Total\n";
   const filas = ventas
     .slice()
     .sort((a, b) => new Date(a.fechaHora).getTime() - new Date(b.fechaHora).getTime())
@@ -74,7 +74,7 @@ function descargarCSV(ventas: ReturnType<typeof useVentas>["data"]) {
   URL.revokeObjectURL(url);
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function CajaPage() {
   const [tab, setTab] = useState<Tab>("cobrar");
@@ -97,14 +97,14 @@ export function CajaPage() {
             <TabBtn
               activo={tab === "cobrar"}
               onClick={() => setTab("cobrar")}
-              icon={Banknote}
+              icon={Money}
               label="Cobrar"
               badge={porCobrar.length}
             />
             <TabBtn
               activo={tab === "corte"}
               onClick={() => setTab("corte")}
-              icon={PieChart}
+              icon={ChartPie}
               label="Corte"
             />
           </div>
@@ -115,7 +115,7 @@ export function CajaPage() {
       {toast && (
         <div className="fixed left-1/2 top-20 z-50 -translate-x-1/2">
           <div className="flex items-center gap-2 rounded-full bg-cafe-intenso px-5 py-3 text-sm font-medium text-crema shadow-xl">
-            <Check className="h-4 w-4 text-verde-menta" /> {toast}
+            <Check weight='light' className="h-4 w-4 text-verde-menta" /> {toast}
           </div>
         </div>
       )}
@@ -131,7 +131,7 @@ export function CajaPage() {
   );
 }
 
-// ─── Tab button ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ Tab button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function TabBtn({
   activo,
@@ -142,7 +142,7 @@ function TabBtn({
 }: {
   activo: boolean;
   onClick: () => void;
-  icon: typeof Banknote;
+  icon: typeof Money;
   label: string;
   badge?: number;
 }) {
@@ -153,7 +153,7 @@ function TabBtn({
         activo ? "bg-cafe-intenso text-crema shadow-sm" : "text-cafe-intenso/60 hover:text-cafe-intenso"
       }`}
     >
-      <Icon className="h-4 w-4" /> {label}
+      <Icon weight='light' className="h-4 w-4" /> {label}
       {typeof badge === "number" && badge > 0 && (
         <span
           className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] font-bold ${
@@ -167,7 +167,7 @@ function TabBtn({
   );
 }
 
-// ─── Cobrar ───────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Cobrar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function Cobrar({
   porCobrar,
@@ -180,11 +180,11 @@ function Cobrar({
     return (
       <div className="flex flex-col items-center py-28 text-center">
         <span className="flex h-20 w-20 items-center justify-center rounded-full bg-cafe-principal/20 text-cafe-intenso/40">
-          <Receipt className="h-10 w-10" />
+          <Receipt weight='light' className="h-10 w-10" />
         </span>
         <p className="mt-5 text-lg text-cafe-intenso/60">No hay pedidos por cobrar.</p>
         <p className="text-sm text-cafe-intenso/40">
-          Cuando cocina marque un pedido como listo, aparecerá aquí.
+          Cuando cocina marque un pedido como listo, aparecerÃ¡ aquÃ­.
         </p>
       </div>
     );
@@ -199,7 +199,7 @@ function Cobrar({
   );
 }
 
-// ─── Tarjeta de comanda con UX de cobro ──────────────────────────────────────
+// â”€â”€â”€ Tarjeta de comanda con UX de cobro â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function ComandaCobro({
   comanda: c,
@@ -251,7 +251,7 @@ function ComandaCobro({
         <span className="rounded-full bg-white/70 px-2.5 py-0.5 text-xs font-semibold text-cafe-intenso">
           {c.esParaLlevar
             ? c.nombreCliente
-              ? `Para llevar · ${c.nombreCliente}`
+              ? `Para llevar Â· ${c.nombreCliente}`
               : "Para llevar"
             : c.mesa}
         </span>
@@ -262,7 +262,7 @@ function ComandaCobro({
         {c.items.map((it, i) => (
           <li key={i} className="flex justify-between">
             <span>
-              {it.cantidad}× {it.nombre}
+              {it.cantidad}Ã— {it.nombre}
             </span>
             <span>{formatCurrency(it.precioUnitario * it.cantidad)}</span>
           </li>
@@ -283,14 +283,14 @@ function ComandaCobro({
               onClick={() => setModoEfectivo(true)}
               className="flex items-center justify-center gap-2 rounded-xl bg-cafe-intenso py-3 text-sm font-semibold text-crema transition-transform hover:scale-[1.02] active:scale-95"
             >
-              <Banknote className="h-4 w-4" /> Efectivo
+              <Money weight='light' className="h-4 w-4" /> Efectivo
             </button>
             <button
               onClick={() => handleCobrar(MetodoPago.Tarjeta)}
               disabled={cobrar.isPending}
               className="flex items-center justify-center gap-2 rounded-xl bg-cafe-intenso py-3 text-sm font-semibold text-crema transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-50"
             >
-              <CreditCard className="h-4 w-4" /> Tarjeta
+              <CreditCard weight='light' className="h-4 w-4" /> Tarjeta
             </button>
           </div>
           <button
@@ -298,14 +298,14 @@ function ComandaCobro({
             disabled={cobrar.isPending}
             className="flex w-full items-center justify-center gap-2 rounded-xl border border-cafe-intenso/20 py-2.5 text-sm font-semibold text-cafe-intenso transition-colors hover:bg-cafe-principal/10 disabled:opacity-50"
           >
-            <Smartphone className="h-4 w-4" /> Transferencia
+            <DeviceMobile weight='light' className="h-4 w-4" /> Transferencia
           </button>
           <button
             onClick={handleCancelar}
             disabled={cancelar.isPending}
             className="flex w-full items-center justify-center gap-2 rounded-xl py-2 text-xs font-medium text-red-400 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-50"
           >
-            <XCircle className="h-3.5 w-3.5" /> Cancelar comanda
+            <XCircle weight='light' className="h-3.5 w-3.5" /> Cancelar comanda
           </button>
         </div>
       ) : (
@@ -319,7 +319,7 @@ function ComandaCobro({
               }}
               className="text-xs text-cafe-intenso/50 hover:text-cafe-intenso"
             >
-              Cambiar método
+              Cambiar mÃ©todo
             </button>
           </div>
 
@@ -343,7 +343,7 @@ function ComandaCobro({
           {/* Input monto recibido */}
           <label className="mt-3 block">
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-cafe-intenso/50">
-              Con cuánto paga
+              Con cuÃ¡nto paga
             </span>
             <input
               value={recibido}
@@ -384,7 +384,7 @@ function ComandaCobro({
             disabled={!puedeCobrarEfectivo || cobrar.isPending}
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-verde-menta py-3 text-sm font-semibold text-crema shadow-md transition-transform hover:scale-[1.02] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Check className="h-4 w-4" /> Cobrar y registrar
+            <Check weight='light' className="h-4 w-4" /> Cobrar y registrar
           </button>
         </div>
       )}
@@ -392,7 +392,7 @@ function ComandaCobro({
   );
 }
 
-// ─── Corte ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Corte â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function Corte() {
   const { desde, hasta } = rangoHoy();
@@ -419,7 +419,7 @@ function Corte() {
 
   return (
     <div className="space-y-8">
-      {/* Tarjeta total del día */}
+      {/* Tarjeta total del dÃ­a */}
       <div className="rounded-3xl bg-cafe-intenso p-8 text-crema shadow-sm">
         <p className="text-sm text-crema/70">Vendido hoy</p>
         <p className="mt-1 text-5xl font-bold tracking-tight">
@@ -457,7 +457,7 @@ function Corte() {
             disabled={!ventas || ventas.length === 0}
             className="flex items-center gap-1.5 rounded-full border border-cafe-intenso/20 px-3 py-1.5 text-xs font-semibold text-cafe-intenso transition-colors hover:bg-cafe-principal/10 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Download className="h-3.5 w-3.5" /> Exportar CSV
+            <DownloadSimple weight='light' className="h-3.5 w-3.5" /> Exportar CSV
           </button>
         </div>
 
@@ -469,7 +469,7 @@ function Corte() {
           </div>
         ) : ventasOrdenadas.length === 0 ? (
           <p className="py-8 text-center text-sm text-cafe-intenso/45">
-            Aún no hay ventas hoy.
+            AÃºn no hay ventas hoy.
           </p>
         ) : (
           <div className="divide-y divide-cafe-intenso/5 rounded-2xl bg-white/70 px-5 shadow-sm">
@@ -489,7 +489,7 @@ function Corte() {
                       </span>
                     </p>
                     <p className="text-xs text-cafe-intenso/45">
-                      {numProductos} productos · {metodoLabel(v.metodoPago)}
+                      {numProductos} productos Â· {metodoLabel(v.metodoPago)}
                     </p>
                   </div>
                   <span className="text-sm font-bold text-cafe-intenso">
@@ -504,3 +504,5 @@ function Corte() {
     </div>
   );
 }
+
+
