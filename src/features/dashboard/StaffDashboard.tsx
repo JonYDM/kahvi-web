@@ -47,21 +47,13 @@ export function StaffDashboard() {
       }
     >
       <div className="flex flex-col gap-6">
-        {/* Acciones rápidas */}
+        {/* Acciones rápidas — estaciones de trabajo */}
         <div className="grid grid-cols-2 gap-2.5">
-          <AccionRapida
-            to="/app/pos"
-            icon={ShoppingCart}
-            titulo="Venta directa"
-            sub="Cobrar sin comanda"
-            className="bg-primary-container text-on-primary"
-            iconWrap="bg-white/20 text-on-primary"
-          />
           <AccionRapida
             to="/mesero"
             icon={Coffee}
-            titulo="Nueva comanda"
-            sub="Enviar a cocina"
+            titulo="Mesero"
+            sub="Tomar pedidos"
             className="bg-cafe-intenso text-crema"
             iconWrap="bg-crema/10 text-crema"
           />
@@ -80,6 +72,14 @@ export function StaffDashboard() {
             sub="Cobrar comandas"
             className="bg-verde-menta/30 text-cafe-intenso"
             iconWrap="bg-verde-menta/40 text-cafe-intenso"
+          />
+          <AccionRapida
+            to="/app/ventas"
+            icon={TrendingUp}
+            titulo="Ventas"
+            sub="Resumen del mes"
+            className="bg-primary-container/15 text-on-surface"
+            iconWrap="bg-primary-container/20 text-primary-container"
           />
         </div>
 

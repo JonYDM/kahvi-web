@@ -34,13 +34,18 @@ export interface NavItem {
 /**
  * Navegación del Administrador (/app/*).
  * Barra inferior: Categorías · Productos · Inicio · Ventas · Más
- * Menú "Más": Equipo, Histórico
+ * Menú "Más": Mesero, Cocina, Caja, Equipo, Histórico
+ * El Admin tiene acceso a TODAS las estaciones.
  */
 export const navStaff: NavItem[] = [
   { to: "/app/categorias", label: "Categorías", icon: Tag, permiso: "gestionar_productos" },
   { to: "/app/productos", label: "Productos", icon: Package, permiso: "gestionar_productos" },
   { to: "/app", label: "Inicio", icon: Home, permiso: null },
   { to: "/app/ventas", label: "Ventas", icon: TrendingUp, permiso: "ver_metricas" },
+  // Estaciones — el Admin puede operar cualquiera
+  { to: "/mesero", label: "Mesero", icon: ShoppingCart, permiso: null, secundario: true },
+  { to: "/cocina", label: "Cocina", icon: ChefHat, permiso: null, secundario: true },
+  { to: "/caja", label: "Caja", icon: Wallet, permiso: null, secundario: true },
   { to: "/app/equipo", label: "Equipo", icon: UserCog, permiso: "gestionar_equipo", secundario: true },
   { to: "/app/historico", label: "Histórico", icon: Receipt, permiso: "ver_metricas", secundario: true },
 ];
