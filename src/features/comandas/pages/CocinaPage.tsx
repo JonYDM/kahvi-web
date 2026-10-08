@@ -150,7 +150,21 @@ function ComandaCard({
             #{comanda.folio}
           </span>
           <div>
-            <p className="text-headline-sm font-bold text-cafe-intenso">{comanda.mesa}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-headline-sm font-bold text-cafe-intenso">
+                {comanda.esParaLlevar ? "Para llevar" : comanda.mesa}
+              </p>
+              {comanda.esParaLlevar && (
+                <span className="rounded-full bg-caramelo/20 px-2 py-0.5 text-label-sm font-bold text-cafe-intenso">
+                  🛍️ Llevar
+                </span>
+              )}
+              {comanda.esParaLlevar && comanda.nombreCliente && (
+                <span className="text-body-sm font-semibold text-primary-container">
+                  {comanda.nombreCliente}
+                </span>
+              )}
+            </div>
             <p className="text-body-sm text-on-surface-variant">{comanda.meseroNombre}</p>
           </div>
         </div>

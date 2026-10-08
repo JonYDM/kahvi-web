@@ -79,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const iniciarSesion = useCallback(
     async (nombreUsuario: string, pin: string) => {
-      const resp = await loginApi({ nombreUsuario, pin });
+      const resp = await loginApi({ identificador: nombreUsuario, pin });
       const nueva = construirSesion(resp);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(nueva));
       setSesion(nueva);

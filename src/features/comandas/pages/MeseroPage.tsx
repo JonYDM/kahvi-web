@@ -1,25 +1,38 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
   Minus,
   Package,
   Plus,
   Search,
-  Send,
+  ShoppingBag,
+  StickyNote,
+  Store,
   Trash2,
-  UtensilsCrossed,
+  X,
 } from "lucide-react";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
-import { Button, Drawer, Input, SkeletonFila } from "@/components/ui";
+import { Button, Input, SkeletonFila } from "@/components/ui";
 import { useAuth } from "@/features/auth";
+import { useCategorias } from "@/features/categorias";
 import { useCatalogo } from "@/features/pos/hooks";
 import { useToast } from "@/components/feedback/useToast";
 import { ApiError } from "@/lib/http";
 import { cn } from "@/lib/cn";
-import { categoriaProductoLabel } from "@/lib/enums";
 import { formatCurrency } from "@/lib/format";
-import { CategoriaProducto, type Producto } from "@/types/api";
+import type { Producto } from "@/types/api";
 import { useEnviarComanda } from "../hooks";
+
+// ─── Tipos locales ──────────────────────────────────────────────────────────
+
+type Paso = 0 | 1 | 2 | 3;
+type TipoServicio = "mesa" | "llevar";
+
+const ETIQUETAS_PASO = ["Servicio", "Productos", "Revisar", "Listo"];
+const MESAS_RAPIDAS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
 interface LineaCarrito {
   producto: Producto;
@@ -27,30 +40,35 @@ interface LineaCarrito {
   nota: string;
 }
 
-const CATEGORIAS: { valor: CategoriaProducto | null; label: string }[] = [
-  { valor: null, label: "Todos" },
-  { valor: CategoriaProducto.Cafe, label: "☕ Café" },
-  { valor: CategoriaProducto.Desayunos, label: "🥞 Desayunos" },
-  { valor: CategoriaProducto.Postres, label: "🍰 Postres" },
-  { valor: CategoriaProducto.Bebidas, label: "🥤 Bebidas" },
-  { valor: CategoriaProducto.Otro, label: "Otro" },
-];
+// ─── Componente principal ────────────────────────────────────────────────────
 
-/** Pantalla del mesero: selecciona mesa, arma comanda y la envía a cocina. */
+/** Pantalla del mesero con flujo en 4 pasos: Servicio → Productos → Revisar → Confirmación */
 export function MeseroPage() {
   const { sesion } = useAuth();
   const { data: productos, isLoading, isError } = useCatalogo();
+  const { data: categorias } = useCategorias();
   const enviarComanda = useEnviarComanda();
   const toast = useToast();
 
-  const [mesa, setMesa] = useState("");
-  const [texto, setTexto] = useState("");
-  const [categoria, setCategoria] = useState<CategoriaProducto | null>(null);
+  // Estado del flujo
+  const [paso, setPaso] = useState<Paso>(0);
+
+  // Paso 0 — tipo de servicio
+  const [tipo, setTipo] = useState<TipoServicio>("mesa");
+  const [mesa, setMesa] = useState("1");
+  const [nombreCliente, setNombreCliente] = useState("");
+
+  // Paso 1 — productos
+  const [categoriaId, setCategoriaId] = useState<string | null>(null);
+  const [busqueda, setBusqueda] = useState("");
   const [carrito, setCarrito] = useState<Record<string, LineaCarrito>>({});
-  const [drawerAbierto, setDrawerAbierto] = useState(false);
   const [editandoNota, setEditandoNota] = useState<string | null>(null);
   const [notaTemp, setNotaTemp] = useState("");
 
+  // Paso 3 — confirmación
+  const [folioConfirmado, setFolioConfirmado] = useState<number | null>(null);
+
+  // Derivados
   const lineas = Object.values(carrito);
   const totalArticulos = lineas.reduce((s, l) => s + l.cantidad, 0);
   const total = useMemo(
@@ -58,14 +76,25 @@ export function MeseroPage() {
     [lineas],
   );
 
+  // Categorías ordenadas para los chips
+  const categoriasOrdenadas = useMemo(
+    () => [...(categorias ?? [])].sort((a, b) => a.orden - b.orden),
+    [categorias],
+  );
+
   const visibles = useMemo(() => {
-    const q = texto.trim().toLowerCase();
+    const q = busqueda.trim().toLowerCase();
     return (productos ?? []).filter((p) => {
-      if (categoria !== null && p.categoria !== categoria) return false;
+      if (categoriaId !== null && p.categoriaId !== categoriaId) return false;
       if (q && !p.nombre.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [productos, categoria, texto]);
+  }, [productos, categoriaId, busqueda]);
+
+  // Texto de referencia de mesa para mostrar en la UI
+  const refMesa = tipo === "llevar" ? "Para llevar" : `Mesa ${mesa}`;
+
+  // ─── Acciones del carrito ──────────────────────────────────────────────────
 
   function agregar(p: Producto) {
     setCarrito((prev) => {
@@ -98,11 +127,13 @@ export function MeseroPage() {
     setEditandoNota(null);
   }
 
-  async function enviar() {
-    if (mesa.trim() === "" || lineas.length === 0 || enviarComanda.isPending) return;
+  // ─── Envío ─────────────────────────────────────────────────────────────────
+
+  async function confirmar() {
+    if (lineas.length === 0 || enviarComanda.isPending) return;
     try {
-      await enviarComanda.mutateAsync({
-        mesa: mesa.trim(),
+      const resp = await enviarComanda.mutateAsync({
+        mesa: tipo === "llevar" ? "" : mesa,
         meseroNombre: sesion?.nombre ?? "Mesero",
         items: lineas.map((l) => ({
           productoId: l.producto.id,
@@ -111,277 +142,503 @@ export function MeseroPage() {
           precio: l.producto.precio,
           nota: l.nota || undefined,
         })),
+        esParaLlevar: tipo === "llevar",
+        nombreCliente: tipo === "llevar" ? nombreCliente.trim() || null : null,
       });
-      // Éxito: limpiar y mostrar confirmación
-      setCarrito({});
-      setMesa("");
-      toast.exito("¡Comanda enviada a cocina!");
-      setDrawerAbierto(false);
+      // El backend devuelve { id } — el folio lo extraemos de las comandas activas,
+      // pero para la confirmación usamos un número derivado del id.
+      // Como fallback, usamos un folio ficticio para mostrar al usuario.
+      setFolioConfirmado(null); // se mostrará el mensaje sin folio específico
+      void resp; // La data no tiene folio directo, solo id
+      setPaso(3);
     } catch (err) {
       const msg = err instanceof ApiError ? err.message : "No se pudo enviar la comanda.";
       toast.error(msg);
     }
   }
 
+  function nuevoPedido() {
+    setCarrito({});
+    setMesa("1");
+    setTipo("mesa");
+    setNombreCliente("");
+    setBusqueda("");
+    setCategoriaId(null);
+    setFolioConfirmado(null);
+    setPaso(0);
+  }
+
+  // ─── Validaciones por paso ─────────────────────────────────────────────────
+
+  function puedeAvanzar(): boolean {
+    if (paso === 0) {
+      if (tipo === "mesa") return mesa.trim().length > 0;
+      return true; // para llevar siempre puede avanzar
+    }
+    if (paso === 1) return totalArticulos > 0;
+    if (paso === 2) return totalArticulos > 0;
+    return false;
+  }
+
+  function irA(destino: Paso) {
+    setPaso(destino);
+  }
+
+  // ─── Render ────────────────────────────────────────────────────────────────
+
   return (
     <PantallaConHeader
       titulo="Nueva comanda"
       subtitulo={
-        <p className="text-body-sm text-on-surface-variant flex items-center gap-1">
-          <UtensilsCrossed className="h-4 w-4" aria-hidden />
-          Mesero
-        </p>
+        <div className="flex items-center gap-1.5">
+          <PasosIndicador paso={paso} />
+        </div>
       }
     >
-      <div className="flex flex-col gap-4 pb-28">
-        {/* Selector de mesa */}
-        <div className="flex items-center gap-3 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-4 shadow-soft">
-          <span className="text-2xl" aria-hidden>🪑</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-body-sm text-on-surface-variant mb-1">¿Qué mesa?</p>
-            <input
-              type="text"
-              aria-label="Mesa o número de mesa"
-              placeholder="Ej: Mesa 3, Barra, Para llevar…"
-              value={mesa}
-              onChange={(e) => setMesa(e.target.value)}
-              className="w-full bg-transparent text-headline-sm font-bold text-cafe-intenso placeholder:text-on-surface-variant/50 outline-none"
-            />
-          </div>
-          {mesa.trim() && (
-            <span className="shrink-0 rounded-full bg-verde-menta/20 px-3 py-1 text-label-sm font-bold text-cafe-intenso">
-              ✓
-            </span>
-          )}
-        </div>
+      <div className="flex flex-col gap-4 pb-32">
 
-        {/* Buscador */}
-        <div className="relative">
-          <Search
-            className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
-            aria-hidden
-          />
-          <Input
-            variant="soft"
-            aria-label="Buscar productos"
-            placeholder="Buscar producto"
-            value={texto}
-            onChange={(e) => setTexto(e.target.value)}
-            className="h-12 pl-12"
-          />
-        </div>
+        {/* ══════════════════ PASO 0: TIPO DE SERVICIO ══════════════════════ */}
+        {paso === 0 && (
+          <section aria-label="Tipo de servicio">
+            <PasoTitulo icon={Store} titulo="¿Dónde es el pedido?" sub="Elige mesa o para llevar" />
 
-        {/* Chips de categoría */}
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {CATEGORIAS.map((cat) => {
-            const activo = categoria === cat.valor;
-            return (
+            {/* Selector Mesa / Para llevar */}
+            <div className="mt-5 grid grid-cols-2 gap-3">
               <button
-                key={cat.label}
-                onClick={() => setCategoria(cat.valor)}
+                onClick={() => setTipo("mesa")}
                 className={cn(
-                  "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
-                  activo
-                    ? "bg-primary-container text-on-primary"
-                    : "bg-surface-container text-on-surface-variant hover:text-on-surface",
+                  "flex flex-col items-start rounded-2xl border-2 p-5 text-left transition-all duration-200",
+                  tipo === "mesa"
+                    ? "border-primary-container bg-primary-container/10 shadow-soft"
+                    : "border-outline-variant/40 bg-surface-container-lowest",
                 )}
               >
-                {cat.label}
+                <Store
+                  className={cn(
+                    "h-7 w-7",
+                    tipo === "mesa" ? "text-primary-container" : "text-on-surface-variant",
+                  )}
+                  aria-hidden
+                />
+                <p className="mt-3 text-label-lg font-bold text-on-surface">En mesa</p>
+                <p className="text-body-sm text-on-surface-variant">El cliente consume aquí</p>
               </button>
-            );
-          })}
-        </div>
 
-        {/* Catálogo */}
-        {isLoading ? (
-          <div className="grid grid-cols-2 gap-3">
-            {Array.from({ length: 6 }).map((_, i) => <SkeletonFila key={i} />)}
-          </div>
-        ) : isError ? (
-          <div className="rounded-2xl bg-error-container/40 p-6 text-center text-body-sm text-on-error-container">
-            No se pudo cargar el catálogo.
-          </div>
-        ) : visibles.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3">
-            {visibles.map((p) => (
-              <ProductoCard
-                key={p.id}
-                producto={p}
-                enCarrito={carrito[p.id]?.cantidad ?? 0}
-                nota={carrito[p.id]?.nota ?? ""}
-                onAgregar={() => agregar(p)}
-                onQuitar={() => quitar(p.id)}
-                onEditarNota={() => {
-                  setEditandoNota(p.id);
-                  setNotaTemp(carrito[p.id]?.nota ?? "");
-                }}
+              <button
+                onClick={() => setTipo("llevar")}
+                className={cn(
+                  "flex flex-col items-start rounded-2xl border-2 p-5 text-left transition-all duration-200",
+                  tipo === "llevar"
+                    ? "border-primary-container bg-primary-container/10 shadow-soft"
+                    : "border-outline-variant/40 bg-surface-container-lowest",
+                )}
+              >
+                <ShoppingBag
+                  className={cn(
+                    "h-7 w-7",
+                    tipo === "llevar" ? "text-primary-container" : "text-on-surface-variant",
+                  )}
+                  aria-hidden
+                />
+                <p className="mt-3 text-label-lg font-bold text-on-surface">Para llevar</p>
+                <p className="text-body-sm text-on-surface-variant">Pedido para salir</p>
+              </button>
+            </div>
+
+            {/* Selector de mesa (solo si es "mesa") */}
+            {tipo === "mesa" && (
+              <div className="mt-5">
+                <p className="mb-2 text-label-md font-semibold text-on-surface-variant">
+                  Número de mesa
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {MESAS_RAPIDAS.map((n) => (
+                    <button
+                      key={n}
+                      onClick={() => setMesa(n)}
+                      className={cn(
+                        "flex h-12 w-12 items-center justify-center rounded-2xl text-label-lg font-bold transition-all active:scale-90",
+                        mesa === n
+                          ? "bg-cafe-intenso text-crema shadow-soft"
+                          : "bg-surface-container-low text-on-surface",
+                      )}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+                {/* Campo manual para mesas no listadas */}
+                <div className="mt-3">
+                  <Input
+                    label="Otra mesa"
+                    placeholder="Ej: Barra, Terraza, 9…"
+                    value={MESAS_RAPIDAS.includes(mesa) ? "" : mesa}
+                    onChange={(e) => setMesa(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Nombre del cliente (solo para llevar) */}
+            {tipo === "llevar" && (
+              <div className="mt-5">
+                <Input
+                  label="Nombre del cliente (opcional)"
+                  placeholder="¿Cómo se llama?"
+                  value={nombreCliente}
+                  onChange={(e) => setNombreCliente(e.target.value)}
+                />
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* ══════════════════ PASO 1: PRODUCTOS ════════════════════════════ */}
+        {paso === 1 && (
+          <section aria-label="Selección de productos">
+            <PasoTitulo
+              icon={ShoppingBag}
+              titulo="Agrega productos"
+              sub={refMesa}
+            />
+
+            {/* Buscador */}
+            <div className="relative mt-5">
+              <Search
+                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
+                aria-hidden
               />
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            titulo="Sin resultados"
-            descripcion="No hay productos que coincidan."
+              <Input
+                variant="soft"
+                aria-label="Buscar productos"
+                placeholder="Buscar producto…"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                className="h-12 pl-12"
+              />
+              {busqueda && (
+                <button
+                  onClick={() => setBusqueda("")}
+                  aria-label="Limpiar búsqueda"
+                  className="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Chips de categoría (se ocultan al buscar) */}
+            {!busqueda.trim() && (
+              <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <button
+                  onClick={() => setCategoriaId(null)}
+                  className={cn(
+                    "shrink-0 rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+                    categoriaId === null
+                      ? "bg-primary-container text-on-primary"
+                      : "bg-surface-container text-on-surface-variant",
+                  )}
+                >
+                  Todos
+                </button>
+                {categoriasOrdenadas.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setCategoriaId(cat.id)}
+                    className={cn(
+                      "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+                      categoriaId === cat.id
+                        ? "bg-primary-container text-on-primary"
+                        : "bg-surface-container text-on-surface-variant",
+                    )}
+                  >
+                    {cat.nombre}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Grilla de productos */}
+            <div className="mt-4">
+              {isLoading ? (
+                <div className="grid grid-cols-2 gap-3">
+                  {Array.from({ length: 6 }).map((_, i) => <SkeletonFila key={i} />)}
+                </div>
+              ) : isError ? (
+                <div className="rounded-2xl bg-surface-container-lowest p-8 text-center text-body-sm text-error-st shadow-soft">
+                  No se pudo cargar el catálogo.
+                </div>
+              ) : visibles.length > 0 ? (
+                <div className="grid grid-cols-2 gap-3">
+                  {visibles.map((p) => (
+                    <ProductoCard
+                      key={p.id}
+                      producto={p}
+                      enCarrito={carrito[p.id]?.cantidad ?? 0}
+                      onAgregar={() => agregar(p)}
+                      onQuitar={() => quitar(p.id)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
+                  titulo="Sin resultados"
+                  descripcion={
+                    busqueda ? `No hay productos para "${busqueda}".` : "No hay productos en esta categoría."
+                  }
+                />
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* ══════════════════ PASO 2: REVISAR ══════════════════════════════ */}
+        {paso === 2 && (
+          <section aria-label="Revisión del pedido">
+            <PasoTitulo
+              icon={StickyNote}
+              titulo="Revisa el pedido"
+              sub={`${refMesa} · ${totalArticulos} producto${totalArticulos !== 1 ? "s" : ""}`}
+            />
+
+            {lineas.length === 0 ? (
+              <p className="mt-8 text-center text-body-sm text-on-surface-variant">
+                No hay productos. Regresa y agrega algunos.
+              </p>
+            ) : (
+              <ul className="mt-5 flex flex-col gap-3">
+                {lineas.map((l) => (
+                  <li
+                    key={l.producto.id}
+                    className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-4 shadow-soft"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-on-surface truncate">{l.producto.nombre}</p>
+                        <p className="text-body-sm text-on-surface-variant">
+                          {formatCurrency(l.producto.precio)} c/u
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-1.5">
+                        <button
+                          onClick={() => quitar(l.producto.id)}
+                          aria-label="Quitar uno"
+                          className="grid h-9 w-9 place-items-center rounded-xl bg-surface-container text-on-surface-variant active:scale-90"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </button>
+                        <span className="w-6 text-center text-label-lg font-bold">{l.cantidad}</span>
+                        <button
+                          onClick={() => agregar(l.producto)}
+                          aria-label="Agregar uno"
+                          className="grid h-9 w-9 place-items-center rounded-xl bg-surface-container text-on-surface-variant active:scale-90"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => quitar(l.producto.id) /* quitar hasta cero elimina */}
+                          aria-label="Eliminar del carrito"
+                          className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant hover:bg-error-container/40 hover:text-on-error-container active:scale-90"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Nota del ítem */}
+                    {editandoNota === l.producto.id ? (
+                      <div className="mt-3 flex gap-2">
+                        <input
+                          autoFocus
+                          value={notaTemp}
+                          onChange={(e) => setNotaTemp(e.target.value)}
+                          placeholder="Ej: sin azúcar, extra caliente…"
+                          className="flex-1 rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2 text-body-sm text-on-surface outline-none focus:border-primary-container"
+                          onKeyDown={(e) => e.key === "Enter" && guardarNota()}
+                        />
+                        <button
+                          onClick={guardarNota}
+                          className="rounded-xl bg-primary-container px-4 py-2 text-label-sm font-bold text-on-primary"
+                        >
+                          OK
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setEditandoNota(l.producto.id);
+                          setNotaTemp(l.nota);
+                        }}
+                        className="mt-2 flex items-center gap-1.5 text-body-sm text-on-surface-variant hover:text-on-surface"
+                      >
+                        <span className="text-xs">✏️</span>
+                        {l.nota
+                          ? <span className="italic text-primary-container">"{l.nota}"</span>
+                          : <span>Agregar nota</span>}
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        )}
+
+        {/* ══════════════════ PASO 3: CONFIRMACIÓN ═════════════════════════ */}
+        {paso === 3 && (
+          <ConfirmacionExito
+            refMesa={refMesa}
+            nombreCliente={tipo === "llevar" ? nombreCliente : null}
+            total={total}
+            folio={folioConfirmado}
+            onNuevo={nuevoPedido}
           />
         )}
       </div>
 
-      {/* Barra flotante del carrito */}
-      {totalArticulos > 0 && (
-        <div
-          className="fixed inset-x-0 z-30 px-[5%]"
-          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 5.5rem)" }}
-        >
-          <button
-            onClick={() => setDrawerAbierto(true)}
-            className="mx-auto flex w-full max-w-2xl items-center justify-between gap-3 rounded-full bg-cafe-intenso px-5 py-3.5 text-crema shadow-float transition-transform active:scale-[0.99]"
-          >
-            <span className="flex items-center gap-2">
-              <span className="grid h-7 w-7 place-items-center rounded-full bg-verde-menta/30 text-label-md font-bold text-crema">
-                {totalArticulos}
-              </span>
-              <span className="text-label-lg font-bold">Ver comanda</span>
-            </span>
-            <span className="tabular text-label-lg font-bold">{formatCurrency(total)}</span>
-          </button>
-        </div>
-      )}
-
-      {/* Drawer de confirmación */}
-      <Drawer
-        open={drawerAbierto}
-        onClose={() => setDrawerAbierto(false)}
-        title="Comanda"
-        descripcion={mesa.trim() ? `Mesa: ${mesa}` : "Selecciona una mesa antes de enviar"}
-      >
-        <div className="flex flex-col gap-4">
-          {/* Mesa (editable desde el drawer también) */}
-          <div className="rounded-xl bg-crema border border-caramelo/30 px-4 py-3">
-            <p className="text-body-sm text-cafe-principal mb-0.5">Mesa</p>
-            <input
-              value={mesa}
-              onChange={(e) => setMesa(e.target.value)}
-              placeholder="Número o nombre de mesa"
-              className="w-full bg-transparent text-headline-sm font-bold text-cafe-intenso outline-none placeholder:text-on-surface-variant/50"
-            />
-          </div>
-
-          {/* Ítems */}
-          <ul className="flex flex-col gap-2">
-            {lineas.map((l) => (
-              <li
-                key={l.producto.id}
-                className="flex flex-col gap-2 rounded-xl bg-surface-container-low p-3"
+      {/* ══════════════════ BARRA DE NAVEGACIÓN FIJA ═════════════════════ */}
+      {paso < 3 && (
+        <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-outline-variant/20 bg-surface/95 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+            {paso > 0 ? (
+              <button
+                onClick={() => irA((paso - 1) as Paso)}
+                aria-label="Paso anterior"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-surface-container-low text-on-surface shadow-soft transition-transform active:scale-90"
               >
-                <div className="flex items-center justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-label-md font-semibold text-on-surface">{l.producto.nombre}</p>
-                    <p className="text-body-sm text-on-surface-variant">{formatCurrency(l.producto.precio)} c/u</p>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      onClick={() => quitar(l.producto.id)}
-                      aria-label="Quitar uno"
-                      className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container text-on-surface-variant"
-                    >
-                      {l.cantidad <= 1 ? <Trash2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
-                    </button>
-                    <span className="w-5 text-center text-label-md font-bold">{l.cantidad}</span>
-                    <button
-                      onClick={() => agregar(l.producto)}
-                      aria-label="Agregar uno"
-                      className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container text-on-surface-variant"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-                {/* Nota */}
-                {editandoNota === l.producto.id ? (
-                  <div className="flex gap-2">
-                    <input
-                      autoFocus
-                      value={notaTemp}
-                      onChange={(e) => setNotaTemp(e.target.value)}
-                      placeholder="Ej: sin azúcar, extra caliente…"
-                      className="flex-1 rounded-lg border border-outline-variant bg-surface-container-lowest px-3 py-1.5 text-body-sm text-on-surface outline-none focus:border-primary-container"
-                      onKeyDown={(e) => e.key === "Enter" && guardarNota()}
-                    />
-                    <button
-                      onClick={guardarNota}
-                      className="rounded-lg bg-verde-menta px-3 py-1.5 text-label-sm font-bold text-cafe-intenso"
-                    >
-                      OK
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setEditandoNota(l.producto.id);
-                      setNotaTemp(l.nota);
-                    }}
-                    className="flex items-center gap-1.5 text-body-sm text-on-surface-variant hover:text-on-surface"
-                  >
-                    <span className="text-xs">✏️</span>
-                    {l.nota ? <span className="italic">"{l.nota}"</span> : <span>Agregar nota</span>}
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            ) : (
+              <div className="w-12 shrink-0" />
+            )}
 
-          <div className="flex items-center justify-between border-t border-outline-variant/30 pt-3">
-            <span className="text-on-surface-variant">Total estimado</span>
-            <span className="tabular text-headline-md font-bold text-on-surface">{formatCurrency(total)}</span>
+            {/* Resumen del ticket */}
+            <div className="flex-1 min-w-0">
+              <p className="text-body-sm text-on-surface-variant">{ETIQUETAS_PASO[paso]}</p>
+              <p className="truncate text-label-lg font-bold text-on-surface">
+                {totalArticulos > 0
+                  ? `${totalArticulos} prod · ${formatCurrency(total)}`
+                  : paso === 0
+                    ? refMesa
+                    : "Ticket vacío"}
+              </p>
+            </div>
+
+            {paso === 0 && (
+              <Button
+                onClick={() => puedeAvanzar() && irA(1)}
+                disabled={!puedeAvanzar()}
+                className="shrink-0"
+              >
+                Continuar
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Button>
+            )}
+            {paso === 1 && (
+              <Button
+                onClick={() => puedeAvanzar() && irA(2)}
+                disabled={!puedeAvanzar()}
+                className="shrink-0"
+              >
+                Revisar
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Button>
+            )}
+            {paso === 2 && (
+              <Button
+                onClick={confirmar}
+                disabled={!puedeAvanzar() || enviarComanda.isPending}
+                loading={enviarComanda.isPending}
+                className="shrink-0 bg-cafe-intenso text-crema hover:bg-cafe-intenso/90"
+              >
+                <Check className="h-4 w-4" aria-hidden />
+                <span className="sm:hidden">Enviar</span>
+                <span className="hidden sm:inline">Enviar a cocina</span>
+              </Button>
+            )}
           </div>
-
-          {!mesa.trim() && (
-            <p role="alert" className="rounded-xl bg-caramelo/20 px-4 py-2.5 text-center text-body-sm font-medium text-cafe-intenso">
-              Escribe el número o nombre de la mesa para continuar.
-            </p>
-          )}
-
-          <Button
-            fullWidth
-            size="lg"
-            onClick={enviar}
-            loading={enviarComanda.isPending}
-            disabled={!mesa.trim() || lineas.length === 0}
-            className="bg-cafe-intenso text-crema hover:bg-cafe-intenso/90"
-          >
-            <Send className="h-5 w-5" aria-hidden />
-            Enviar a cocina
-          </Button>
-        </div>
-      </Drawer>
-
-      {/* Diálogo de nota individual */}
+        </footer>
+      )}
     </PantallaConHeader>
+  );
+}
+
+// ─── Sub-componentes ─────────────────────────────────────────────────────────
+
+function PasoTitulo({
+  icon: Icon,
+  titulo,
+  sub,
+}: {
+  icon: typeof Store;
+  titulo: string;
+  sub: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-container/15 text-primary-container">
+        <Icon className="h-5 w-5" aria-hidden />
+      </span>
+      <div>
+        <h1 className="text-headline-sm font-bold text-on-surface">{titulo}</h1>
+        <p className="text-body-sm text-on-surface-variant">{sub}</p>
+      </div>
+    </div>
+  );
+}
+
+function PasosIndicador({ paso }: { paso: number }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      {ETIQUETAS_PASO.map((label, i) => (
+        <div key={label} className="flex items-center gap-1.5">
+          <span
+            className={cn(
+              "flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold transition-all duration-300",
+              i === paso
+                ? "bg-cafe-intenso text-crema"
+                : i < paso
+                  ? "bg-primary-container/20 text-primary-container"
+                  : "bg-surface-container text-on-surface-variant/50",
+            )}
+          >
+            {i < paso ? <Check className="h-3 w-3" aria-hidden /> : <span>{i + 1}</span>}
+            <span className={i === paso ? "inline" : "hidden sm:inline"}>{label}</span>
+          </span>
+          {i < ETIQUETAS_PASO.length - 1 && (
+            <span
+              className={cn("h-0.5 w-3 rounded-full", i < paso ? "bg-primary-container" : "bg-outline-variant/30")}
+            />
+          )}
+        </div>
+      ))}
+    </div>
   );
 }
 
 function ProductoCard({
   producto,
   enCarrito,
-  nota,
   onAgregar,
   onQuitar,
-  onEditarNota,
 }: {
   producto: Producto;
   enCarrito: number;
-  nota: string;
   onAgregar: () => void;
   onQuitar: () => void;
-  onEditarNota: () => void;
 }) {
   return (
     <div
       className={cn(
-        "relative flex flex-col justify-between rounded-2xl border bg-surface-container-lowest p-3.5 shadow-soft transition-transform",
-        enCarrito > 0 ? "border-cafe-intenso" : "border-outline-variant/40",
+        "relative flex flex-col justify-between rounded-2xl border bg-surface-container-lowest p-3.5 shadow-soft transition-all duration-200",
+        enCarrito > 0 ? "border-primary-container" : "border-outline-variant/40",
       )}
     >
+      {enCarrito > 0 && (
+        <span className="absolute right-3 top-3 flex h-6 min-w-6 items-center justify-center rounded-full bg-primary-container px-1.5 text-xs font-bold text-on-primary">
+          {enCarrito}
+        </span>
+      )}
       <button
         onClick={onAgregar}
         className="flex flex-1 flex-col items-start text-left"
@@ -390,43 +647,105 @@ function ProductoCard({
           <Package className="h-5 w-5" aria-hidden />
         </div>
         <p className="mt-2 line-clamp-2 text-label-lg font-bold text-on-surface">{producto.nombre}</p>
-        <p className="text-body-sm text-on-surface-variant">{categoriaProductoLabel[producto.categoria]}</p>
         <p className="mt-1 tabular text-headline-sm font-bold text-primary-container">
           {formatCurrency(producto.precio)}
         </p>
       </button>
 
-      <div className="mt-2.5">
-        {enCarrito > 0 ? (
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between rounded-xl bg-cafe-intenso/10 p-1">
-              <button
-                onClick={onQuitar}
-                aria-label={`Quitar uno de ${producto.nombre}`}
-                className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container-lowest text-cafe-intenso shadow-soft active:scale-95"
-              >
-                {enCarrito <= 1 ? <Trash2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
-              </button>
-              <span className="tabular text-label-lg font-bold text-cafe-intenso">{enCarrito}</span>
-              <button
-                onClick={onAgregar}
-                aria-label={`Agregar uno de ${producto.nombre}`}
-                className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container-lowest text-cafe-intenso shadow-soft active:scale-95"
-              >
-                <Plus className="h-4 w-4" />
-              </button>
-            </div>
-            <button
-              onClick={onEditarNota}
-              className="truncate text-body-sm text-on-surface-variant hover:text-on-surface text-left"
-            >
-              {nota ? <span className="italic text-cafe-principal">"{nota}"</span> : <span>+ nota</span>}
-            </button>
-          </div>
-        ) : (
-          <span className="text-body-sm text-on-surface-variant">Toca para agregar</span>
-        )}
-      </div>
+      {enCarrito > 0 && (
+        <div className="mt-2.5 flex items-center justify-between rounded-xl bg-primary-container/10 p-1">
+          <button
+            onClick={onQuitar}
+            aria-label={`Quitar uno de ${producto.nombre}`}
+            className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container-lowest text-primary-container shadow-soft active:scale-95"
+          >
+            {enCarrito <= 1 ? <Trash2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
+          </button>
+          <span className="tabular text-label-lg font-bold text-primary-container">{enCarrito}</span>
+          <button
+            onClick={onAgregar}
+            aria-label={`Agregar uno de ${producto.nombre}`}
+            className="grid h-8 w-8 place-items-center rounded-lg bg-surface-container-lowest text-primary-container shadow-soft active:scale-95"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </div>
+  );
+}
+
+function ConfirmacionExito({
+  refMesa,
+  nombreCliente,
+  total,
+  folio,
+  onNuevo,
+}: {
+  refMesa: string;
+  nombreCliente: string | null;
+  total: number;
+  folio: number | null;
+  onNuevo: () => void;
+}) {
+  const AUTO_MS = 5000;
+  const [restante, setRestante] = useState(AUTO_MS);
+
+  useEffect(() => {
+    const inicio = Date.now();
+    const tick = setInterval(() => {
+      const queda = AUTO_MS - (Date.now() - inicio);
+      if (queda <= 0) {
+        clearInterval(tick);
+        onNuevo();
+      } else {
+        setRestante(queda);
+      }
+    }, 50);
+    return () => clearInterval(tick);
+  }, [onNuevo]);
+
+  const progreso = Math.max(0, (restante / AUTO_MS) * 100);
+
+  return (
+    <section className="mx-auto flex max-w-sm flex-col items-center py-12 text-center" aria-live="polite">
+      {/* Check animado */}
+      <span className="flex h-24 w-24 items-center justify-center rounded-full bg-primary-container/20 text-primary-container shadow-soft">
+        <Check className="h-12 w-12" strokeWidth={3} aria-hidden />
+      </span>
+
+      <h2 className="mt-6 text-headline-md font-bold text-on-surface">¡Pedido confirmado!</h2>
+      <p className="mt-1 text-body-md text-on-surface-variant">
+        {folio ? `Comanda #${folio} enviada a cocina` : "Comanda enviada a cocina"}
+      </p>
+
+      <p className="mt-6 tabular text-4xl font-bold text-on-surface">{formatCurrency(total)}</p>
+      <div className="mt-1 flex flex-col items-center gap-0.5 text-body-sm text-on-surface-variant">
+        <span>{refMesa}</span>
+        {nombreCliente && <span className="font-semibold text-primary-container">{nombreCliente}</span>}
+      </div>
+
+      <Button
+        fullWidth
+        size="lg"
+        onClick={onNuevo}
+        className="mt-10 bg-cafe-intenso text-crema hover:bg-cafe-intenso/90"
+      >
+        <Plus className="h-4 w-4" aria-hidden />
+        <span className="sm:hidden">Nuevo pedido</span>
+        <span className="hidden sm:inline">Tomar otro pedido</span>
+      </Button>
+
+      {/* Barra de cuenta regresiva */}
+      <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-surface-container">
+        <div
+          className="h-full rounded-full bg-primary-container transition-[width] duration-75 ease-linear"
+          style={{ width: `${progreso}%` }}
+        />
+      </div>
+      <p className="mt-2 text-body-sm text-on-surface-variant/60">
+        Nuevo pedido en {Math.ceil(restante / 1000)} s
+      </p>
+    </section>
   );
 }

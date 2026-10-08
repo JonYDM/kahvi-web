@@ -48,14 +48,16 @@ export function useEditarProducto() {
     mutationFn: ({
       productoId,
       nombre,
-      categoria,
+      categoriaId,
       precio,
+      costo,
     }: {
       productoId: string;
       nombre: string;
-      categoria: number;
+      categoriaId: string;
       precio: number;
-    }) => editarProducto(productoId, { nombre, categoria, precio }),
+      costo?: number | null;
+    }) => editarProducto(productoId, { nombre, categoriaId, precio, costo }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["catalogo"] });
     },

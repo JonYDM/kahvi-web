@@ -143,7 +143,21 @@ export function CajaPage() {
                           #{comanda.folio}
                         </span>
                         <div>
-                          <p className="text-headline-sm font-bold text-cafe-intenso">{comanda.mesa}</p>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="text-headline-sm font-bold text-cafe-intenso">
+                              {comanda.esParaLlevar ? "Para llevar" : comanda.mesa}
+                            </p>
+                            {comanda.esParaLlevar && (
+                              <span className="rounded-full bg-caramelo/20 px-2 py-0.5 text-label-sm font-bold text-cafe-intenso">
+                                🛍️ Llevar
+                              </span>
+                            )}
+                          </div>
+                          {comanda.esParaLlevar && comanda.nombreCliente && (
+                            <p className="text-body-sm font-semibold text-primary-container">
+                              {comanda.nombreCliente}
+                            </p>
+                          )}
                           <p className="text-body-sm text-cafe-principal">{comanda.meseroNombre}</p>
                         </div>
                       </div>
@@ -211,7 +225,13 @@ export function CajaPage() {
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-label-sm font-bold text-on-surface-variant">#{comanda.folio}</span>
-                      <span className="text-label-md font-semibold text-on-surface">{comanda.mesa}</span>
+                      <span className="text-label-md font-semibold text-on-surface">
+                        {comanda.esParaLlevar
+                          ? comanda.nombreCliente
+                            ? `Para llevar - ${comanda.nombreCliente}`
+                            : "Para llevar"
+                          : comanda.mesa}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="rounded-full border border-outline-variant/40 px-2 py-0.5 text-label-sm text-on-surface-variant">
@@ -234,7 +254,13 @@ export function CajaPage() {
         open={!!comandaSel}
         onClose={cerrarDrawer}
         title={exito ? "" : `Cobrar comanda #${comandaSel?.folio ?? ""}`}
-        descripcion={exito ? undefined : `${comandaSel?.mesa ?? ""} · ${comandaSel?.meseroNombre ?? ""}`}
+        descripcion={exito ? undefined : `${
+          comandaSel?.esParaLlevar
+            ? comandaSel.nombreCliente
+              ? `Para llevar - ${comandaSel.nombreCliente}`
+              : "Para llevar"
+            : (comandaSel?.mesa ?? "")
+        } · ${comandaSel?.meseroNombre ?? ""}`}
       >
         {exito ? (
           <CobroExitoso total={exito.total} cambio={exito.cambio} onListo={cerrarDrawer} />

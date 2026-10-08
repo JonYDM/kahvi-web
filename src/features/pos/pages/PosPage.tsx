@@ -13,19 +13,18 @@ import {
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import {
-  Badge,
   Button,
   Drawer,
   Input,
   SkeletonFila,
 } from "@/components/ui";
 import { useAuth } from "@/features/auth";
+import { useCategorias } from "@/features/categorias";
 import { useToast } from "@/components/feedback/useToast";
 import { ApiError } from "@/lib/http";
 import { cn } from "@/lib/cn";
-import { categoriaProductoLabel } from "@/lib/enums";
 import { formatCurrency } from "@/lib/format";
-import { CategoriaProducto, MetodoPago, RolUsuario, type Producto } from "@/types/api";
+import { MetodoPago, RolUsuario, type Producto } from "@/types/api";
 import { useCatalogo, useRegistrarVenta } from "../hooks";
 import { AgregarProductoModal } from "../components/AgregarProductoModal";
 import { EditarProductoModal } from "../components/EditarProductoModal";
@@ -34,15 +33,6 @@ interface LineaCarrito {
   producto: Producto;
   cantidad: number;
 }
-
-const CATEGORIAS: { valor: CategoriaProducto | null; label: string }[] = [
-  { valor: null, label: "Todos" },
-  { valor: CategoriaProducto.Cafe, label: "Café" },
-  { valor: CategoriaProducto.Desayunos, label: "Desayunos" },
-  { valor: CategoriaProducto.Postres, label: "Postres" },
-  { valor: CategoriaProducto.Bebidas, label: "Bebidas" },
-  { valor: CategoriaProducto.Otro, label: "Otro" },
-];
 
 const METODOS: { valor: MetodoPago; label: string; icon: typeof Banknote }[] = [
   { valor: MetodoPago.Efectivo, label: "Efectivo", icon: Banknote },
@@ -54,12 +44,13 @@ const METODOS: { valor: MetodoPago; label: string; icon: typeof Banknote }[] = [
 export function PosPage() {
   const { sesion } = useAuth();
   const { data: productos, isLoading, isError } = useCatalogo();
+  const { data: categorias } = useCategorias();
   const registrarVenta = useRegistrarVenta();
   const toast = useToast();
 
   const [carrito, setCarrito] = useState<Record<string, LineaCarrito>>({});
   const [texto, setTexto] = useState("");
-  const [categoria, setCategoria] = useState<CategoriaProducto | null>(null);
+  const [categoriaId, setCategoriaId] = useState<string | null>(null);
   const [modalProducto, setModalProducto] = useState(false);
   const [editando, setEditando] = useState<Producto | null>(null);
   const [cobroAbierto, setCobroAbierto] = useState(false);
@@ -69,6 +60,19 @@ export function PosPage() {
   const [error, setError] = useState<string | null>(null);
 
   const esAdmin = sesion?.rol === RolUsuario.Administrador;
+
+  // Categorías ordenadas para los chips
+  const categoriasOrdenadas = useMemo(
+    () => [...(categorias ?? [])].sort((a, b) => a.orden - b.orden),
+    [categorias],
+  );
+
+  // Mapa id→nombre para mostrar en los chips de producto
+  const categoriaNombrePorId = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const c of categorias ?? []) map[c.id] = c.nombre;
+    return map;
+  }, [categorias]);
 
   const lineas = Object.values(carrito);
   const totalArticulos = lineas.reduce((s, l) => s + l.cantidad, 0);
@@ -80,11 +84,11 @@ export function PosPage() {
   const visibles = useMemo(() => {
     const q = texto.trim().toLowerCase();
     return (productos ?? []).filter((p) => {
-      if (categoria !== null && p.categoria !== categoria) return false;
+      if (categoriaId !== null && p.categoriaId !== categoriaId) return false;
       if (q && !p.nombre.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [productos, categoria, texto]);
+  }, [productos, categoriaId, texto]);
 
   function agregar(p: Producto) {
     setCarrito((prev) => {
@@ -162,25 +166,33 @@ export function PosPage() {
           />
         </div>
 
-        {/* Chips de categoría */}
+        {/* Chips de categoría dinámica */}
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {CATEGORIAS.map((cat) => {
-            const activo = categoria === cat.valor;
-            return (
-              <button
-                key={cat.label}
-                onClick={() => setCategoria(cat.valor)}
-                className={cn(
-                  "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
-                  activo
-                    ? "bg-primary-container text-on-primary"
-                    : "bg-surface-container text-on-surface-variant hover:text-on-surface",
-                )}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
+          <button
+            onClick={() => setCategoriaId(null)}
+            className={cn(
+              "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+              categoriaId === null
+                ? "bg-primary-container text-on-primary"
+                : "bg-surface-container text-on-surface-variant hover:text-on-surface",
+            )}
+          >
+            Todos
+          </button>
+          {categoriasOrdenadas.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setCategoriaId(cat.id)}
+              className={cn(
+                "shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+                categoriaId === cat.id
+                  ? "bg-primary-container text-on-primary"
+                  : "bg-surface-container text-on-surface-variant hover:text-on-surface",
+              )}
+            >
+              {cat.nombre}
+            </button>
+          ))}
         </div>
 
         {/* Catálogo */}
@@ -198,6 +210,7 @@ export function PosPage() {
               <ProductoCard
                 key={p.id}
                 producto={p}
+                categoriaNombre={categoriaNombrePorId[p.categoriaId]}
                 enCarrito={carrito[p.id]?.cantidad ?? 0}
                 esAdmin={esAdmin}
                 onAgregar={() => agregar(p)}
@@ -208,9 +221,9 @@ export function PosPage() {
           </div>
         ) : (
           <EmptyState
-            titulo={texto || categoria !== null ? "Sin resultados" : "Catálogo vacío"}
+            titulo={texto || categoriaId !== null ? "Sin resultados" : "Catálogo vacío"}
             descripcion={
-              texto || categoria !== null
+              texto || categoriaId !== null
                 ? "No hay productos que coincidan."
                 : esAdmin
                   ? "Agrega tu primer producto para empezar a vender."
@@ -261,6 +274,12 @@ export function PosPage() {
                   <div className="min-w-0">
                     <p className="truncate text-label-md font-semibold text-on-surface">{l.producto.nombre}</p>
                     <p className="text-body-sm text-on-surface-variant">{formatCurrency(l.producto.precio)} c/u</p>
+                    {/* Margen: solo visible para Admin si tiene costo */}
+                    {esAdmin && l.producto.costo != null && (
+                      <p className="text-body-sm text-on-surface-variant">
+                        Margen: {formatCurrency(l.producto.precio - l.producto.costo)}
+                      </p>
+                    )}
                   </div>
                   <div className="flex items-center gap-1.5">
                     <button
@@ -366,6 +385,7 @@ export function PosPage() {
 
 function ProductoCard({
   producto,
+  categoriaNombre,
   enCarrito,
   esAdmin,
   onAgregar,
@@ -373,13 +393,13 @@ function ProductoCard({
   onEditar,
 }: {
   producto: Producto;
+  categoriaNombre?: string;
   enCarrito: number;
   esAdmin: boolean;
   onAgregar: () => void;
   onQuitar: () => void;
   onEditar: () => void;
 }) {
-  const agotado = producto.stock <= 0;
   return (
     <div
       className={cn(
@@ -389,17 +409,24 @@ function ProductoCard({
     >
       <button
         onClick={onAgregar}
-        disabled={agotado}
-        className="flex flex-1 flex-col items-start text-left disabled:opacity-50"
+        className="flex flex-1 flex-col items-start text-left"
       >
         <div className="grid h-10 w-10 place-items-center rounded-xl bg-caramelo/20 text-cafe-principal">
           <Package className="h-5 w-5" aria-hidden />
         </div>
         <p className="mt-2 line-clamp-2 text-label-lg font-bold text-on-surface">{producto.nombre}</p>
-        <p className="text-body-sm text-on-surface-variant">{categoriaProductoLabel[producto.categoria]}</p>
+        {categoriaNombre && (
+          <p className="text-body-sm text-on-surface-variant">{categoriaNombre}</p>
+        )}
         <p className="mt-1 tabular text-headline-sm font-bold text-primary-container">
           {formatCurrency(producto.precio)}
         </p>
+        {/* Costo y margen: solo visible para Admin */}
+        {esAdmin && producto.costo != null && (
+          <p className="text-body-sm text-on-surface-variant">
+            Costo: {formatCurrency(producto.costo)} · Margen: {formatCurrency(producto.precio - producto.costo)}
+          </p>
+        )}
       </button>
 
       <div className="mt-2.5">
@@ -423,9 +450,9 @@ function ProductoCard({
           </div>
         ) : (
           <div className="flex items-center justify-between">
-            <Badge tone={agotado ? "danger" : "neutral"}>
-              {agotado ? "Agotado" : `Stock ${producto.stock}`}
-            </Badge>
+            <span className="text-body-sm text-on-surface-variant">
+              {formatCurrency(producto.precio)}
+            </span>
             {esAdmin && (
               <button
                 onClick={onEditar}

@@ -56,6 +56,9 @@ const HistorialVentasPage = lazy(() =>
 const EquipoPage = lazy(() =>
   import("@/features/usuarios").then((m) => ({ default: m.StaffPage })),
 );
+const CategoriasPage = lazy(() =>
+  import("@/features/categorias").then((m) => ({ default: m.CategoriasPage })),
+);
 
 // Área Comandas
 const MeseroPage = lazy(() =>
@@ -138,6 +141,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute roles={[RolUsuario.Administrador]}>
             <EquipoPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "categorias",
+        element: (
+          <ProtectedRoute roles={[RolUsuario.Administrador]}>
+            <CategoriasPage />
           </ProtectedRoute>
         ),
       },

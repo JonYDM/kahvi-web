@@ -15,6 +15,10 @@ export enum RolUsuario {
   SuperAdmin = 99,
 }
 
+/**
+ * @deprecated El backend ahora usa categorías dinámicas (CategoriaDto).
+ * Conservado solo para compatibilidad con código legacy hasta migración completa.
+ */
 export enum CategoriaProducto {
   Cafe = 1,
   Desayunos = 2,
@@ -57,7 +61,7 @@ export interface ResultadoPaginado<T> {
 // ─────────────────────────── Auth ───────────────────────────────────────────
 
 export interface LoginRequest {
-  nombreUsuario: string;
+  identificador: string;
   pin: string;
 }
 
@@ -78,6 +82,16 @@ export interface JwtClaims {
   role?: string;
   exp?: number;
   [key: string]: unknown;
+}
+
+// ─────────────────────────── Categorías dinámicas ───────────────────────────
+
+/** Categoría dinámica de producto (CRUD por el Administrador). */
+export interface CategoriaDto {
+  id: string;
+  nombre: string;
+  orden: number;
+  cafeteriaId: string;
 }
 
 // ─────────────────────────── Entidades ──────────────────────────────────────
@@ -127,9 +141,11 @@ export interface Producto {
   id: string;
   cafeteriaId: string;
   nombre: string;
-  categoria: CategoriaProducto;
+  /** ID de la categoría (Guid) — referencia a CategoriaDto. */
+  categoriaId: string;
   precio: number;
-  stock: number;
+  /** Costo de adquisición. Solo visible para el Administrador (null para otros roles). */
+  costo?: number | null;
   activo: boolean;
 }
 
@@ -154,12 +170,17 @@ export interface ComandaDto {
   /** UTC ISO 8601 */
   creadaEn: string;
   total: number;
+  /** True si el pedido es para llevar (no se consume en mesa). */
+  esParaLlevar: boolean;
+  /** Nombre del cliente para pedidos para llevar (opcional). */
+  nombreCliente?: string | null;
   items: LineaComandaDto[];
 }
 
 /** Payload para crear una comanda. */
 export interface EnviarComandaRequest {
-  mesa: string;
+  /** Mesa o referencia del pedido (ej. "Mesa 3"). Vacío si esParaLlevar = true. */
+  mesa?: string;
   meseroNombre: string;
   items: {
     productoId: string;
@@ -168,6 +189,10 @@ export interface EnviarComandaRequest {
     precio: number;
     nota?: string;
   }[];
+  /** True si el pedido es para llevar. */
+  esParaLlevar?: boolean;
+  /** Nombre del cliente para pedidos para llevar. */
+  nombreCliente?: string | null;
 }
 
 /** Payload para cobrar una comanda. */
@@ -289,9 +314,11 @@ export interface UsuarioDto {
 
 export interface AgregarProductoRequest {
   nombre: string;
-  categoria: CategoriaProducto;
+  /** ID de la categoría dinámica (Guid). */
+  categoriaId: string;
   precio: number;
-  stock: number;
+  /** Costo de adquisición. Solo visible para el Administrador. */
+  costo?: number | null;
 }
 
 export interface ItemVenta {

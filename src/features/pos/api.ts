@@ -52,7 +52,7 @@ export function resumenVentas(
 /** Edita un producto (Admin). */
 export function editarProducto(
   productoId: string,
-  body: { nombre: string; categoria: number; precio: number },
+  body: { nombre: string; categoriaId: string; precio: number; costo?: number | null },
 ): Promise<unknown> {
   return http.put(`/api/productos/${productoId}`, body);
 }

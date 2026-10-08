@@ -25,7 +25,7 @@ export interface IdentificarResultado {
 export async function identificar(nombreUsuario: string): Promise<IdentificarResultado> {
   try {
     return await http.post<IdentificarResultado>("/api/auth/identificar", {
-      nombreUsuario,
+      identificador: nombreUsuario,
     });
   } catch (e) {
     if (e instanceof ApiError && (e.status === 404 || e.status === 405)) {
