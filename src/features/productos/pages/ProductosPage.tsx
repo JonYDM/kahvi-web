@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Edit2, GripVertical, Plus, Search, Trash2, X } from "lucide-react";
+import { Edit2, Plus, Search, Trash2, X } from "lucide-react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Button, Drawer, Input, SkeletonFila } from "@/components/ui";
 import { useToast } from "@/components/feedback/useToast";
@@ -178,16 +178,16 @@ export function ProductosPage() {
         </div>
       )}
 
-      {/* Lista de productos */}
+      {/* Grid de productos */}
       {!isLoading && !isError && lista.length > 0 && (
-        <ul className="flex flex-col gap-2">
+        <div className="grid grid-cols-2 gap-3">
           {lista.map((p) => {
             const cat = categorias.find((c: CategoriaDto) => c.id === p.categoriaId);
             const margen = p.costo != null && p.costo > 0
               ? Math.round(((p.precio - p.costo) / p.precio) * 100)
               : null;
             return (
-              <ProductoFila
+              <ProductoCard
                 key={p.id}
                 producto={p}
                 categoriaNombre={cat?.nombre}
@@ -198,7 +198,7 @@ export function ProductosPage() {
               />
             );
           })}
-        </ul>
+        </div>
       )}
 
       {/* Drawer crear/editar */}
@@ -279,9 +279,9 @@ export function ProductosPage() {
   );
 }
 
-// ─── Fila de producto ─────────────────────────────────────────────────────────
+// ─── Card de producto (grid 2 col, preparada para imagen futura) ──────────────
 
-function ProductoFila({
+function ProductoCard({
   producto: p,
   categoriaNombre,
   margen,
@@ -297,67 +297,70 @@ function ProductoFila({
   desactivando: boolean;
 }) {
   return (
-    <li
+    <div
       className={cn(
-        "flex items-center gap-3 rounded-2xl border border-outline-variant/40",
-        "bg-surface-container-lowest px-4 py-3 shadow-soft",
+        "flex flex-col overflow-hidden rounded-2xl border border-outline-variant/40",
+        "bg-surface-container-lowest shadow-soft transition-all duration-200",
         !p.activo && "opacity-60",
       )}
     >
-      {/* Icono visual */}
-      <span className="shrink-0 text-on-surface-variant/40" aria-hidden>
-        <GripVertical className="h-5 w-5" />
-      </span>
-
-      {/* Info */}
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-label-lg font-semibold text-on-surface">{p.nombre}</p>
-        <p className="text-body-sm text-on-surface-variant">
-          {categoriaNombre ?? "—"}
-          {margen !== null && (
-            <span className="ml-2 text-primary-container font-medium">{margen}% margen</span>
-          )}
-        </p>
+      {/* Zona de imagen futura — placeholder con color de la paleta */}
+      <div className="flex h-28 items-center justify-center bg-primary-container/8">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-container/15">
+          <span className="text-2xl" aria-hidden>☕</span>
+        </div>
       </div>
 
-      {/* Precio */}
-      <span className="shrink-0 text-label-lg font-bold text-primary-container">
-        {formatCurrency(p.precio)}
-      </span>
-
-      {/* Toggle activo */}
-      <button
-        onClick={onToggleActivo}
-        disabled={desactivando}
-        aria-label={p.activo ? "Desactivar producto" : "Activar producto"}
-        className={cn(
-          "shrink-0 rounded-full px-2.5 py-1 text-label-sm font-semibold transition-colors",
-          p.activo
-            ? "bg-primary-container/15 text-primary-container hover:bg-primary-container/25"
-            : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
+      {/* Contenido */}
+      <div className="flex flex-1 flex-col gap-1 px-3 pb-3 pt-2">
+        <p className="line-clamp-2 text-label-lg font-bold leading-snug text-on-surface">
+          {p.nombre}
+        </p>
+        <p className="text-body-sm text-on-surface-variant">
+          {categoriaNombre ?? "—"}
+        </p>
+        <p className="mt-1 text-label-lg font-bold text-primary-container">
+          {formatCurrency(p.precio)}
+        </p>
+        {margen !== null && (
+          <p className="text-body-sm font-medium text-primary-container/70">
+            {margen}% margen
+          </p>
         )}
-      >
-        {p.activo ? "Activo" : "Inactivo"}
-      </button>
+      </div>
 
       {/* Acciones */}
-      <div className="flex shrink-0 items-center gap-1">
-        <button
-          onClick={onEditar}
-          aria-label={`Editar ${p.nombre}`}
-          className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-surface-container"
-        >
-          <Edit2 className="h-4 w-4" aria-hidden />
-        </button>
+      <div className="flex items-center justify-between border-t border-outline-variant/20 px-2 py-1.5">
         <button
           onClick={onToggleActivo}
           disabled={desactivando}
-          aria-label={`Desactivar ${p.nombre}`}
-          className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-error-container/40 hover:text-on-error-container disabled:opacity-50"
+          className={cn(
+            "rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors",
+            p.activo
+              ? "bg-primary-container/15 text-primary-container"
+              : "bg-surface-container text-on-surface-variant",
+          )}
         >
-          <Trash2 className="h-4 w-4" aria-hidden />
+          {p.activo ? "Activo" : "Inactivo"}
         </button>
+        <div className="flex items-center gap-0.5">
+          <button
+            onClick={onEditar}
+            aria-label={`Editar ${p.nombre}`}
+            className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-surface-container"
+          >
+            <Edit2 className="h-3.5 w-3.5" aria-hidden />
+          </button>
+          <button
+            onClick={onToggleActivo}
+            disabled={desactivando}
+            aria-label={`Desactivar ${p.nombre}`}
+            className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-error-container/40 hover:text-on-error-container disabled:opacity-50"
+          >
+            <Trash2 className="h-3.5 w-3.5" aria-hidden />
+          </button>
+        </div>
       </div>
-    </li>
+    </div>
   );
 }
