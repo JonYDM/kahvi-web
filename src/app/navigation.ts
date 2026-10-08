@@ -6,6 +6,7 @@ import {
   Package,
   Receipt,
   ShoppingCart,
+  Tag,
   TrendingUp,
   UserCog,
   Users,
@@ -32,10 +33,11 @@ export interface NavItem {
 
 /**
  * Navegación del Administrador (/app/*).
- * Barra inferior: Productos (izq) · Inicio/Dashboard (centro) · Ventas (der)
+ * Barra inferior: Categorías · Productos · Inicio · Ventas · Más
  * Menú "Más": Equipo, Histórico
  */
 export const navStaff: NavItem[] = [
+  { to: "/app/categorias", label: "Categorías", icon: Tag, permiso: "gestionar_productos" },
   { to: "/app/productos", label: "Productos", icon: Package, permiso: "gestionar_productos" },
   { to: "/app", label: "Inicio", icon: Home, permiso: null },
   { to: "/app/ventas", label: "Ventas", icon: TrendingUp, permiso: "ver_metricas" },
