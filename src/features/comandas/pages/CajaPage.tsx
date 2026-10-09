@@ -272,7 +272,7 @@ function ComandaCobro({
       {/* Total */}
       <div className="mt-3 flex items-center justify-between border-t border-cafe-intenso/10 pt-3">
         <span className="text-sm text-cafe-intenso/60">Total</span>
-        <span className="text-2xl font-bold text-cafe-intenso">{formatCurrency(c.total)}</span>
+        <span className="shrink-0 text-xl font-bold text-cafe-intenso tabular-nums">{formatCurrency(c.total)}</span>
       </div>
 
       {/* Acciones */}
@@ -422,7 +422,7 @@ function Corte() {
       {/* Tarjeta total del día */}
       <div className="rounded-3xl bg-cafe-intenso p-8 text-crema shadow-sm">
         <p className="text-sm text-crema/70">Vendido hoy</p>
-        <p className="mt-1 text-5xl font-bold tracking-tight">
+        <p className="mt-1 text-4xl font-bold tracking-tight break-all">
           {formatCurrency(resumen?.total ?? 0)}
         </p>
         <p className="mt-2 text-sm text-crema/60">{resumen?.numeroVentas ?? 0} ventas</p>
@@ -492,7 +492,7 @@ function Corte() {
                       {numProductos} productos \u00B7 {metodoLabel(v.metodoPago)}
                     </p>
                   </div>
-                  <span className="text-sm font-bold text-cafe-intenso">
+                  <span className="shrink-0 text-sm font-bold text-cafe-intenso">
                     {formatCurrency(v.total)}
                   </span>
                 </div>
