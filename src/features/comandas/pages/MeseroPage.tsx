@@ -119,6 +119,14 @@ export function MeseroPage() {
     });
   }
 
+  function eliminar(id: string) {
+    setCarrito((prev) => {
+      const copia = { ...prev };
+      delete copia[id];
+      return copia;
+    });
+  }
+
   function guardarNota() {
     if (!editandoNota) return;
     setCarrito((prev) => ({
@@ -451,7 +459,7 @@ export function MeseroPage() {
                           <Plus weight='light' className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => quitar(l.producto.id) /* quitar hasta cero elimina */}
+                          onClick={() => eliminar(l.producto.id)}
                           aria-label="Eliminar del carrito"
                           className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant hover:bg-error-container/40 hover:text-on-error-container active:scale-90"
                         >
