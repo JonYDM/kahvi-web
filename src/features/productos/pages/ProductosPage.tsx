@@ -385,11 +385,6 @@ function ProductoCard({
           <div className="absolute inset-0 bg-gradient-to-br from-[#EDE4D8] to-[#D9CFC3]" />
           <div className="absolute -left-8 top-3 h-16 w-16 rounded-full bg-white/30 blur-2xl" />
           <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-black/10 to-transparent" />
-          {categoriaNombre && (
-            <span className="absolute right-2 top-2 rounded-full bg-white/85 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-cafe-intenso backdrop-blur-sm shadow-sm">
-              {categoriaNombre}
-            </span>
-          )}
         </div>
         {/* Contenido */}
         <div className="px-3 pb-3 pt-2.5">
