@@ -168,7 +168,7 @@ export function HistorialVentasPage() {
                   <ul className="flex flex-col gap-1 rounded-xl bg-surface-container-low px-3 py-2.5">
                     {v.lineas.map((l, i) => (
                       <li key={i} className="flex justify-between gap-2 text-body-md">
-                        <span className="min-w-0 truncate text-on-surface">{l.cantidad}À— {l.nombreProducto}</span>
+                        <span className="min-w-0 truncate text-on-surface">{l.cantidad}x {l.nombreProducto}</span>
                         <span className="tabular shrink-0 text-on-surface-variant">{formatCurrency(l.subtotal)}</span>
                       </li>
                     ))}
