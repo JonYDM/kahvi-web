@@ -636,7 +636,12 @@ export function MeseroPage() {
         )}
 
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 3: CONFIRMACIÀ“N â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-        {paso === 3 && (
+        {/* Drawer de confirmacion — se abre cuando paso llega a 3 */}
+        <Drawer
+          open={paso === 3}
+          onClose={nuevoPedido}
+          title=""
+        >
           <ConfirmacionExito
             refMesa={refMesa}
             nombreCliente={tipo === "llevar" ? nombreCliente : null}
@@ -644,7 +649,7 @@ export function MeseroPage() {
             folio={folioConfirmado}
             onNuevo={nuevoPedido}
           />
-        )}
+        </Drawer>
       </div>
 
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• BARRA DE NAVEGACIÀ“N FIJA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
@@ -811,19 +816,15 @@ function ConfirmacionExito({
   folio: number | null;
   onNuevo: () => void;
 }) {
-  const AUTO_MS = 5000;
+  const AUTO_MS = 6000;
   const [restante, setRestante] = useState(AUTO_MS);
 
   useEffect(() => {
     const inicio = Date.now();
     const tick = setInterval(() => {
       const queda = AUTO_MS - (Date.now() - inicio);
-      if (queda <= 0) {
-        clearInterval(tick);
-        onNuevo();
-      } else {
-        setRestante(queda);
-      }
+      if (queda <= 0) { clearInterval(tick); onNuevo(); }
+      else setRestante(queda);
     }, 50);
     return () => clearInterval(tick);
   }, [onNuevo]);
@@ -831,48 +832,86 @@ function ConfirmacionExito({
   const progreso = Math.max(0, (restante / AUTO_MS) * 100);
 
   return (
-    <section className="mx-auto flex max-w-sm flex-col items-center py-12 text-center" aria-live="polite">
-      {/* Imagen de confirmación */}
-      <img
-        src="/confirmed.webp"
-        alt=""
-        aria-hidden
-        className="h-40 w-40 object-contain drop-shadow-sm"
-      />
-
-      <h2 className="mt-6 text-headline-md font-bold text-on-surface">¡Pedido confirmado!</h2>
-      <p className="mt-1 text-body-md text-on-surface-variant">
-        {folio ? `Comanda #${folio} enviada a cocina` : "Comanda enviada a cocina"}
-      </p>
-
-      <p className="mt-6 tabular text-4xl font-bold text-on-surface">{formatCurrency(total)}</p>
-      <div className="mt-1 flex flex-col items-center gap-0.5 text-body-sm text-on-surface-variant">
-        <span>{refMesa}</span>
-        {nombreCliente && <span className="font-semibold text-primary-container">{nombreCliente}</span>}
+    <div className="flex flex-col items-center pt-2 pb-4 text-center">
+      {/* SVG check animado — circulo + palomita que se dibujan */}
+      <div className="relative flex h-24 w-24 items-center justify-center">
+        <svg viewBox="0 0 80 80" fill="none" className="h-24 w-24">
+          {/* Circulo de fondo */}
+          <circle cx="40" cy="40" r="36" stroke="#E8F5F0" strokeWidth="4" />
+          {/* Circulo animado */}
+          <circle
+            cx="40" cy="40" r="36"
+            stroke="#6FAF9A"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray="226"
+            strokeDashoffset="226"
+            transform="rotate(-90 40 40)"
+            style={{ animation: "drawCircle 0.6s ease-out 0.1s forwards" }}
+          />
+          {/* Palomita animada */}
+          <polyline
+            points="22,42 34,54 58,28"
+            stroke="#2B1F19"
+            strokeWidth="4.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeDasharray="60"
+            strokeDashoffset="60"
+            style={{ animation: "drawCheck 0.4s ease-out 0.65s forwards" }}
+          />
+        </svg>
+        <style>{`
+          @keyframes drawCircle {
+            to { stroke-dashoffset: 0; }
+          }
+          @keyframes drawCheck {
+            to { stroke-dashoffset: 0; }
+          }
+        `}</style>
       </div>
 
-      <Button
-        fullWidth
-        size="lg"
-        onClick={onNuevo}
-        className="mt-10 bg-cafe-intenso text-crema hover:bg-cafe-intenso/90"
-      >
-        <Plus weight='light' className="h-4 w-4" aria-hidden />
-        <span className="sm:hidden">Nuevo pedido</span>
-        <span className="hidden sm:inline">Tomar otro pedido</span>
-      </Button>
+      <h2 className="mt-5 text-[1.6rem] font-black tracking-[-0.02em] text-cafe-intenso">
+        Pedido confirmado
+        <span className="text-verde-menta">.</span>
+      </h2>
+      <p className="mt-1 text-body-md text-on-surface-variant">
+        {folio ? `Comanda #${folio} en cocina` : "Enviado a cocina"}
+      </p>
 
-      {/* Barra de cuenta regresiva */}
-      <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-surface-container">
+      {/* Info del pedido */}
+      <div className="mt-5 w-full rounded-2xl bg-surface-container/50 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <span className="text-body-sm text-on-surface-variant">{refMesa}</span>
+          <span className="text-headline-sm font-black text-cafe-intenso tabular-nums">{formatCurrency(total)}</span>
+        </div>
+        {nombreCliente && (
+          <p className="mt-0.5 text-body-sm font-semibold text-primary-container">{nombreCliente}</p>
+        )}
+      </div>
+
+      {/* Boton nuevo pedido */}
+      <button
+        onClick={onNuevo}
+        className="group mt-5 flex h-14 w-full items-center justify-between rounded-2xl bg-cafe-intenso px-5 text-crema transition-all duration-300 active:scale-[0.98]"
+      >
+        <span className="text-[0.9rem] font-bold">Tomar otro pedido</span>
+        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/15 transition-transform group-hover:translate-x-0.5">
+          <ArrowRight weight="light" className="h-4 w-4" />
+        </span>
+      </button>
+
+      {/* Barra cuenta regresiva */}
+      <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-surface-container">
         <div
-          className="h-full rounded-full bg-primary-container transition-[width] duration-75 ease-linear"
+          className="h-full rounded-full bg-verde-menta transition-[width] duration-75 ease-linear"
           style={{ width: `${progreso}%` }}
         />
       </div>
-      <p className="mt-2 text-body-sm text-on-surface-variant/60">
-        Nuevo pedido en {Math.ceil(restante / 1000)} s
+      <p className="mt-1.5 text-body-sm text-on-surface-variant/50">
+        Nuevo pedido en {Math.ceil(restante / 1000)}s
       </p>
-    </section>
+    </div>
   );
 }
 
