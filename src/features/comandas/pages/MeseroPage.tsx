@@ -25,7 +25,8 @@ import { ApiError } from "@/lib/http";
 import { cn } from "@/lib/cn";
 import { formatCurrency } from "@/lib/format";
 import type { Producto } from "@/types/api";
-import { useEnviarComanda } from "../hooks";
+import { RolUsuario } from "@/types/api";
+import { useEnviarComanda, useComandasActivas, useCancelarComanda } from "../hooks";
 
 // â”€â”€â”€ Tipos locales â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
@@ -48,8 +49,28 @@ export function MeseroPage() {
   const { sesion } = useAuth();
   const { data: productos, isLoading, isError } = useCatalogo();
   const { data: categorias } = useCategorias();
+  const { data: todasComandas } = useComandasActivas();
   const enviarComanda = useEnviarComanda();
+  const cancelarComanda = useCancelarComanda();
   const toast = useToast();
+
+  // Comandas activas del mesero actual
+  const misComandas = (todasComandas ?? []).filter(
+    (c) =>
+      (c.estado === "Recibida" || c.estado === "EnPreparacion") &&
+      (sesion?.rol === RolUsuario.Administrador || c.meseroNombre === sesion?.nombre),
+  );
+
+  async function handleCancelar(id: string, folio: number) {
+    const ok = window.confirm(`Cancelar comanda #${folio}?`);
+    if (!ok) return;
+    try {
+      await cancelarComanda.mutateAsync(id);
+      toast.exito(`Comanda #${folio} cancelada.`);
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : "No se pudo cancelar.");
+    }
+  }
 
   // Estado del flujo
   const [paso, setPaso] = useState<Paso>(0);
@@ -222,6 +243,53 @@ export function MeseroPage() {
         {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• PASO 0: TIPO DE SERVICIO â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         {paso === 0 && (
           <section aria-label="Tipo de servicio">
+
+            {/* ── Mis comandas activas ── */}
+            {misComandas.length > 0 && (
+              <div className="mb-6">
+                <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60 mb-2">
+                  Mis comandas activas ({misComandas.length})
+                </p>
+                <div className="flex flex-col gap-2">
+                  {misComandas.map((c) => (
+                    <div
+                      key={c.id}
+                      className="flex items-center gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 shadow-soft"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-label-md font-black text-cafe-intenso">#{c.folio}</span>
+                          <span className="text-body-sm text-on-surface-variant">
+                            {c.esParaLlevar ? "Para llevar" : c.mesa}
+                          </span>
+                          <span className={cn(
+                            "rounded-full px-2 py-0.5 text-[10px] font-bold",
+                            c.estado === "Recibida"
+                              ? "bg-caramelo/20 text-cafe-intenso"
+                              : "bg-orange-100 text-orange-800",
+                          )}>
+                            {c.estado === "Recibida" ? "Recibida" : "Preparando"}
+                          </span>
+                        </div>
+                        <p className="mt-0.5 text-body-sm text-on-surface-variant truncate">
+                          {c.items.map((it) => it.nombre).join(", ")}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleCancelar(c.id, c.folio)}
+                        disabled={cancelarComanda.isPending}
+                        aria-label={`Cancelar comanda #${c.folio}`}
+                        className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-error-st/60 transition-colors hover:bg-error-container/30 hover:text-error-st disabled:opacity-40"
+                      >
+                        <X weight="light" className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 border-b border-outline-variant/20" />
+              </div>
+            )}
+
             <PasoTitulo icon={Storefront} titulo="¿Dónde es el pedido?" sub="Elige mesa o para llevar" />
 
             {/* Selector Mesa / Para llevar */}
