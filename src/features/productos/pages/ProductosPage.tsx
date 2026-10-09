@@ -416,28 +416,22 @@ function ProductoCard({
           {/* Switch activo + acciones */}
           <div className="flex items-center justify-between">
 
-            {/* Switch activo/inactivo */}
+            {/* Switch activo/inactivo — sin texto, color neutro */}
             <button
               onClick={onToggleActivo}
               disabled={desactivando}
               aria-label={p.activo ? "Desactivar producto" : "Activar producto"}
-              className="flex items-center gap-1.5 transition-all duration-200 active:scale-95 disabled:opacity-40"
+              className="flex items-center transition-all duration-200 active:scale-95 disabled:opacity-40"
             >
               <div className={cn(
                 "relative h-5 w-9 rounded-full transition-colors duration-300",
-                p.activo ? "bg-verde-menta" : "bg-outline-variant/40",
+                p.activo ? "bg-cafe-principal/60" : "bg-outline-variant/30",
               )}>
                 <div className={cn(
                   "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-300",
                   p.activo ? "translate-x-4" : "translate-x-0.5",
                 )} />
               </div>
-              <span className={cn(
-                "text-[10px] font-bold",
-                p.activo ? "text-verde-menta" : "text-on-surface-variant/50",
-              )}>
-                {p.activo ? "Activo" : "Inactivo"}
-              </span>
             </button>
 
             {/* Acciones con color */}
