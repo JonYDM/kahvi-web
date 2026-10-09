@@ -164,10 +164,10 @@ export function LoginPage() {
             <div className="pt-10">
               <button
                 onClick={volver}
-                className="flex w-fit items-center gap-1.5 rounded-full bg-white/60 px-3 py-1.5 text-[0.75rem] font-semibold text-cafe-intenso/60 backdrop-blur-sm transition-colors hover:text-cafe-intenso"
+                className="flex w-fit items-center gap-1.5 rounded-full bg-cafe-intenso px-4 py-2 text-[0.75rem] font-bold text-crema transition-all active:scale-95"
               >
                 <ArrowLeft weight="light" className="h-3.5 w-3.5" />
-                {identificador}
+                Regresar
               </button>
             </div>
 
