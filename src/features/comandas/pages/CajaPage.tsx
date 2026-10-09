@@ -262,7 +262,7 @@ function ComandaCobro({
         {c.items.map((it, i) => (
           <li key={i} className="flex justify-between">
             <span>
-              {it.cantidad}\u00D7 {it.nombre}
+              {it.cantidad}x {it.nombre}
             </span>
             <span>{formatCurrency(it.precioUnitario * it.cantidad)}</span>
           </li>
