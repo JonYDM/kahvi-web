@@ -247,7 +247,6 @@ export function ProductosPage() {
       {!isLoading && !isError && lista.length > 0 && (
         <div className="grid grid-cols-2 gap-3 pb-6">
           {lista.map((p) => {
-            const cat = categorias.find((c: CategoriaDto) => c.id === p.categoriaId);
             const margen = p.costo != null && p.costo > 0
               ? Math.round(((p.precio - p.costo) / p.precio) * 100)
               : null;
@@ -255,7 +254,6 @@ export function ProductosPage() {
               <ProductoCard
                 key={p.id}
                 producto={p}
-                categoriaNombre={cat?.nombre}
                 margen={margen}
                 onEditar={() => abrirEditar(p)}
                 onToggleActivo={() => handleDesactivar(p)}
@@ -350,14 +348,12 @@ export function ProductosPage() {
 
 function ProductoCard({
   producto: p,
-  categoriaNombre,
   margen,
   onEditar,
   onToggleActivo,
   desactivando,
 }: {
   producto: Producto;
-  categoriaNombre?: string;
   margen: number | null;
   onEditar: () => void;
   onToggleActivo: () => void;
