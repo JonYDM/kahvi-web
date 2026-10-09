@@ -1,4 +1,4 @@
-﻿import { type ReactNode, useState } from "react";
+﻿import { type ReactNode, useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Check, CaretDown, Key, SignOut, MapPin, DotsThreeOutline } from "@phosphor-icons/react";
 import { cn } from "@/lib/cn";
@@ -301,8 +301,26 @@ function SelectorSucursal() {
 /** Botón "Más" del bottom-nav. */
 function MenuMas({ items }: { items: NavItem[] }) {
   const [abierto, setAbierto] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Cierra al tocar fuera del componente
+  useEffect(() => {
+    if (!abierto) return;
+    function handler(e: MouseEvent | TouchEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setAbierto(false);
+      }
+    }
+    document.addEventListener("mousedown", handler);
+    document.addEventListener("touchstart", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("touchstart", handler);
+    };
+  }, [abierto]);
+
   return (
-    <div className="flex flex-1 flex-col items-center">
+    <div ref={ref} className="relative flex flex-1 flex-col items-center">
       <button
         onClick={() => setAbierto((v) => !v)}
         aria-label="Más opciones"
@@ -324,9 +342,7 @@ function MenuMas({ items }: { items: NavItem[] }) {
       </button>
 
       {abierto && (
-        <>
-          <div className="fixed inset-0 z-[49]" onClick={() => setAbierto(false)} />
-          <div className="absolute bottom-full right-0 z-50 mb-2 w-56 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-1.5 shadow-lift">
+        <div className="absolute bottom-full right-0 z-50 mb-2 w-56 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-1.5 shadow-lift">
             <p className="px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
               Más módulos
             </p>
@@ -349,7 +365,6 @@ function MenuMas({ items }: { items: NavItem[] }) {
               </NavLink>
             ))}
           </div>
-        </>
       )}
     </div>
   );
