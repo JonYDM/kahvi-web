@@ -158,7 +158,7 @@ export function LoginPage() {
 
         {/* ── Paso 2: PIN con teclado en pantalla ── */}
         {paso === "pin" && (
-          <div className="flex flex-1 flex-col pb-[26rem]">
+          <div className="flex flex-1 flex-col pb-[22rem]">
 
             {/* Volver */}
             <div className="pt-10">
@@ -211,61 +211,34 @@ export function LoginPage() {
           </div>
         )}
 
-        {/* ── Teclado numerico en pantalla — glassmorphism fijo abajo ── */}
+        {/* ── Teclado numerico flotante — sin contenedor, directo sobre el fondo ── */}
         {paso === "pin" && (
           <div
-            className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-sm px-5"
-            style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}
+            className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-sm px-6"
+            style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1.5rem)" }}
           >
-            {/* Panel glass */}
-            <div
-              className="rounded-3xl p-4"
-              style={{
-                background: "rgba(253,250,246,0.72)",
-                backdropFilter: "blur(24px)",
-                WebkitBackdropFilter: "blur(24px)",
-                boxShadow: "0 -4px 32px -8px rgba(43,31,25,0.12), inset 0 1px 0 rgba(255,255,255,0.8), 0 0 0 1px rgba(43,31,25,0.06)",
-              }}
-            >
-              <div className="grid grid-cols-3 gap-2.5">
-                {TECLAS.map((t, i) => (
-                  <button
-                    key={i}
-                    onClick={() => presionarTecla(t)}
-                    disabled={t === "" || cargando}
-                    aria-label={t === "<" ? "Borrar" : t === "" ? "" : t}
-                    className={cn(
-                      "flex h-14 items-center justify-center rounded-2xl text-xl font-bold transition-all duration-150",
-                      "active:scale-[0.94] active:duration-75",
-                      t === ""
-                        ? "pointer-events-none"
-                        : t === "<"
-                          ? "bg-white/50 text-cafe-intenso/50 hover:bg-white/80"
-                          : "bg-white/60 text-cafe-intenso hover:bg-white shadow-[0_1px_4px_rgba(43,31,25,0.08)]",
-                    )}
-                  >
-                    {t === "<" ? (
-                      <Backspace weight="light" className="h-5 w-5" />
-                    ) : (
-                      t
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {/* Boton entrar */}
-              <button
-                onClick={() => enviarPin()}
-                disabled={pin.length !== PIN_LENGTH || cargando}
-                className="mt-2.5 group flex h-13 w-full items-center justify-between rounded-2xl bg-cafe-intenso px-5 text-crema transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98] disabled:opacity-30"
-              >
-                <span className="text-[0.9rem] font-bold">
-                  {cargando ? "Entrando..." : "Entrar"}
-                </span>
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/15">
-                  <ArrowRight weight="light" className="h-4 w-4" />
-                </span>
-              </button>
+            <div className="grid grid-cols-3 gap-3">
+              {TECLAS.map((t, i) => (
+                <button
+                  key={i}
+                  onClick={() => presionarTecla(t)}
+                  disabled={t === "" || cargando}
+                  aria-label={t === "<" ? "Borrar" : t === "" ? "" : t}
+                  className={cn(
+                    "flex h-16 items-center justify-center rounded-2xl text-2xl font-bold transition-all duration-150",
+                    "active:scale-[0.91] active:duration-75",
+                    t === ""
+                      ? "pointer-events-none opacity-0"
+                      : t === "<"
+                        ? "text-cafe-intenso/40 hover:text-cafe-intenso/70 hover:bg-white/30"
+                        : "bg-white/40 text-cafe-intenso hover:bg-white/60 backdrop-blur-sm shadow-[0_2px_8px_rgba(43,31,25,0.08),inset_0_1px_0_rgba(255,255,255,0.7)]",
+                  )}
+                >
+                  {t === "<" ? (
+                    <Backspace weight="light" className="h-6 w-6" />
+                  ) : t}
+                </button>
+              ))}
             </div>
           </div>
         )}
