@@ -169,7 +169,7 @@ export function ProductosPage() {
 
       {/* Chips de categoría â€” siempre visibles */}
       {categorias.length > 0 && (
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 mb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <button
             onClick={() => { setFiltroCat(null); setMostrarInactivos(false); }}
             className={cn(
