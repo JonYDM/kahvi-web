@@ -245,57 +245,6 @@ export function MeseroPage() {
         {paso === 0 && (
           <section aria-label="Tipo de servicio">
 
-            {/* ── Mis comandas activas — solo la mas reciente ── */}
-            {misComandas.length > 0 && (
-              <div className="mb-5">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60">
-                    Mis comandas activas
-                  </p>
-                  {misComandas.length > 1 && (
-                    <button
-                      onClick={() => setDrawerComandas(true)}
-                      className="text-[11px] font-semibold text-primary-container hover:underline"
-                    >
-                      Ver {misComandas.length} →
-                    </button>
-                  )}
-                </div>
-
-                {/* Solo la mas reciente */}
-                {(() => {
-                  const c = misComandas[0];
-                  return (
-                    <div className="flex items-center gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 shadow-soft">
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-label-md font-black text-cafe-intenso">#{c.folio}</span>
-                          <span className="text-body-sm text-on-surface-variant">{c.esParaLlevar ? "Para llevar" : `Mesa ${c.mesa}`}</span>
-                          <span className={cn(
-                            "rounded-full px-2 py-0.5 text-[10px] font-bold",
-                            c.estado === "Recibida" ? "bg-caramelo/20 text-cafe-intenso" : "bg-orange-100 text-orange-800",
-                          )}>
-                            {c.estado === "Recibida" ? "Recibida" : "Preparando"}
-                          </span>
-                        </div>
-                        <p className="mt-0.5 text-body-sm text-on-surface-variant truncate">
-                          {c.items.map((it) => it.nombre).join(", ")}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => handleCancelar(c.id, c.folio)}
-                        disabled={cancelarComanda.isPending}
-                        className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-error-st/50 hover:bg-error-container/30 hover:text-error-st transition-colors disabled:opacity-40"
-                      >
-                        <X weight="light" className="h-4 w-4" />
-                      </button>
-                    </div>
-                  );
-                })()}
-                <div className="mt-4 border-b border-outline-variant/20" />
-              </div>
-            )}
-
             {/* Drawer con todas las comandas activas */}
             <Drawer
               open={drawerComandas}
@@ -413,6 +362,56 @@ export function MeseroPage() {
                     className="h-12 w-full rounded-2xl border-0 bg-white/70 px-4 text-body-md text-cafe-intenso shadow-[0_2px_12px_-4px_rgba(43,31,25,0.08)] outline-none ring-2 ring-transparent placeholder:text-cafe-intenso/30 transition-all focus:bg-white focus:ring-cafe-intenso/15"
                   />
                 </div>
+
+                {/* Mis comandas activas - debajo del selector de mesa */}
+                {misComandas.length > 0 && (
+                  <div className="mt-5">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60">
+                        Mis comandas activas
+                      </p>
+                      {misComandas.length > 1 && (
+                        <button
+                          onClick={() => setDrawerComandas(true)}
+                          className="text-[11px] font-semibold text-primary-container hover:underline"
+                        >
+                          Ver mas
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Solo la mas reciente */}
+                    {(() => {
+                      const c = misComandas[0];
+                      return (
+                        <div className="flex items-center gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 shadow-soft">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-label-md font-black text-cafe-intenso">#{c.folio}</span>
+                              <span className="text-body-sm text-on-surface-variant">{c.esParaLlevar ? "Para llevar" : `Mesa ${c.mesa}`}</span>
+                              <span className={cn(
+                                "rounded-full px-2 py-0.5 text-[10px] font-bold",
+                                c.estado === "Recibida" ? "bg-caramelo/20 text-cafe-intenso" : "bg-orange-100 text-orange-800",
+                              )}>
+                                {c.estado === "Recibida" ? "Recibida" : "Preparando"}
+                              </span>
+                            </div>
+                            <p className="mt-0.5 text-body-sm text-on-surface-variant truncate">
+                              {c.items.map((it) => it.nombre).join(", ")}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleCancelar(c.id, c.folio)}
+                            disabled={cancelarComanda.isPending}
+                            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-error-st/50 hover:bg-error-container/30 hover:text-error-st transition-colors disabled:opacity-40"
+                          >
+                            <X weight="light" className="h-4 w-4" />
+                          </button>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
               </div>
             )}
 
@@ -543,80 +542,95 @@ export function MeseroPage() {
                 No hay productos. Regresa y agrega algunos.
               </p>
             ) : (
-              <ul className="mt-5 flex flex-col gap-3">
-                {lineas.map((l) => (
-                  <li
-                    key={l.producto.id}
-                    className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-4 shadow-soft"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-on-surface truncate">{l.producto.nombre}</p>
-                        <p className="text-body-sm text-on-surface-variant">
-                          {formatCurrency(l.producto.precio)} c/u
-                        </p>
+              <>
+                <ul className="mt-5 flex flex-col gap-3">
+                  {lineas.map((l) => (
+                    <li
+                      key={l.producto.id}
+                      className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-3 shadow-soft"
+                    >
+                      {/* Fila superior: nombre + controles */}
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-label-lg font-bold text-on-surface truncate">{l.producto.nombre}</p>
+                          <p className="text-body-sm text-on-surface-variant">
+                            {formatCurrency(l.producto.precio)} c/u
+                          </p>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-1">
+                          <button
+                            onClick={() => quitar(l.producto.id)}
+                            aria-label="Quitar uno"
+                            className="grid h-8 w-8 place-items-center rounded-xl bg-surface-container text-on-surface-variant active:scale-90"
+                          >
+                            <Minus weight="light" className="h-4 w-4" />
+                          </button>
+                          <span className="w-6 text-center text-label-lg font-bold">{l.cantidad}</span>
+                          <button
+                            onClick={() => agregar(l.producto)}
+                            aria-label="Agregar uno"
+                            className="grid h-8 w-8 place-items-center rounded-xl bg-surface-container text-on-surface-variant active:scale-90"
+                          >
+                            <Plus weight="light" className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => eliminar(l.producto.id)}
+                            aria-label="Eliminar del carrito"
+                            className="grid h-8 w-8 place-items-center rounded-xl text-error-st/40 hover:text-error-st active:scale-90"
+                          >
+                            <Trash weight="light" className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex shrink-0 items-center gap-1.5">
-                        <button
-                          onClick={() => quitar(l.producto.id)}
-                          aria-label="Quitar uno"
-                          className="grid h-9 w-9 place-items-center rounded-xl bg-surface-container text-on-surface-variant active:scale-90"
-                        >
-                          <Minus weight='light' className="h-4 w-4" />
-                        </button>
-                        <span className="w-6 text-center text-label-lg font-bold">{l.cantidad}</span>
-                        <button
-                          onClick={() => agregar(l.producto)}
-                          aria-label="Agregar uno"
-                          className="grid h-9 w-9 place-items-center rounded-xl bg-surface-container text-on-surface-variant active:scale-90"
-                        >
-                          <Plus weight='light' className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => eliminar(l.producto.id)}
-                          aria-label="Eliminar del carrito"
-                          className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant hover:bg-error-container/40 hover:text-on-error-container active:scale-90"
-                        >
-                          <Trash weight='light' className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
 
-                    {/* Nota del ítem */}
-                    {editandoNota === l.producto.id ? (
-                      <div className="mt-3 flex gap-2">
-                        <input
-                          autoFocus
-                          value={notaTemp}
-                          onChange={(e) => setNotaTemp(e.target.value)}
-                          placeholder="Ej: sin azúcar, extra caliente…"
-                          className="flex-1 rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2 text-body-sm text-on-surface outline-none focus:border-primary-container"
-                          onKeyDown={(e) => e.key === "Enter" && guardarNota()}
-                        />
+                      {/* Nota del item */}
+                      {editandoNota === l.producto.id ? (
+                        <div className="mt-2 flex gap-2">
+                          <input
+                            autoFocus
+                            value={notaTemp}
+                            onChange={(e) => setNotaTemp(e.target.value)}
+                            placeholder="Ej: sin azucar, extra caliente..."
+                            className="flex-1 bg-surface-container rounded-2xl border-0 px-3 py-2 text-body-sm text-on-surface ring-2 ring-primary-container/20 outline-none"
+                            onKeyDown={(e) => e.key === "Enter" && guardarNota()}
+                          />
+                          <button
+                            onClick={guardarNota}
+                            className="rounded-xl bg-primary-container px-4 py-2 text-label-sm font-bold text-on-primary"
+                          >
+                            OK
+                          </button>
+                        </div>
+                      ) : (
                         <button
-                          onClick={guardarNota}
-                          className="rounded-xl bg-primary-container px-4 py-2 text-label-sm font-bold text-on-primary"
+                          onClick={() => {
+                            setEditandoNota(l.producto.id);
+                            setNotaTemp(l.nota);
+                          }}
+                          className="mt-2 flex items-center gap-1.5"
                         >
-                          OK
+                          {l.nota ? (
+                            <span className="inline-flex items-center gap-1 bg-primary-container/10 text-primary-container rounded-full px-2.5 py-1 text-body-sm italic">
+                              &ldquo;{l.nota}&rdquo;
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 bg-surface-container rounded-full px-2.5 py-1 text-body-sm text-on-surface-variant">
+                              <PencilSimple weight="light" className="h-3.5 w-3.5" />
+                              Agregar nota
+                            </span>
+                          )}
                         </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          setEditandoNota(l.producto.id);
-                          setNotaTemp(l.nota);
-                        }}
-                        className="mt-2 flex items-center gap-1.5 text-body-sm text-on-surface-variant hover:text-on-surface"
-                      >
-                        <PencilSimple weight="light" className="h-3.5 w-3.5" />
-                        {l.nota
-                          ? <span className="italic text-primary-container">"{l.nota}"</span>
-                          : <span>Agregar nota</span>}
-                      </button>
-                    )}
-                  </li>
-                ))}
-              </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Total */}
+                <div className="flex justify-between items-center rounded-2xl bg-cafe-intenso text-crema px-4 py-3 mt-2">
+                  <span className="text-label-md">Total</span>
+                  <span className="text-headline-sm font-black">{formatCurrency(total)}</span>
+                </div>
+              </>
             )}
           </section>
         )}

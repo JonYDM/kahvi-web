@@ -323,16 +323,16 @@ function CategoriaFila({
       <div className="flex shrink-0 items-center gap-1">
         <button
           onClick={onEditar}
-          aria-label={`Editar categoría ${categoria.nombre}`}
-          className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-surface-container"
+          aria-label={`Editar categoria ${categoria.nombre}`}
+          className="grid h-9 w-9 place-items-center rounded-xl text-cafe-principal/60 transition-colors hover:bg-cafe-principal/10 hover:text-cafe-intenso"
         >
           <PencilSimple weight='light' className="h-4 w-4" aria-hidden />
         </button>
         <button
           onClick={onEliminar}
           disabled={eliminando}
-          aria-label={`Eliminar categoría ${categoria.nombre}`}
-          className="grid h-9 w-9 place-items-center rounded-xl text-on-surface-variant transition-colors hover:bg-error-container/40 hover:text-on-error-container disabled:opacity-50"
+          aria-label={`Eliminar categoria ${categoria.nombre}`}
+          className="grid h-9 w-9 place-items-center rounded-xl text-error-st/50 transition-colors hover:bg-red-50 hover:text-error-st disabled:opacity-30"
         >
           <Trash weight='light' className="h-4 w-4" aria-hidden />
         </button>
