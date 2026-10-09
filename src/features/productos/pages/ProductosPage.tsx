@@ -245,7 +245,7 @@ export function ProductosPage() {
 
       {/* Grid de productos */}
       {!isLoading && !isError && lista.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 pb-6">
           {lista.map((p) => {
             const cat = categorias.find((c: CategoriaDto) => c.id === p.categoriaId);
             const margen = p.costo != null && p.costo > 0
@@ -413,37 +413,56 @@ function ProductoCard({
 
         {/* Footer acciones */}
         <div className="flex items-center justify-between border-t border-black/[0.04] px-2.5 py-2">
-          {/* Toggle activo */}
-          <button
-            onClick={onToggleActivo}
-            disabled={desactivando}
-            className={cn(
-              "rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] transition-all duration-300",
-              p.activo
-                ? "bg-primary-container/12 text-primary-container"
-                : "bg-surface-container text-on-surface-variant/60",
-            )}
-          >
-            {p.activo ? "Activo" : "Inactivo"}
-          </button>
+          {/* Switch activo + acciones */}
+          <div className="flex items-center justify-between">
 
-          {/* Acciones */}
-          <div className="flex items-center gap-0.5">
-            <button
-              onClick={onEditar}
-              aria-label={`Editar ${p.nombre}`}
-              className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant/50 transition-all duration-200 hover:bg-surface-container hover:text-on-surface"
-            >
-              <PencilSimple weight='light' className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
-            </button>
+            {/* Switch activo/inactivo */}
             <button
               onClick={onToggleActivo}
               disabled={desactivando}
-              aria-label={`Desactivar ${p.nombre}`}
-              className="grid h-8 w-8 place-items-center rounded-xl text-on-surface-variant/50 transition-all duration-200 hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
+              aria-label={p.activo ? "Desactivar producto" : "Activar producto"}
+              className="flex items-center gap-1.5 transition-all duration-200 active:scale-95 disabled:opacity-40"
             >
-              <Trash weight='light' className="h-3.5 w-3.5" strokeWidth={1.5} aria-hidden />
+              <div className={cn(
+                "relative h-5 w-9 rounded-full transition-colors duration-300",
+                p.activo ? "bg-verde-menta" : "bg-outline-variant/40",
+              )}>
+                <div className={cn(
+                  "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-300",
+                  p.activo ? "translate-x-4" : "translate-x-0.5",
+                )} />
+              </div>
+              <span className={cn(
+                "text-[10px] font-bold",
+                p.activo ? "text-verde-menta" : "text-on-surface-variant/50",
+              )}>
+                {p.activo ? "Activo" : "Inactivo"}
+              </span>
             </button>
+
+            {/* Acciones con color */}
+            <div className="flex items-center gap-1">
+              <button
+                onClick={onEditar}
+                aria-label={`Editar ${p.nombre}`}
+                className="grid h-8 w-8 place-items-center rounded-xl text-cafe-principal/60 transition-all duration-200 hover:bg-cafe-principal/10 hover:text-cafe-intenso"
+              >
+                <PencilSimple weight="light" className="h-3.5 w-3.5" aria-hidden />
+              </button>
+              <button
+                onClick={onToggleActivo}
+                disabled={desactivando}
+                aria-label={p.activo ? `Desactivar ${p.nombre}` : `Activar ${p.nombre}`}
+                className={cn(
+                  "grid h-8 w-8 place-items-center rounded-xl transition-all duration-200 disabled:opacity-40",
+                  p.activo
+                    ? "text-error-st/50 hover:bg-red-50 hover:text-error-st"
+                    : "text-verde-menta/60 hover:bg-verde-menta/10 hover:text-verde-menta",
+                )}
+              >
+                <Trash weight="light" className="h-3.5 w-3.5" aria-hidden />
+              </button>
+            </div>
           </div>
         </div>
       </div>
