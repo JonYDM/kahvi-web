@@ -16,7 +16,7 @@ import {
 } from "@phosphor-icons/react";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
-import { Button, Input, SkeletonFila } from "@/components/ui";
+import { Button, SkeletonFila } from "@/components/ui";
 import { useAuth } from "@/features/auth";
 import { useCategorias } from "@/features/categorias";
 import { useCatalogo } from "@/features/pos/hooks";
@@ -283,11 +283,12 @@ export function MeseroPage() {
                 </div>
                 {/* Campo manual para mesas no listadas */}
                 <div className="mt-3">
-                  <Input
-                    label="Otra mesa"
-                    placeholder="Ej: Barra, Terraza, 9…"
+                  <label className="mb-1.5 block text-[0.7rem] font-bold uppercase tracking-[0.1em] text-cafe-intenso/50">Otra mesa</label>
+                  <input
+                    placeholder="Ej: Barra, Terraza, 9..."
                     value={MESAS_RAPIDAS.includes(mesa) ? "" : mesa}
                     onChange={(e) => setMesa(e.target.value)}
+                    className="h-12 w-full rounded-2xl border-0 bg-white/70 px-4 text-body-md text-cafe-intenso shadow-[0_2px_12px_-4px_rgba(43,31,25,0.08)] outline-none ring-2 ring-transparent placeholder:text-cafe-intenso/30 transition-all focus:bg-white focus:ring-cafe-intenso/15"
                   />
                 </div>
               </div>
@@ -296,11 +297,12 @@ export function MeseroPage() {
             {/* Nombre del cliente (solo para llevar) */}
             {tipo === "llevar" && (
               <div className="mt-5">
-                <Input
-                  label="Nombre del cliente (opcional)"
+                <label className="mb-1.5 block text-[0.7rem] font-bold uppercase tracking-[0.1em] text-cafe-intenso/50">Nombre del cliente (opcional)</label>
+                <input
                   placeholder="¿Cómo se llama?"
                   value={nombreCliente}
                   onChange={(e) => setNombreCliente(e.target.value)}
+                  className="h-12 w-full rounded-2xl border-0 bg-white/70 px-4 text-body-md text-cafe-intenso shadow-[0_2px_12px_-4px_rgba(43,31,25,0.08)] outline-none ring-2 ring-transparent placeholder:text-cafe-intenso/30 transition-all focus:bg-white focus:ring-cafe-intenso/15"
                 />
               </div>
             )}
@@ -319,16 +321,15 @@ export function MeseroPage() {
             {/* Buscador */}
             <div className="relative mt-5">
               <MagnifyingGlass
-                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant"
+                className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-cafe-intenso/40"
                 aria-hidden
               />
-              <Input
-                variant="soft"
+              <input
                 aria-label="Buscar productos"
-                placeholder="Buscar producto…"
+                placeholder="Buscar producto..."
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
-                className="h-12 pl-12"
+                className="h-12 w-full rounded-2xl border-0 bg-white/70 pl-12 pr-10 text-body-md text-cafe-intenso shadow-[0_2px_12px_-4px_rgba(43,31,25,0.08)] outline-none ring-2 ring-transparent placeholder:text-cafe-intenso/30 backdrop-blur-sm transition-all focus:bg-white focus:ring-cafe-intenso/15"
               />
               {busqueda && (
                 <button
