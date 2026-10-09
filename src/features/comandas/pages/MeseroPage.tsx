@@ -16,7 +16,7 @@ import {
 } from "@phosphor-icons/react";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
-import { Button, SkeletonFila } from "@/components/ui";
+import { Button, Drawer, SkeletonFila } from "@/components/ui";
 import { useAuth } from "@/features/auth";
 import { useCategorias } from "@/features/categorias";
 import { useCatalogo } from "@/features/pos/hooks";
@@ -79,6 +79,7 @@ export function MeseroPage() {
   const [tipo, setTipo] = useState<TipoServicio>("mesa");
   const [mesa, setMesa] = useState("1");
   const [nombreCliente, setNombreCliente] = useState("");
+  const [drawerComandas, setDrawerComandas] = useState(false);
 
   // Paso 1 â€” productos
   const [categoriaId, setCategoriaId] = useState<string | null>(null);
@@ -244,29 +245,35 @@ export function MeseroPage() {
         {paso === 0 && (
           <section aria-label="Tipo de servicio">
 
-            {/* ── Mis comandas activas ── */}
+            {/* ── Mis comandas activas — solo la mas reciente ── */}
             {misComandas.length > 0 && (
-              <div className="mb-6">
-                <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60 mb-2">
-                  Mis comandas activas ({misComandas.length})
-                </p>
-                <div className="flex flex-col gap-2">
-                  {misComandas.map((c) => (
-                    <div
-                      key={c.id}
-                      className="flex items-center gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 shadow-soft"
+              <div className="mb-5">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60">
+                    Mis comandas activas
+                  </p>
+                  {misComandas.length > 1 && (
+                    <button
+                      onClick={() => setDrawerComandas(true)}
+                      className="text-[11px] font-semibold text-primary-container hover:underline"
                     >
+                      Ver {misComandas.length} →
+                    </button>
+                  )}
+                </div>
+
+                {/* Solo la mas reciente */}
+                {(() => {
+                  const c = misComandas[0];
+                  return (
+                    <div className="flex items-center gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 shadow-soft">
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-label-md font-black text-cafe-intenso">#{c.folio}</span>
-                          <span className="text-body-sm text-on-surface-variant">
-                            {c.esParaLlevar ? "Para llevar" : c.mesa}
-                          </span>
+                          <span className="text-body-sm text-on-surface-variant">{c.esParaLlevar ? "Para llevar" : `Mesa ${c.mesa}`}</span>
                           <span className={cn(
                             "rounded-full px-2 py-0.5 text-[10px] font-bold",
-                            c.estado === "Recibida"
-                              ? "bg-caramelo/20 text-cafe-intenso"
-                              : "bg-orange-100 text-orange-800",
+                            c.estado === "Recibida" ? "bg-caramelo/20 text-cafe-intenso" : "bg-orange-100 text-orange-800",
                           )}>
                             {c.estado === "Recibida" ? "Recibida" : "Preparando"}
                           </span>
@@ -278,17 +285,53 @@ export function MeseroPage() {
                       <button
                         onClick={() => handleCancelar(c.id, c.folio)}
                         disabled={cancelarComanda.isPending}
-                        aria-label={`Cancelar comanda #${c.folio}`}
-                        className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-error-st/60 transition-colors hover:bg-error-container/30 hover:text-error-st disabled:opacity-40"
+                        className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-error-st/50 hover:bg-error-container/30 hover:text-error-st transition-colors disabled:opacity-40"
                       >
                         <X weight="light" className="h-4 w-4" />
                       </button>
                     </div>
-                  ))}
-                </div>
-                <div className="mt-3 border-b border-outline-variant/20" />
+                  );
+                })()}
+                <div className="mt-4 border-b border-outline-variant/20" />
               </div>
             )}
+
+            {/* Drawer con todas las comandas activas */}
+            <Drawer
+              open={drawerComandas}
+              onClose={() => setDrawerComandas(false)}
+              title="Mis comandas activas"
+              descripcion={`${misComandas.length} en curso`}
+            >
+              <div className="flex flex-col gap-3 pt-2">
+                {misComandas.map((c) => (
+                  <div key={c.id} className="flex items-center gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 shadow-soft">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-label-md font-black text-cafe-intenso">#{c.folio}</span>
+                        <span className="text-body-sm text-on-surface-variant">{c.esParaLlevar ? "Para llevar" : `Mesa ${c.mesa}`}</span>
+                        <span className={cn(
+                          "rounded-full px-2 py-0.5 text-[10px] font-bold",
+                          c.estado === "Recibida" ? "bg-caramelo/20 text-cafe-intenso" : "bg-orange-100 text-orange-800",
+                        )}>
+                          {c.estado === "Recibida" ? "Recibida" : "Preparando"}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-body-sm text-on-surface-variant">
+                        {c.items.map((it) => `${it.nombre}${it.cantidad > 1 ? ` x${it.cantidad}` : ""}`).join(", ")}
+                      </p>
+                    </div>
+                    <button
+                      onClick={async () => { await handleCancelar(c.id, c.folio); if (misComandas.length <= 1) setDrawerComandas(false); }}
+                      disabled={cancelarComanda.isPending}
+                      className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-error-st/50 hover:bg-error-container/30 hover:text-error-st transition-colors disabled:opacity-40"
+                    >
+                      <X weight="light" className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </Drawer>
 
             <PasoTitulo icon={Storefront} titulo="¿Dónde es el pedido?" sub="Elige mesa o para llevar" />
 
@@ -338,16 +381,19 @@ export function MeseroPage() {
             {/* Selector de mesa (solo si es "mesa") */}
             {tipo === "mesa" && (
               <div className="mt-5">
-                <p className="mb-2 text-label-md font-semibold text-on-surface-variant">
-                  Número de mesa
-                </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-label-md font-semibold text-on-surface-variant">
+                    Número de mesa
+                  </p>
+                  <ArrowRight weight="light" className="h-4 w-4 text-on-surface-variant/40" aria-hidden />
+                </div>
+                <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {MESAS_RAPIDAS.map((n) => (
                     <button
                       key={n}
                       onClick={() => setMesa(n)}
                       className={cn(
-                        "flex h-12 w-12 items-center justify-center rounded-2xl text-label-lg font-bold transition-all active:scale-90",
+                        "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-label-lg font-bold transition-all active:scale-90",
                         mesa === n
                           ? "bg-cafe-intenso text-crema shadow-soft"
                           : "bg-surface-container-low text-on-surface",
