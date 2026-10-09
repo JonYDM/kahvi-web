@@ -1,5 +1,5 @@
 ﻿import { type ReactNode, useState, useRef, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Check, CaretDown, Key, SignOut, MapPin, DotsThreeOutline } from "@phosphor-icons/react";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/features/auth";
@@ -11,6 +11,7 @@ import { usePermisos } from "@/lib/usePermisos";
 import { Avatar } from "@/components/ui";
 import { CambiarMiPinModal } from "@/features/usuarios";
 import { HeaderTituloContext, useHeaderTitulo } from "./headerTitulo";
+import { useComandasActivas } from "@/features/comandas/hooks";
 
 interface AppShellProps {
   nav: NavItem[];
@@ -61,15 +62,21 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
   const secundarios = items.filter((i) => i.secundario);
   const [pinAbierto, setPinAbierto] = useState(false);
   const { titulo, subtitulo, accion } = useHeaderTitulo();
+  const { pathname } = useLocation();
+  const { data: comandasNav } = useComandasActivas();
+  const badgeNav = (() => {
+    if (pathname.includes('/cocina')) return (comandasNav ?? []).filter(c => c.estado === 'Recibida' || c.estado === 'EnPreparacion').length;
+    if (pathname.includes('/caja')) return (comandasNav ?? []).filter(c => c.estado === 'Lista').length;
+    return 0;
+  })();
 
   return (
     <div className="min-h-dvh bg-gradient-to-b from-[#FDFAF6] via-[#FAF5EE] to-[#F0E8DC]">
       {/* HEADER â€” transparente para que el degradado sea continuo */}
       <header
-        className="fixed inset-x-0 top-0 z-40 backdrop-blur-md"
+        className="fixed inset-x-0 top-0 z-40 bg-[#FDFAF6] border-b border-cafe-intenso/5"
         style={{
           paddingTop: "env(safe-area-inset-top, 0px)",
-          background: "linear-gradient(to bottom, rgba(253,250,246,0.92) 0%, rgba(253,250,246,0) 100%)",
         }}
       >
         <div className="mx-auto w-[90%] max-w-2xl">
@@ -137,7 +144,7 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
                     <span className="-mt-5 flex flex-col items-center gap-1">
                       <span
                         className={cn(
-                          "flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+                          "relative flex h-14 w-14 items-center justify-center rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
                           isActive
                             ? "bg-cafe-intenso text-crema scale-110"
                             : "bg-cafe-intenso text-crema",
@@ -149,6 +156,11 @@ function AppShellInterno({ nav, children }: { nav: NavItem[]; children: ReactNod
                         }}
                       >
                         <item.icon className="h-6 w-6" aria-hidden />
+                        {badgeNav > 0 && (
+                          <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-verde-menta px-1 text-[10px] font-black text-cafe-intenso">
+                            {badgeNav}
+                          </span>
+                        )}
                       </span>
                       <span className={cn(
                         "text-[9px] font-bold transition-colors",
