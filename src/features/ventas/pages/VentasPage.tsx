@@ -171,33 +171,35 @@ export function VentasPage() {
             <div className="h-52 animate-pulse rounded-2xl bg-surface-container" />
           ) : (
             <div className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-4 shadow-soft">
-              {/* Barras */}
-              <div className="flex h-40 items-end gap-2">
+              <div className="flex items-end gap-2" style={{ height: "140px" }}>
                 {diasGrafica.map((dia, i) => {
-                  const pct = maxDia > 0 ? (dia.total / maxDia) * 100 : 0;
+                  const MAX_PX = 100;
+                  const barHeight = maxDia > 0
+                    ? Math.max((dia.total / maxDia) * MAX_PX, dia.total > 0 ? 8 : 3)
+                    : 3;
                   const esHoy = i === diasGrafica.length - 1;
                   const tieneVentas = dia.total > 0;
                   return (
-                    <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                    <div key={i} className="flex flex-1 flex-col items-center justify-end gap-1" style={{ height: "140px" }}>
                       {/* Valor encima */}
-                      <span className={`text-[10px] font-bold tabular-nums ${
-                        tieneVentas ? (esHoy ? "text-cafe-intenso" : "text-primary-container") : "text-on-surface-variant/30"
+                      <span className={`text-[10px] font-bold tabular-nums leading-none ${
+                        tieneVentas
+                          ? esHoy ? "text-cafe-intenso" : "text-primary-container"
+                          : "opacity-0"
                       }`}>
-                        {tieneVentas ? formatCurrency(dia.total) : ""}
+                        {formatCurrency(dia.total)}
                       </span>
                       {/* Barra */}
-                      <div className="flex w-full flex-1 items-end">
-                        <div
-                          className={`w-full rounded-xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-                            esHoy
-                              ? "bg-cafe-intenso"
-                              : tieneVentas
-                                ? "bg-primary-container/40"
-                                : "bg-outline-variant/20"
-                          }`}
-                          style={{ height: `${tieneVentas ? Math.max(pct, 8) : 4}%` }}
-                        />
-                      </div>
+                      <div
+                        className={`w-full rounded-xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                          esHoy
+                            ? "bg-cafe-intenso"
+                            : tieneVentas
+                              ? "bg-primary-container/50"
+                              : "bg-outline-variant/25"
+                        }`}
+                        style={{ height: `${barHeight}px`, minHeight: "3px" }}
+                      />
                       {/* Día */}
                       <span className={`text-[11px] font-semibold ${
                         esHoy ? "text-cafe-intenso font-bold" : "text-on-surface-variant/60"
@@ -208,10 +210,9 @@ export function VentasPage() {
                   );
                 })}
               </div>
-              {/* Sin ventas */}
               {maxDia === 0 && (
-                <p className="mt-3 text-center text-body-sm text-on-surface-variant/50">
-                  Sin ventas registradas esta semana
+                <p className="mt-2 text-center text-body-sm text-on-surface-variant/50">
+                  Sin ventas esta semana
                 </p>
               )}
             </div>
