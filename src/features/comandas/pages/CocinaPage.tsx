@@ -283,32 +283,16 @@ function ComandaCard({
             </div>
           </div>
 
-          {/* Derecha: estado + tiempo */}
+          {/* Derecha: solo badge estado (sin label) */}
           <div className="flex shrink-0 flex-col items-end gap-1.5">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">Estado</span>
-              <span
-                className={cn(
-                  "rounded-full px-2.5 py-0.5 text-label-sm font-bold",
-                  estilos.badgeBg,
-                  estilos.badgeText,
-                )}
-              >
-                {estadoComandaLabel[comanda.estado]}
-              </span>
-            </div>
             <span
               className={cn(
-                "flex items-center gap-1 text-label-sm font-semibold",
-                urgente ? "text-red-500" : "text-on-surface-variant/70",
+                "rounded-full px-2 py-0.5 text-[10px] font-bold",
+                estilos.badgeBg,
+                estilos.badgeText,
               )}
             >
-              {urgente ? (
-                <Fire weight="fill" className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              ) : (
-                <Clock weight="light" className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              )}
-              {tiempo}
+              {estadoComandaLabel[comanda.estado]}
             </span>
           </div>
         </div>
@@ -316,9 +300,25 @@ function ComandaCard({
         {/* ── Divisor ── */}
         <div className="border-t border-outline-variant/20" />
 
-        {/* ── Items ── */}
+        {/* ── Items con label Pedido + tiempo en misma fila ── */}
         <ul className="flex flex-col gap-1.5 bg-surface-container/30 px-4 py-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 mb-1">Pedido</p>
+          {/* Fila: PEDIDO (izq) + tiempo (der) */}
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">Pedido</p>
+            <span
+              className={cn(
+                "flex items-center gap-1 text-[10px] font-semibold",
+                urgente ? "text-red-500" : "text-on-surface-variant/60",
+              )}
+            >
+              {urgente ? (
+                <Fire weight="fill" className="h-3 w-3 shrink-0" aria-hidden />
+              ) : (
+                <Clock weight="light" className="h-3 w-3 shrink-0" aria-hidden />
+              )}
+              {tiempo}
+            </span>
+          </div>
           {comanda.items.map((item, i) => (
             <li key={i} className="flex items-start gap-2">
               <span className="mt-0.5 text-cafe-intenso/40 text-body-md leading-snug">•</span>
