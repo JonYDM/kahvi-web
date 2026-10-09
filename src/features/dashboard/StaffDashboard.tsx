@@ -142,7 +142,7 @@ export function StaffDashboard() {
                     {p.nombre}
                   </span>
                   <span className="tabular shrink-0 text-label-md font-bold text-primary-container">
-                    À—{p.cantidad}
+                    x{p.cantidad}
                   </span>
                 </div>
               ))}
