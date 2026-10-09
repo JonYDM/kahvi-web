@@ -325,7 +325,7 @@ function MenuMas({ items }: { items: NavItem[] }) {
 
       {abierto && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setAbierto(false)} />
+          <div className="fixed inset-0 z-[49]" onClick={() => setAbierto(false)} />
           <div className="absolute bottom-full right-0 z-50 mb-2 w-56 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-1.5 shadow-lift">
             <p className="px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">
               Más módulos
