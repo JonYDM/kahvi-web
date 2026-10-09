@@ -413,8 +413,7 @@ function ProductoCard({
 
         {/* Footer acciones */}
         <div className="flex items-center justify-between border-t border-black/[0.04] px-2.5 py-2">
-          {/* Switch activo + acciones */}
-          <div className="flex items-center justify-between">
+          {/* Switch — izquierda */}
 
             {/* Switch activo/inactivo — sin texto, color neutro */}
             <button
@@ -457,7 +456,6 @@ function ProductoCard({
                 <Trash weight="light" className="h-3.5 w-3.5" aria-hidden />
               </button>
             </div>
-          </div>
         </div>
       </div>
     </div>
