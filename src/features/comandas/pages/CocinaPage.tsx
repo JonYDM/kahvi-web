@@ -321,12 +321,12 @@ function ComandaCard({
           <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 mb-1">Pedido</p>
           {comanda.items.map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="mt-0.5 text-cafe-intenso/40 text-body-sm leading-snug">•</span>
+              <span className="mt-0.5 text-cafe-intenso/40 text-body-md leading-snug">•</span>
               <div className="min-w-0 flex-1">
-                <span className="font-semibold text-on-surface text-label-md leading-snug">
+                <span className="font-bold text-on-surface text-[1.05rem] leading-snug">
                   {item.nombre}
                   {item.cantidad > 1 && (
-                    <span className="ml-1.5 text-body-sm font-bold text-primary-container">(x{item.cantidad})</span>
+                    <span className="ml-2 text-label-lg font-black text-primary-container">(x{item.cantidad})</span>
                   )}
                 </span>
                 {item.nota ? (
