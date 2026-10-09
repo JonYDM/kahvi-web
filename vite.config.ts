@@ -12,7 +12,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "apple-touch-icon.png", "vito.png", "vito-feliz.png"],
+      includeAssets: ["favicon.svg", "apple-touch-icon.png", "*.webp"],
       manifest: {
         name: "Kahvi — POS para cafeterias",
         short_name: "Kahvi",
@@ -43,7 +43,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,woff2}"],
+        globPatterns: ["**/*.{js,css,html,svg,png,webp,woff2}"],
         navigateFallbackDenylist: [/^\/api/],
         runtimeCaching: [
           {
