@@ -51,7 +51,7 @@ export function CafeteriasPage() {
       {/* Búsqueda */}
       <input
         type="search"
-        placeholder="Buscar cafeteríaâ€¦"
+        placeholder="Buscar cafetería…"
         value={busqueda}
         onChange={(e) => setBusqueda(e.target.value)}
         className="w-full rounded-2xl border border-outline-variant bg-surface-container-lowest px-4 py-2.5 text-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:ring-2 focus:ring-primary-container"
@@ -130,6 +130,8 @@ function formatCurrencyLocal(n: number) {
   return formatCurrency(n);
 }
 void formatCurrencyLocal;
+
+
 
 
 

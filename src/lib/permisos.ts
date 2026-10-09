@@ -15,7 +15,7 @@ export type Accion =
   | "gestionar_productos"; // alta/edición de productos (Admin)
 
 /**
- * Â¿La sesión puede realizar la acción? Àšnica fuente de verdad de permisos.
+ * ¿La sesión puede realizar la acción? Àšnica fuente de verdad de permisos.
  */
 export function puede(sesion: Sesion | null, accion: Accion): boolean {
   if (!sesion) return false;
@@ -42,7 +42,7 @@ export function puede(sesion: Sesion | null, accion: Accion): boolean {
   }
 }
 
-/** Â¿Puede ver el POS directo (venta sin comanda)? */
+/** ¿Puede ver el POS directo (venta sin comanda)? */
 export function puedeVerPos(sesion: Sesion | null): boolean {
   if (!sesion) return false;
   return (
@@ -52,16 +52,18 @@ export function puedeVerPos(sesion: Sesion | null): boolean {
   );
 }
 
-/** Â¿Puede ver el tablero de cocina? */
+/** ¿Puede ver el tablero de cocina? */
 export function puedeVerCocina(sesion: Sesion | null): boolean {
   if (!sesion) return false;
   return sesion.rol === RolUsuario.Cocina || sesion.rol === RolUsuario.Administrador;
 }
 
-/** Â¿Puede ver el módulo de caja/corte? */
+/** ¿Puede ver el módulo de caja/corte? */
 export function puedeVerCorte(sesion: Sesion | null): boolean {
   if (!sesion) return false;
   return sesion.rol === RolUsuario.Caja || sesion.rol === RolUsuario.Administrador;
 }
+
+
 
 

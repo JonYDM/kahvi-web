@@ -1,9 +1,7 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
-import { Button, Input } from "@/components/ui";
 import { PinInput } from "@/components/molecules/PinInput";
-import { Reveal } from "@/lib/anim";
 import { saludoPorHora } from "@/lib/saludo";
 import { ApiError } from "@/lib/http";
 import { useAuth } from "../AuthContext";
@@ -46,7 +44,7 @@ export function LoginPage() {
       setNombreReal(r.nombre ?? null);
       setPaso("pin");
     } catch {
-      setErrorId("No se pudo verificar. Revisa tu conexión e intenta de nuevo.");
+      setErrorId("No se pudo verificar. Revisa tu conexion e intenta de nuevo.");
     } finally {
       setVerificando(false);
     }
@@ -84,110 +82,128 @@ export function LoginPage() {
   }
 
   return (
-    <main className="relative min-h-dvh overflow-y-auto bg-crema">
-      {/* Fondo decorativo sutil */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-brand-mesh opacity-40"
-      />
+    <main
+      className="relative min-h-dvh"
+      style={{ background: "linear-gradient(160deg, #FDFAF6 0%, #F5EDE0 60%, #EDE0CE 100%)" }}
+    >
+      <div className="relative mx-auto flex min-h-dvh w-full max-w-sm flex-col px-7 py-12">
 
-      <div className="relative mx-auto flex min-h-dvh w-full max-w-sm flex-col justify-center px-6 py-10">
         {paso === "identificador" ? (
-          <Reveal key="id" className="flex flex-col">
-            {/* Vito feliz + wordmark Kahvi */}
-            <div className="flex flex-col items-center text-center">
-              <img
-                src="/vito-feliz.webp"
-                alt="Vito"
-                className="h-32 w-32 object-contain drop-shadow-md animate-vito-float"
-              />
-              <span className="mt-2 font-marca text-4xl font-extrabold tracking-tight text-cafe-intenso">
+          <div className="flex flex-1 flex-col justify-between">
+
+            {/* Top — Vito + marca */}
+            <div className="flex flex-col items-center pt-8 text-center">
+              <div
+                className="relative inline-block"
+                style={{ filter: "drop-shadow(0 12px 24px rgba(43,31,25,0.18))" }}
+              >
+                <img
+                  src="/vito-feliz.webp"
+                  alt="Vito"
+                  className="h-28 w-28 object-contain"
+                />
+              </div>
+              <span className="mt-3 text-[2rem] font-black tracking-[-0.03em] text-cafe-intenso">
                 Kahvi
               </span>
-              <p className="mt-0.5 text-body-md text-cafe-principal font-medium">
-                Tu cafetería, en buenas manos
+              <p className="mt-1 text-[0.8rem] font-medium uppercase tracking-[0.14em] text-cafe-principal/70">
+                Tu cafeteria, en buenas manos
               </p>
             </div>
 
-            {/* Saludo cálido */}
-            <div className="mt-8 text-center">
-              <h1 className="text-h1 font-bold tracking-tight text-cafe-intenso">
-                Â¡{saludoPorHora()}!
-              </h1>
-              <p className="mt-1.5 text-body-lg text-on-surface-variant">
-                Ingresa para continuar
-              </p>
-            </div>
+            {/* Center — saludo + form */}
+            <div className="flex flex-col gap-6">
+              <div>
+                <p className="text-[0.7rem] font-bold uppercase tracking-[0.15em] text-on-surface-variant/50 mb-1">
+                  {saludoPorHora()}
+                </p>
+                <h1 className="text-[2.2rem] font-black leading-[1.05] tracking-[-0.03em] text-cafe-intenso">
+                  Bienvenido
+                  <span className="text-verde-menta">.</span>
+                </h1>
+              </div>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                siguiente();
-              }}
-              className="mt-8 flex flex-col gap-3"
-            >
-              <Input
-                variant="soft"
-                aria-label="Usuario"
-                autoComplete="username"
-                enterKeyHint="go"
-                placeholder="Tu usuario"
-                value={identificador}
-                onChange={(e) => {
-                  setIdentificador(e.target.value);
-                  if (errorId) setErrorId(null);
-                }}
-                error={errorId ?? undefined}
-                className="h-14 text-center"
-                autoFocus
-              />
-              <Button
-                type="submit"
-                fullWidth
-                size="lg"
-                loading={verificando}
-                disabled={identificador.trim().length === 0}
-                className="h-14 text-base bg-verde-menta hover:bg-verde-menta/90 text-cafe-intenso font-bold"
+              <form
+                onSubmit={(e) => { e.preventDefault(); siguiente(); }}
+                className="flex flex-col gap-3"
               >
-                Continuar
-                <ArrowRight weight='light' className="h-5 w-5" aria-hidden />
-              </Button>
-            </form>
-          </Reveal>
+                {/* Input con estilo editorial */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-on-surface-variant/60">
+                    Usuario
+                  </label>
+                  <input
+                    type="text"
+                    autoComplete="username"
+                    placeholder="Ej: admindemo"
+                    value={identificador}
+                    onChange={(e) => { setIdentificador(e.target.value); if (errorId) setErrorId(null); }}
+                    autoFocus
+                    className="h-14 w-full rounded-2xl border-0 bg-white/70 px-4 text-[1rem] font-semibold text-cafe-intenso shadow-[0_2px_16px_-4px_rgba(43,31,25,0.10)] outline-none ring-2 ring-transparent placeholder:text-cafe-intenso/25 backdrop-blur-sm transition-all duration-200 focus:bg-white focus:ring-cafe-intenso/20"
+                  />
+                  {errorId && (
+                    <p role="alert" className="text-body-sm font-medium text-red-600 mt-0.5">
+                      {errorId}
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={identificador.trim().length === 0 || verificando}
+                  className="group flex h-14 w-full items-center justify-between rounded-2xl bg-cafe-intenso px-5 text-crema transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-cafe-intenso/90 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <span className="text-[0.9rem] font-bold">
+                    {verificando ? "Verificando..." : "Continuar"}
+                  </span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/15 transition-transform duration-300 group-hover:translate-x-0.5">
+                    <ArrowRight weight="light" className="h-4 w-4" />
+                  </span>
+                </button>
+              </form>
+            </div>
+
+            {/* Bottom spacer */}
+            <div />
+          </div>
+
         ) : (
-          <Reveal key="pin" className="flex flex-col">
+          <div className="flex flex-1 flex-col justify-between">
+
+            {/* Volver */}
             <button
               onClick={volver}
-              className="absolute left-6 top-6 flex w-fit items-center gap-1.5 rounded-full bg-surface-container px-3 py-1.5 text-label-md font-medium text-on-surface-variant transition-colors hover:text-on-surface"
+              className="flex w-fit items-center gap-1.5 rounded-full bg-white/60 px-3 py-1.5 text-[0.75rem] font-semibold text-cafe-intenso/60 backdrop-blur-sm transition-colors hover:text-cafe-intenso"
             >
-              <ArrowLeft weight='light' className="h-4 w-4" aria-hidden />
+              <ArrowLeft weight="light" className="h-3.5 w-3.5" />
               {identificador}
             </button>
 
-            {/* Vito + saludo con nombre real */}
-            <div className="flex flex-col items-center text-center">
+            {/* Saludo con nombre */}
+            <div className="flex flex-col items-center text-center -mt-4">
               <img
                 src="/vito-feliz.webp"
                 alt="Vito"
-                className="h-28 w-28 object-contain drop-shadow-md"
+                className="h-24 w-24 object-contain"
+                style={{ filter: "drop-shadow(0 8px 16px rgba(43,31,25,0.15))" }}
               />
-              <h1 className="mt-3 text-h1 font-bold tracking-tight text-cafe-intenso">
-                {nombreReal ? `Â¡Hola, ${nombreReal.split(" ")[0]}!` : "Tu PIN"}
+              <p className="mt-3 text-[0.7rem] font-bold uppercase tracking-[0.15em] text-on-surface-variant/50">
+                PIN de acceso
+              </p>
+              <h1 className="mt-1 text-[2rem] font-black leading-tight tracking-[-0.02em] text-cafe-intenso">
+                {nombreReal ? `Hola, ${nombreReal.split(" ")[0]}` : "Tu PIN"}
+                <span className="text-verde-menta">.</span>
               </h1>
-              <p className="mt-1.5 text-body-lg text-on-surface-variant">
-                {nombreReal
-                  ? "Ingresa tu PIN para entrar"
-                  : `Ingresa tu PIN de ${PIN_LENGTH} dígitos`}
+              <p className="mt-1 text-body-sm text-on-surface-variant">
+                {PIN_LENGTH} digitos para entrar
               </p>
             </div>
 
-            <div className="mt-8 space-y-5">
+            {/* PIN + error + boton */}
+            <div className="flex flex-col gap-4">
               <PinInput
                 value={pin}
-                onChange={(next) => {
-                  setPin(next);
-                  if (errorPin) setErrorPin(null);
-                }}
+                onChange={(next) => { setPin(next); if (errorPin) setErrorPin(null); }}
                 length={PIN_LENGTH}
                 onComplete={enviar}
                 disabled={cargando}
@@ -195,33 +211,29 @@ export function LoginPage() {
               />
 
               {errorPin && (
-                <p
-                  role="alert"
-                  className="rounded-2xl bg-error-container/60 px-4 py-3 text-center text-body-sm font-medium text-on-error-container"
-                >
+                <p role="alert" className="rounded-2xl bg-red-50 px-4 py-3 text-center text-body-sm font-medium text-red-600">
                   {errorPin}
                 </p>
               )}
+
+              <button
+                onClick={enviar}
+                disabled={pin.length !== PIN_LENGTH || cargando}
+                className="group flex h-14 w-full items-center justify-between rounded-2xl bg-cafe-intenso px-5 text-crema transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-cafe-intenso/90 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <span className="text-[0.9rem] font-bold">
+                  {cargando ? "Entrando..." : "Entrar"}
+                </span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/15 transition-transform duration-300 group-hover:translate-x-0.5">
+                  <ArrowRight weight="light" className="h-4 w-4" />
+                </span>
+              </button>
             </div>
 
-            <div className="mt-6">
-              <Button
-                fullWidth
-                size="lg"
-                onClick={enviar}
-                loading={cargando}
-                disabled={pin.length !== PIN_LENGTH}
-                className="h-14 text-base bg-verde-menta hover:bg-verde-menta/90 text-cafe-intenso font-bold"
-              >
-                Entrar
-              </Button>
-            </div>
-          </Reveal>
+          </div>
         )}
+
       </div>
     </main>
   );
 }
-
-
-

@@ -33,7 +33,7 @@ export interface NavItem {
 
 /**
  * Navegación del Administrador (/app/*).
- * Barra inferior: Categorías Â· Productos Â· Inicio Â· Ventas Â· Más
+ * Barra inferior: Categorías · Productos · Inicio · Ventas · Más
  * Menú "Más": Mesero, Cocina, Caja, Equipo, Histórico
  * El Admin tiene acceso a TODAS las estaciones.
  */
@@ -73,6 +73,8 @@ export const navCocina: NavItem[] = [
 export const navCaja: NavItem[] = [
   { to: "/app/caja", label: "Caja", icon: Wallet, permiso: null },
 ];
+
+
 
 
 

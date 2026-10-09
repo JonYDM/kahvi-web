@@ -24,7 +24,7 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
   if (cargando) {
     return (
       <div className="grid min-h-full place-items-center">
-        <Spinner label="Cargando sesiónâ€¦" />
+        <Spinner label="Cargando sesión…" />
       </div>
     );
   }
@@ -46,5 +46,7 @@ export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
 
   return <>{children}</>;
 }
+
+
 
 

@@ -240,7 +240,7 @@ export function CategoriasPage() {
         <form onSubmit={enviar} className="space-y-4">
           <Input
             label="Nombre"
-            placeholder="Ej: Café, Postres, Bebidasâ€¦"
+            placeholder="Ej: Café, Postres, Bebidas…"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             required
@@ -340,6 +340,8 @@ function CategoriaFila({
     </li>
   );
 }
+
+
 
 
 

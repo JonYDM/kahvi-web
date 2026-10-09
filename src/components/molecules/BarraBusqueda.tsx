@@ -32,3 +32,5 @@ export function BarraBusqueda({ valor, onChange, placeholder, etiqueta }: Props)
 }
 
 
+
+

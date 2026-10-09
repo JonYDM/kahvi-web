@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+﻿import { Outlet } from "react-router-dom";
 import { useAuth } from "@/features/auth";
 import { RolUsuario } from "@/types/api";
 import { AppShell } from "@/components/organisms/AppShell";
@@ -24,3 +24,5 @@ export function AdaptiveEstacionLayout() {
 
   return <EstacionLayout />;
 }
+
+

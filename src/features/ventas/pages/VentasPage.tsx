@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+﻿import { useMemo } from "react";
 import { CreditCard, CurrencyDollar, Receipt, DeviceMobile } from "@phosphor-icons/react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { SkeletonFila } from "@/components/ui";
@@ -242,3 +242,5 @@ export function VentasPage() {
     </PantallaConHeader>
   );
 }
+
+

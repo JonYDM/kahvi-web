@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { ArrowsClockwise, Clock, Fire, CheckCircle } from "@phosphor-icons/react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { SkeletonFila } from "@/components/ui";
@@ -366,3 +366,5 @@ function ComandaCard({
     </div>
   );
 }
+
+

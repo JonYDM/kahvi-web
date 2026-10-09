@@ -209,10 +209,10 @@ function VitoPopover() {
           <div className="absolute left-0 top-full z-50 mt-2 w-52 rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-3 text-center shadow-lift">
             <img src="/vito.webp" alt="Vito" className="mx-auto h-14 w-14 object-contain" />
             <p className="mt-1 font-marca text-base font-extrabold text-cafe-intenso">
-              Â¡{saludoPorHora()}!
+              ¡{saludoPorHora()}!
             </p>
             <p className="mt-0.5 text-body-sm leading-snug text-on-surface-variant">
-              Soy Vito, Â¡qué gusto verte!
+              Soy Vito, ¡qué gusto verte!
             </p>
           </div>
         </>
@@ -409,5 +409,7 @@ function PerfilMenu({
     </div>
   );
 }
+
+
 
 

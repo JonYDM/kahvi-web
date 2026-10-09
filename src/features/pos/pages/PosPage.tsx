@@ -424,7 +424,7 @@ function ProductoCard({
         {/* Costo y margen: solo visible para Admin */}
         {esAdmin && producto.costo != null && (
           <p className="text-body-sm text-on-surface-variant">
-            Costo: {formatCurrency(producto.costo)} Â· Margen: {formatCurrency(producto.precio - producto.costo)}
+            Costo: {formatCurrency(producto.costo)} · Margen: {formatCurrency(producto.precio - producto.costo)}
           </p>
         )}
       </button>
@@ -497,7 +497,7 @@ function CobroExitoso({
       </div>
       <div className="cobro-datos flex w-full flex-col items-center gap-4">
         <div>
-          <p className="text-headline-sm font-bold text-on-surface">Â¡Cobro realizado!</p>
+          <p className="text-headline-sm font-bold text-on-surface">¡Cobro realizado!</p>
           <p className="mt-1 text-body-sm text-on-surface-variant">Total cobrado</p>
           <p className="tabular text-headline-lg font-bold text-on-surface">{formatCurrency(total)}</p>
         </div>
@@ -512,6 +512,8 @@ function CobroExitoso({
     </div>
   );
 }
+
+
 
 
 

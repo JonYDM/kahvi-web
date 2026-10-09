@@ -32,3 +32,5 @@ export function EmptyState({ titulo, descripcion, accion }: Props) {
 }
 
 
+
+

@@ -94,7 +94,7 @@ const STAFF_ROLES = [RolUsuario.Administrador];
 /** Redirige la raíz "/" al home del rol actual (o al login si no hay sesión). */
 function RootRedirect() {
   const { sesion, cargando } = useAuth();
-  if (cargando) return <FullSpinner label="Cargandoâ€¦" />;
+  if (cargando) return <FullSpinner label="Cargando…" />;
   if (!sesion) return <Navigate to="/login" replace />;
   return <Navigate to={rutaInicialPorRol(sesion.rol)} replace />;
 }
@@ -219,5 +219,7 @@ const router = createBrowserRouter([
 export function AppRouter() {
   return <RouterProvider router={router} />;
 }
+
+
 
 

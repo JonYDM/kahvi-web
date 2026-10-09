@@ -4,7 +4,7 @@ import { ApiError } from "@/lib/http";
 import toast from "react-hot-toast";
 
 /**
- * Muestra un toast cuando una MUTACIÀ“N (acción del usuario: crear, editar, cobrarâ€¦)
+ * Muestra un toast cuando una MUTACIÀ“N (acción del usuario: crear, editar, cobrar…)
  * falla por permiso (403) u otro error de negocio. Las QUERIES de fondo NO generan
  * toast: si una consulta de estado devuelve 403 se maneja en silencio (la UI ya
  * oculta lo que el rol no puede ver). Así evitamos ruido de errores no accionados.
@@ -35,5 +35,7 @@ export function HttpFeedbackBridge() {
 
   return null;
 }
+
+
 
 

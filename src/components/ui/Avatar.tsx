@@ -48,3 +48,5 @@ export function Avatar({ nombre, size, tone, className, src }: AvatarProps) {
 }
 
 
+
+

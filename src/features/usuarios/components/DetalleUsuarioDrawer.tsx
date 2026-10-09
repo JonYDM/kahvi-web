@@ -212,7 +212,7 @@ function EditarDatos({ usuario, onListo }: { usuario: UsuarioDetalle; onListo: (
       libre
       guardando={editar.isPending}
       textoFinal="Guardar cambios"
-      textoCompletado="Â¡Datos actualizados!"
+      textoCompletado="¡Datos actualizados!"
       onFinalizar={guardar}
       onCompletado={onListo}
       pasos={[
@@ -242,6 +242,8 @@ function EditarDatos({ usuario, onListo }: { usuario: UsuarioDetalle; onListo: (
     />
   );
 }
+
+
 
 
 

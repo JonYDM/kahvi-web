@@ -14,7 +14,7 @@ export function ResumenSuperAdminPage() {
 
   return (
     <PantallaConHeader
-      titulo={`${saludoPorHora()}â€¦`}
+      titulo={`${saludoPorHora()}…`}
       subtitulo={
         <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
           <Coffee weight='light' className="h-4 w-4 text-primary-container" aria-hidden />
@@ -101,6 +101,8 @@ function StatusRow({ label, value, color }: { label: string; value: number; colo
     </div>
   );
 }
+
+
 
 
 

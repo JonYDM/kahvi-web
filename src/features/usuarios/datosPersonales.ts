@@ -35,3 +35,5 @@ export const nombreValido = (d: DatosPersonales) => d.nombre.trim().length > 0 &
 export const contactoValido = (d: DatosPersonales) => d.telefono.length === 10 && !curpInvalida(d.curp);
 
 
+
+

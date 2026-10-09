@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
  */
 export function Spinner({
   className,
-  label = "Cargandoâ€¦",
+  label = "Cargando…",
 }: {
   className?: string;
   label?: string;
@@ -22,5 +22,7 @@ export function Spinner({
     </span>
   );
 }
+
+
 
 
