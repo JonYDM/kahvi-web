@@ -1,4 +1,4 @@
-﻿import { useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { PencilSimple, Plus, MagnifyingGlass, Trash, X } from "@phosphor-icons/react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Button, Drawer, Input, SkeletonFila } from "@/components/ui";
@@ -380,23 +380,19 @@ function ProductoCard({
       {/* Inner core */}
       <div className="overflow-hidden rounded-[calc(1.25rem-3px)] bg-surface-container-lowest">
 
-        {/* Zona imagen â€” full bleed */}
+        {/* Zona imagen â€” full bleed con badge */}
         <div className="relative h-[6.5rem] w-full overflow-hidden bg-[#F0EBE3]">
-          {/* Placeholder: gradiente cálido sutil */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#EDE4D8] to-[#D9CFC3]" />
-          {/* Shimmer decorativo */}
           <div className="absolute -left-8 top-3 h-16 w-16 rounded-full bg-white/30 blur-2xl" />
-        </div>
-
-        {/* Contenido */}
-        <div className="px-3 pb-3 pt-2.5">
-          {/* Categoría â€” eyebrow tag */}
+          <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-black/10 to-transparent" />
           {categoriaNombre && (
-            <span className="mb-1.5 inline-block rounded-full bg-surface-container px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-on-surface-variant/70">
+            <span className="absolute right-2 top-2 rounded-full bg-white/85 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-cafe-intenso backdrop-blur-sm shadow-sm">
               {categoriaNombre}
             </span>
           )}
-
+        </div>
+        {/* Contenido */}
+        <div className="px-3 pb-3 pt-2.5">
           {/* Nombre */}
           <p className="line-clamp-2 text-[0.9rem] font-bold leading-[1.25] tracking-[-0.01em] text-on-surface">
             {p.nombre}
