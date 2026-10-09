@@ -168,34 +168,52 @@ export function VentasPage() {
         <section className="flex flex-col gap-3">
           <h2 className="text-label-lg font-bold text-on-surface">Últimos 7 días</h2>
           {cargando ? (
-            <div className="h-40 animate-pulse rounded-2xl bg-surface-container" />
+            <div className="h-52 animate-pulse rounded-2xl bg-surface-container" />
           ) : (
-            <div className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-5 shadow-soft">
-              <div className="flex h-28 items-end gap-1.5">
+            <div className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-4 shadow-soft">
+              {/* Barras */}
+              <div className="flex h-40 items-end gap-2">
                 {diasGrafica.map((dia, i) => {
                   const pct = maxDia > 0 ? (dia.total / maxDia) * 100 : 0;
                   const esHoy = i === diasGrafica.length - 1;
+                  const tieneVentas = dia.total > 0;
                   return (
-                    <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
+                    <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                      {/* Valor encima */}
+                      <span className={`text-[10px] font-bold tabular-nums ${
+                        tieneVentas ? (esHoy ? "text-cafe-intenso" : "text-primary-container") : "text-on-surface-variant/30"
+                      }`}>
+                        {tieneVentas ? formatCurrency(dia.total) : ""}
+                      </span>
+                      {/* Barra */}
                       <div className="flex w-full flex-1 items-end">
                         <div
-                          className={`w-full rounded-t-lg transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-                            esHoy ? "bg-cafe-intenso" : "bg-primary-container/25"
+                          className={`w-full rounded-xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                            esHoy
+                              ? "bg-cafe-intenso"
+                              : tieneVentas
+                                ? "bg-primary-container/40"
+                                : "bg-outline-variant/20"
                           }`}
-                          style={{ height: `${Math.max(pct, dia.total > 0 ? 5 : 0)}%` }}
+                          style={{ height: `${tieneVentas ? Math.max(pct, 8) : 4}%` }}
                         />
                       </div>
-                      <span className={`text-[9px] font-semibold ${esHoy ? "text-cafe-intenso" : "text-on-surface-variant/50"}`}>
+                      {/* Día */}
+                      <span className={`text-[11px] font-semibold ${
+                        esHoy ? "text-cafe-intenso font-bold" : "text-on-surface-variant/60"
+                      }`}>
                         {dia.label}
                       </span>
                     </div>
                   );
                 })}
               </div>
-              <div className="mt-2 flex justify-between text-[9px] text-on-surface-variant/40">
-                <span>$0</span>
-                <span>{formatCurrency(maxDia)}</span>
-              </div>
+              {/* Sin ventas */}
+              {maxDia === 0 && (
+                <p className="mt-3 text-center text-body-sm text-on-surface-variant/50">
+                  Sin ventas registradas esta semana
+                </p>
+              )}
             </div>
           )}
         </section>
