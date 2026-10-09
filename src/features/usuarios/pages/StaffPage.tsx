@@ -2,7 +2,7 @@
 import { ChefHat, Coffee, Key, Plus, MagnifyingGlass, Sliders, Wallet } from "@phosphor-icons/react";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
-import { Avatar, Badge, Button, Input, SkeletonFila } from "@/components/ui";
+import { Avatar, Badge, Button, SkeletonFila } from "@/components/ui";
 import { useDebounce } from "@/lib/useDebounce";
 import { rolLabel } from "@/lib/enums";
 import { RolUsuario, type UsuarioDto } from "@/types/api";
@@ -58,14 +58,13 @@ export function StaffPage() {
       <div className="flex flex-col gap-4">
         {/* Buscador */}
         <div className="relative">
-          <MagnifyingGlass weight='light' className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-on-surface-variant" aria-hidden />
-          <Input
-            variant="soft"
+          <MagnifyingGlass weight='light' className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-cafe-intenso/40" aria-hidden />
+          <input
             aria-label="Buscar en el equipo"
-            placeholder="Buscar por nombre o usuario"
+            placeholder="Buscar por nombre o usuario..."
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
-            className="h-12 pl-12"
+            className="h-12 w-full rounded-2xl border-0 bg-white/70 pl-12 pr-4 text-body-md text-cafe-intenso shadow-[0_2px_12px_-4px_rgba(43,31,25,0.08)] outline-none ring-2 ring-transparent placeholder:text-cafe-intenso/30 backdrop-blur-sm transition-all focus:bg-white focus:ring-cafe-intenso/15"
           />
         </div>
 
@@ -143,15 +142,17 @@ function CardRol({ icon: Icon, label, conteo, activo, onClick }: {
       onClick={onClick}
       aria-pressed={activo}
       className={
-        "flex flex-col items-center gap-1 rounded-2xl border p-3 text-center transition-all active:scale-[0.98] " +
-        (activo ? "border-primary-container bg-primary-container/10" : "border-outline-variant/40 bg-surface-container")
+        "flex flex-col items-center gap-1.5 rounded-2xl border p-3 text-center transition-all duration-200 active:scale-[0.97] " +
+        (activo
+          ? "border-cafe-principal/30 bg-cafe-principal/10"
+          : "border-cafe-intenso/8 bg-white/60")
       }
     >
-      <span className={"grid h-9 w-9 place-items-center rounded-lg " + (activo ? "bg-primary-container/15 text-primary-container" : "bg-surface-container-lowest text-on-surface-variant")}>
+      <span className={"grid h-9 w-9 place-items-center rounded-xl " + (activo ? "bg-cafe-intenso text-crema" : "bg-cafe-intenso/8 text-cafe-intenso/60")}>
         <Icon weight='light' className="h-5 w-5" aria-hidden />
       </span>
-      <span className={"text-label-sm font-bold " + (activo ? "text-primary-container" : "text-on-surface")}>{label}</span>
-      <span className="tabular text-body-sm text-on-surface-variant">{conteo}</span>
+      <span className={"text-label-sm font-bold " + (activo ? "text-cafe-intenso" : "text-on-surface")}>{label}</span>
+      <span className={"tabular text-body-sm " + (activo ? "text-cafe-principal font-semibold" : "text-on-surface-variant")}>{conteo}</span>
     </button>
   );
 }
