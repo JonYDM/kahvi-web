@@ -20,6 +20,8 @@ const dateTimeFmt = new Intl.DateTimeFormat("es-MX", {
 const currencyFmt = new Intl.NumberFormat("es-MX", {
   style: "currency",
   currency: "MXN",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
 });
 
 // Fecha "larga" legible: "Lunes, 28 de octubre". Como es PWA, se calcula con la

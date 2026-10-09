@@ -201,7 +201,7 @@ function MetricaCard({
       <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary-container/15 text-primary-container">
         {icon}
       </span>
-      <p className="tabular text-metric-display font-bold text-on-surface">{valor}</p>
+      <p className="tabular text-2xl font-bold tracking-tight text-on-surface break-all">{valor}</p>
       <div>
         <p className="text-label-md font-semibold text-on-surface">{label}</p>
         <p className="text-body-sm text-on-surface-variant">{sub}</p>
