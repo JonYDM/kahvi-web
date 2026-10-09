@@ -11,7 +11,7 @@ import { useComandasActivas, useAvanzarComanda } from "../hooks";
 
 // ─── Tipos de filtro ──────────────────────────────────────────────────────────
 
-type FiltroChip = "Todos" | "Recibida" | "EnPreparacion" | "Lista";
+type FiltroChip = "Todos" | "Recibida" | "EnPreparacion" | "Lista" | "Cancelada";
 
 interface ChipDef {
   id: FiltroChip;
@@ -23,6 +23,7 @@ const CHIPS: ChipDef[] = [
   { id: "Recibida", label: "Pendiente" },
   { id: "EnPreparacion", label: "Preparando" },
   { id: "Lista", label: "Lista" },
+  { id: "Cancelada", label: "Canceladas" },
 ];
 
 // ─── Helpers de tiempo ────────────────────────────────────────────────────────
@@ -71,9 +72,9 @@ const ESTILOS: Record<EstadoComanda, EstiloEstado> = {
     badgeText: "text-on-surface-variant",
   },
   Cancelada: {
-    outerFrom: "from-error-container/30",
-    badgeBg: "bg-error-container",
-    badgeText: "text-on-error-container",
+    outerFrom: "from-surface-container/60",
+    badgeBg: "bg-error-container/60",
+    badgeText: "text-error-st",
   },
 };
 
@@ -108,10 +109,21 @@ export function CocinaPage() {
       c.estado === "Lista",
   );
 
+  // Canceladas recientes (ultimos 2 min) — para avisar al cocinero
+  const canceladasRecientes = (comandas ?? []).filter((c) => {
+    if (c.estado !== "Cancelada") return false;
+    const min = (Date.now() - new Date(c.creadaEn).getTime()) / 60000;
+    return min < 2;
+  });
+
+  const todasVisibles = [...activas, ...canceladasRecientes];
+
   const listaMostrada =
     filtro === "Todos"
-      ? activas
-      : activas.filter((c) => c.estado === filtro);
+      ? todasVisibles
+      : filtro === "Cancelada"
+        ? canceladasRecientes
+        : activas.filter((c) => c.estado === filtro);
 
   const ultimaActualizacion =
     dataUpdatedAt > 0
@@ -169,13 +181,20 @@ export function CocinaPage() {
             key={chip.id}
             onClick={() => setFiltro(chip.id)}
             className={cn(
-              "shrink-0 rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
+              "relative shrink-0 rounded-full px-3.5 py-1.5 text-label-md font-semibold transition-colors",
               filtro === chip.id
-                ? "bg-primary-container text-on-primary"
+                ? chip.id === "Cancelada"
+                  ? "bg-error-st text-white"
+                  : "bg-primary-container text-on-primary"
                 : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high",
             )}
           >
             {chip.label}
+            {chip.id === "Cancelada" && canceladasRecientes.length > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-error-st px-0.5 text-[9px] font-black text-white">
+                {canceladasRecientes.length}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -258,6 +277,7 @@ function ComandaCard({
         estilos.outerFrom,
         "shadow-[0_2px_16px_-4px_rgba(43,31,25,0.12)]",
         "transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+        comanda.estado === "Cancelada" && "opacity-60 grayscale",
       )}
     >
       {/* Inner core */}
@@ -323,7 +343,10 @@ function ComandaCard({
             <li key={i} className="flex items-start gap-2">
               <span className="mt-0.5 text-cafe-intenso/40 text-body-md leading-snug">•</span>
               <div className="min-w-0 flex-1">
-                <span className="font-bold text-on-surface text-[1.05rem] leading-snug">
+                <span className={cn(
+                  "font-bold text-on-surface text-[1.05rem] leading-snug",
+                  comanda.estado === "Cancelada" && "line-through text-on-surface-variant",
+                )}>
                   {item.nombre}
                   {item.cantidad > 1 && (
                     <span className="ml-2 text-label-lg font-black text-primary-container">(x{item.cantidad})</span>
