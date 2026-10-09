@@ -248,14 +248,6 @@ function ComandaCard({
   const estilos = ESTILOS[comanda.estado] ?? ESTILOS.Recibida;
 
   const esLista = comanda.estado === "Lista";
-  const esEntregada = comanda.estado === "Entregada";
-  const mostrarAccion = !esLista && !esEntregada;
-
-  const ubicacion = comanda.esParaLlevar
-    ? comanda.nombreCliente
-      ? `Para llevar - ${comanda.nombreCliente}`
-      : "Para llevar"
-    : comanda.mesa;
 
   return (
     /* Outer shell — double-bezel */
@@ -273,27 +265,38 @@ function ComandaCard({
 
         {/* ── Fila superior ── */}
         <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-3">
-          {/* Izquierda: folio + ubicacion */}
-          <div className="min-w-0 flex-1">
-            <p className="text-2xl font-black leading-none text-cafe-intenso">
-              #{comanda.folio}
-            </p>
-            <p className="mt-1 truncate text-body-sm font-medium text-on-surface-variant">
-              {ubicacion}
-            </p>
+          {/* Izquierda: no. comanda + mesa */}
+          <div className="min-w-0 flex-1 flex flex-col gap-1">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">No. Comanda</span>
+              <span className="text-xl font-black leading-none text-cafe-intenso">#{comanda.folio}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">
+                {comanda.esParaLlevar ? "Para" : "Mesa"}
+              </span>
+              <span className="text-label-md font-semibold text-on-surface truncate">
+                {comanda.esParaLlevar
+                  ? comanda.nombreCliente ? comanda.nombreCliente : "llevar"
+                  : comanda.mesa}
+              </span>
+            </div>
           </div>
 
-          {/* Derecha: badge estado + tiempo */}
+          {/* Derecha: estado + tiempo */}
           <div className="flex shrink-0 flex-col items-end gap-1.5">
-            <span
-              className={cn(
-                "rounded-full px-2.5 py-0.5 text-label-sm font-bold",
-                estilos.badgeBg,
-                estilos.badgeText,
-              )}
-            >
-              {estadoComandaLabel[comanda.estado]}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">Estado</span>
+              <span
+                className={cn(
+                  "rounded-full px-2.5 py-0.5 text-label-sm font-bold",
+                  estilos.badgeBg,
+                  estilos.badgeText,
+                )}
+              >
+                {estadoComandaLabel[comanda.estado]}
+              </span>
+            </div>
             <span
               className={cn(
                 "flex items-center gap-1 text-label-sm font-semibold",
@@ -315,18 +318,20 @@ function ComandaCard({
 
         {/* ── Items ── */}
         <ul className="flex flex-col gap-1.5 bg-surface-container/30 px-4 py-3">
+          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 mb-1">Pedido</p>
           {comanda.items.map((item, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="shrink-0 font-black text-cafe-intenso text-label-md leading-snug">
-                {item.cantidad}x
-              </span>
+              <span className="mt-0.5 text-cafe-intenso/40 text-body-sm leading-snug">•</span>
               <div className="min-w-0 flex-1">
                 <span className="font-semibold text-on-surface text-label-md leading-snug">
                   {item.nombre}
+                  {item.cantidad > 1 && (
+                    <span className="ml-1.5 text-body-sm font-bold text-primary-container">(x{item.cantidad})</span>
+                  )}
                 </span>
                 {item.nota ? (
-                  <p className="mt-0.5 text-body-xs italic text-on-surface-variant">
-                    {item.nota}
+                  <p className="mt-0.5 text-body-sm italic text-on-surface-variant">
+                    "{item.nota}"
                   </p>
                 ) : null}
               </div>
@@ -335,7 +340,7 @@ function ComandaCard({
         </ul>
 
         {/* ── Accion ── */}
-        {mostrarAccion ? (
+        {!esLista && comanda.estado !== "Entregada" ? (
           <div className="px-4 pb-4 pt-3">
             <button
               onClick={onAvanzar}
