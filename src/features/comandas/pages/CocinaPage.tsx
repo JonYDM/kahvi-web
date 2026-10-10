@@ -399,7 +399,7 @@ function ComandaCard({
             <div className="min-w-0 flex-1 flex flex-col gap-1">
               <div className="flex items-baseline gap-1.5">
                 <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">No. Comanda</span>
-                <span className="text-xl font-black leading-none text-cafe-intenso">#{comanda.folio}</span>
+                <span className="text-xl font-black leading-none text-cafe-intenso">{comanda.folio}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">
@@ -429,32 +429,30 @@ function ComandaCard({
               </span>
             </div>
 
-            {/* Lista densa — cantidad prominente + nombre */}
-            <div className="flex flex-col divide-y divide-outline-variant/15">
+            {/* Grid 2 columnas — cantidad circular + nombre, sin bordes */}
+            <div className="grid grid-cols-2 gap-x-3 gap-y-2">
               {itemsVisibles.map((item, i) => (
                 <div key={i} className={cn(
-                  "flex items-center gap-3 py-2",
+                  "flex items-start gap-2",
                   comanda.estado === "Cancelada" && "opacity-50",
                 )}>
-                  {/* Cantidad en chip circular — lo mas importante */}
                   <span className={cn(
-                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-label-lg font-black",
+                    "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-label-md font-black mt-0.5",
                     comanda.estado === "Cancelada"
                       ? "bg-surface-container text-on-surface-variant"
                       : "bg-cafe-intenso text-crema",
                   )}>
                     {item.cantidad}
                   </span>
-                  {/* Nombre + nota */}
                   <div className="min-w-0 flex-1">
                     <p className={cn(
-                      "text-[1rem] font-bold leading-snug text-cafe-intenso",
+                      "text-[0.9rem] font-bold leading-snug text-cafe-intenso",
                       comanda.estado === "Cancelada" && "line-through text-on-surface-variant",
                     )}>
                       {item.nombre}
                     </p>
                     {item.nota && (
-                      <p className="text-[11px] italic text-primary-container">"{item.nota}"</p>
+                      <p className="text-[10px] italic text-primary-container truncate">"{item.nota}"</p>
                     )}
                   </div>
                 </div>
