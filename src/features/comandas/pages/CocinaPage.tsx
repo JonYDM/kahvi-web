@@ -429,45 +429,49 @@ function ComandaCard({
               </span>
             </div>
 
-            {/* Grid 2 columnas */}
-            <div className="grid grid-cols-2 gap-1.5">
+            {/* Lista densa — cantidad prominente + nombre */}
+            <div className="flex flex-col divide-y divide-outline-variant/15">
               {itemsVisibles.map((item, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    "rounded-xl bg-surface-container-lowest/80 px-2.5 py-2 border border-outline-variant/20",
-                    comanda.estado === "Cancelada" && "opacity-60",
-                  )}
-                >
-                  <p className={cn(
-                    "text-label-md font-bold leading-snug text-cafe-intenso",
-                    comanda.estado === "Cancelada" && "line-through",
+                <div key={i} className={cn(
+                  "flex items-center gap-3 py-2",
+                  comanda.estado === "Cancelada" && "opacity-50",
+                )}>
+                  {/* Cantidad en chip circular — lo mas importante */}
+                  <span className={cn(
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-label-lg font-black",
+                    comanda.estado === "Cancelada"
+                      ? "bg-surface-container text-on-surface-variant"
+                      : "bg-cafe-intenso text-crema",
                   )}>
-                    {item.nombre}
-                    {item.cantidad > 1 && (
-                      <span className="ml-1 text-[11px] font-black text-primary-container">x{item.cantidad}</span>
+                    {item.cantidad}
+                  </span>
+                  {/* Nombre + nota */}
+                  <div className="min-w-0 flex-1">
+                    <p className={cn(
+                      "text-[1rem] font-bold leading-snug text-cafe-intenso",
+                      comanda.estado === "Cancelada" && "line-through text-on-surface-variant",
+                    )}>
+                      {item.nombre}
+                    </p>
+                    {item.nota && (
+                      <p className="text-[11px] italic text-primary-container">"{item.nota}"</p>
                     )}
-                  </p>
-                  {item.nota ? (
-                    <p className="mt-0.5 text-[10px] italic text-primary-container truncate">"{item.nota}"</p>
-                  ) : null}
+                  </div>
                 </div>
               ))}
             </div>
 
             {/* Sin notas o ver mas */}
-            <div className="mt-2 flex items-center justify-between">
+            <div className="mt-1.5 flex items-center justify-between">
               {!tieneNotas ? (
-                <p className="text-[10px] text-on-surface-variant/40 italic">Sin notas especiales</p>
-              ) : (
-                <div />
-              )}
+                <p className="text-[10px] text-on-surface-variant/35 italic">Sin notas</p>
+              ) : <div />}
               {hayMas && (
                 <button
                   onClick={() => setDrawerAbierto(true)}
                   className="text-[10px] font-semibold text-primary-container hover:underline"
                 >
-                  +{comanda.items.length - MAX_VISIBLE} mas
+                  +{comanda.items.length - MAX_VISIBLE} mas...
                 </button>
               )}
             </div>
