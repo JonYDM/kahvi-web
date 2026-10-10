@@ -174,8 +174,8 @@ export function CocinaPage() {
         </button>
       }
     >
-      {/* ── Chips de filtro ── */}
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {/* ── Chips de filtro — solo en mobile ── */}
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
         {CHIPS.map((chip) => (
           <button
             key={chip.id}
@@ -234,18 +234,67 @@ export function CocinaPage() {
         </div>
       )}
 
-      {/* ── Lista vertical de comandas ── */}
-      {!isLoading && !isError && listaMostrada.length > 0 && (
-        <div className="mt-4 flex flex-col gap-3">
-          {listaMostrada.map((comanda) => (
-            <ComandaCard
-              key={comanda.id}
-              comanda={comanda}
-              onAvanzar={() => handleAvanzar(comanda)}
-              avanzando={avanzar.isPending}
-            />
-          ))}
-        </div>
+      {/* ── Lista mobile / Kanban desktop ── */}
+      {!isLoading && !isError && (activas.length > 0 || canceladasRecientes.length > 0) && (
+        <>
+          {/* MOBILE: lista vertical filtrada por chip */}
+          <div className="mt-4 flex flex-col gap-3 md:hidden">
+            {listaMostrada.map((comanda) => (
+              <ComandaCard
+                key={comanda.id}
+                comanda={comanda}
+                onAvanzar={() => handleAvanzar(comanda)}
+                avanzando={avanzar.isPending}
+              />
+            ))}
+            {listaMostrada.length === 0 && (
+              <div className="flex flex-col items-center gap-3 py-12 text-center">
+                <img src="/spil.webp" alt="" className="h-28 w-28 object-contain" />
+                <p className="text-body-md text-on-surface-variant">{textoVacioFiltro(filtro)}</p>
+              </div>
+            )}
+          </div>
+
+          {/* TABLET/DESKTOP: Kanban 3 columnas */}
+          <div className="mt-4 hidden md:grid md:grid-cols-3 md:gap-4">
+            {(["Recibida", "EnPreparacion", "Lista"] as const).map((estado) => {
+              const cols = estado === "Lista"
+                ? activas.filter((c) => c.estado === "Lista")
+                : activas.filter((c) => c.estado === estado);
+              const labelCol = estado === "Recibida" ? "Pendiente" : estado === "EnPreparacion" ? "Preparando" : "Lista";
+              const colorHeader = estado === "Recibida"
+                ? "bg-caramelo/20 text-cafe-intenso"
+                : estado === "EnPreparacion"
+                  ? "bg-orange-100 text-orange-800"
+                  : "bg-verde-menta/20 text-cafe-intenso";
+              return (
+                <div key={estado} className="flex flex-col gap-3">
+                  {/* Header columna */}
+                  <div className="flex items-center gap-2">
+                    <span className={cn("rounded-full px-3 py-1 text-label-sm font-bold", colorHeader)}>
+                      {labelCol}
+                    </span>
+                    <span className="text-label-sm text-on-surface-variant/60">{cols.length}</span>
+                  </div>
+                  {/* Cards */}
+                  {cols.map((comanda) => (
+                    <ComandaCard
+                      key={comanda.id}
+                      comanda={comanda}
+                      onAvanzar={() => handleAvanzar(comanda)}
+                      avanzando={avanzar.isPending}
+                    />
+                  ))}
+                  {cols.length === 0 && (
+                    <div className="rounded-2xl border-2 border-dashed border-outline-variant/30 py-8 text-center">
+                      <p className="text-body-sm text-on-surface-variant/40">Sin comandas</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
     </PantallaConHeader>
   );

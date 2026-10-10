@@ -17,10 +17,10 @@ export function EstacionLayout() {
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   return (
-    <div className="min-h-dvh bg-crema">
-      {/* Header minimal */}
+    <div className="min-h-dvh bg-gradient-to-b from-[#FDFAF6] via-[#FAF5EE] to-[#F0E8DC]">
+      {/* Header minimal — solido igual que AppShell */}
       <header
-        className="fixed inset-x-0 top-0 z-40 bg-crema/95 backdrop-blur-sm border-b border-outline-variant/30"
+        className="fixed inset-x-0 top-0 z-40 bg-[#FDFAF6] border-b border-cafe-intenso/5"
         style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
       >
         <div className="mx-auto flex h-14 w-full max-w-2xl items-center justify-between px-4">
