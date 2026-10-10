@@ -276,6 +276,9 @@ export function MeseroPage() {
                             <p className="mt-1 text-body-sm text-on-surface-variant">
                               {c.items.map((it) => `${it.nombre}${it.cantidad > 1 ? ` x${it.cantidad}` : ""}`).join(", ")}
                             </p>
+                            <p className="mt-0.5 text-[10px] text-on-surface-variant/50">
+                              {new Date(c.creadaEn).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}
+                            </p>
                           </div>
                           <button
                             onClick={async () => { await handleCancelar(c.id, c.folio); if (misComandas.length <= 1) setDrawerComandas(false); }}
@@ -411,6 +414,9 @@ export function MeseroPage() {
                                 </div>
                                 <p className="mt-1 text-body-sm text-on-surface-variant truncate">
                                   {c.items.map((it) => `${it.nombre}${it.cantidad > 1 ? ` x${it.cantidad}` : ""}`).join(", ")}
+                                </p>
+                                <p className="mt-0.5 text-[10px] text-on-surface-variant/50">
+                                  {new Date(c.creadaEn).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}
                                 </p>
                               </div>
                               <div className="flex shrink-0 flex-col items-end gap-1.5">
