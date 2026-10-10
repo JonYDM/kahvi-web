@@ -165,6 +165,7 @@ export interface ComandaDto {
   id: string;
   folio: number;
   mesa: string;
+  meseroId: string;
   meseroNombre: string;
   estado: EstadoComanda;
   /** UTC ISO 8601 */

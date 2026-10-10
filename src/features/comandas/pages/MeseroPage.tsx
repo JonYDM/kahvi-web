@@ -25,7 +25,6 @@ import { ApiError } from "@/lib/http";
 import { cn } from "@/lib/cn";
 import { formatCurrency } from "@/lib/format";
 import type { Producto } from "@/types/api";
-import { RolUsuario } from "@/types/api";
 import { useEnviarComanda, useComandasActivas, useCancelarComanda } from "../hooks";
 
 // â”€â”€â”€ Tipos locales â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -54,11 +53,10 @@ export function MeseroPage() {
   const cancelarComanda = useCancelarComanda();
   const toast = useToast();
 
-  // Comandas activas del mesero actual
+  // Para Mesero: el backend ya filtra por su meseroId, devuelve solo las suyas.
+  // Para Admin: devuelve todas — filtramos localmente para mostrar solo las activas.
   const misComandas = (todasComandas ?? []).filter(
-    (c) =>
-      (c.estado === "Recibida" || c.estado === "EnPreparacion") &&
-      (sesion?.rol === RolUsuario.Administrador || c.meseroNombre === sesion?.nombre),
+    (c) => c.estado === "Recibida" || c.estado === "EnPreparacion",
   );
 
   async function handleCancelar(id: string, folio: number) {
@@ -250,35 +248,48 @@ export function MeseroPage() {
               open={drawerComandas}
               onClose={() => setDrawerComandas(false)}
               title="Mis comandas activas"
-              descripcion={`${misComandas.length} en curso`}
+              descripcion={`${misComandas.length} pedido${misComandas.length !== 1 ? "s" : ""} en curso`}
             >
               <div className="flex flex-col gap-3 pt-2">
-                {misComandas.map((c) => (
-                  <div key={c.id} className="flex items-center gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 shadow-soft">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-label-md font-black text-cafe-intenso">#{c.folio}</span>
-                        <span className="text-body-sm text-on-surface-variant">{c.esParaLlevar ? "Para llevar" : `Mesa ${c.mesa}`}</span>
-                        <span className={cn(
-                          "rounded-full px-2 py-0.5 text-[10px] font-bold",
-                          c.estado === "Recibida" ? "bg-caramelo/20 text-cafe-intenso" : "bg-orange-100 text-orange-800",
-                        )}>
-                          {c.estado === "Recibida" ? "Recibida" : "Preparando"}
-                        </span>
+                {misComandas.map((c) => {
+                  const esPreparando = c.estado === "EnPreparacion";
+                  return (
+                    <div key={c.id} className={cn(
+                      "rounded-[1.1rem] p-[2px]",
+                      esPreparando
+                        ? "bg-gradient-to-b from-orange-100/80 to-transparent shadow-[0_2px_12px_-4px_rgba(43,31,25,0.10)]"
+                        : "bg-gradient-to-b from-[#FFF8E7]/80 to-transparent shadow-[0_2px_12px_-4px_rgba(43,31,25,0.10)]",
+                    )}>
+                      <div className="overflow-hidden rounded-[calc(1.1rem-2px)] bg-surface-container-lowest px-4 py-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-label-lg font-black text-cafe-intenso">#{c.folio}</span>
+                              <span className="text-body-sm text-on-surface-variant">{c.esParaLlevar ? "Para llevar" : `Mesa ${c.mesa}`}</span>
+                              <span className={cn(
+                                "rounded-full px-2 py-0.5 text-[10px] font-bold",
+                                esPreparando ? "bg-orange-100 text-orange-800" : "bg-caramelo/20 text-cafe-intenso",
+                              )}>
+                                {esPreparando ? "Preparando" : "Recibida"}
+                              </span>
+                            </div>
+                            <p className="mt-1 text-body-sm text-on-surface-variant">
+                              {c.items.map((it) => `${it.nombre}${it.cantidad > 1 ? ` x${it.cantidad}` : ""}`).join(", ")}
+                            </p>
+                          </div>
+                          <button
+                            onClick={async () => { await handleCancelar(c.id, c.folio); if (misComandas.length <= 1) setDrawerComandas(false); }}
+                            disabled={cancelarComanda.isPending}
+                            className="flex shrink-0 items-center gap-1 rounded-full bg-error-container/20 px-2.5 py-1 text-[10px] font-bold text-error-st transition-colors hover:bg-error-container/40 disabled:opacity-40"
+                          >
+                            <X weight="light" className="h-3 w-3" />
+                            Cancelar
+                          </button>
+                        </div>
                       </div>
-                      <p className="mt-0.5 text-body-sm text-on-surface-variant">
-                        {c.items.map((it) => `${it.nombre}${it.cantidad > 1 ? ` x${it.cantidad}` : ""}`).join(", ")}
-                      </p>
                     </div>
-                    <button
-                      onClick={async () => { await handleCancelar(c.id, c.folio); if (misComandas.length <= 1) setDrawerComandas(false); }}
-                      disabled={cancelarComanda.isPending}
-                      className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-error-st/50 hover:bg-error-container/30 hover:text-error-st transition-colors disabled:opacity-40"
-                    >
-                      <X weight="light" className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </Drawer>
 
@@ -383,30 +394,43 @@ export function MeseroPage() {
                     {/* Solo la mas reciente */}
                     {(() => {
                       const c = misComandas[0];
+                      const esPreparando = c.estado === "EnPreparacion";
                       return (
-                        <div className="flex items-center gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest px-4 py-3 shadow-soft">
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-label-md font-black text-cafe-intenso">#{c.folio}</span>
-                              <span className="text-body-sm text-on-surface-variant">{c.esParaLlevar ? "Para llevar" : `Mesa ${c.mesa}`}</span>
-                              <span className={cn(
-                                "rounded-full px-2 py-0.5 text-[10px] font-bold",
-                                c.estado === "Recibida" ? "bg-caramelo/20 text-cafe-intenso" : "bg-orange-100 text-orange-800",
-                              )}>
-                                {c.estado === "Recibida" ? "Recibida" : "Preparando"}
-                              </span>
+                        <div className={cn(
+                          "rounded-[1.1rem] p-[2px]",
+                          esPreparando
+                            ? "bg-gradient-to-b from-orange-100/80 to-transparent shadow-[0_2px_12px_-4px_rgba(43,31,25,0.10)]"
+                            : "bg-gradient-to-b from-[#FFF8E7]/80 to-transparent shadow-[0_2px_12px_-4px_rgba(43,31,25,0.10)]",
+                        )}>
+                          <div className="overflow-hidden rounded-[calc(1.1rem-2px)] bg-surface-container-lowest px-4 py-3">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="text-label-lg font-black text-cafe-intenso">#{c.folio}</span>
+                                  <span className="text-body-sm text-on-surface-variant">{c.esParaLlevar ? "Para llevar" : `Mesa ${c.mesa}`}</span>
+                                </div>
+                                <p className="mt-1 text-body-sm text-on-surface-variant truncate">
+                                  {c.items.map((it) => `${it.nombre}${it.cantidad > 1 ? ` x${it.cantidad}` : ""}`).join(", ")}
+                                </p>
+                              </div>
+                              <div className="flex shrink-0 flex-col items-end gap-1.5">
+                                <span className={cn(
+                                  "rounded-full px-2 py-0.5 text-[10px] font-bold",
+                                  esPreparando ? "bg-orange-100 text-orange-800" : "bg-caramelo/20 text-cafe-intenso",
+                                )}>
+                                  {esPreparando ? "Preparando" : "Recibida"}
+                                </span>
+                                <button
+                                  onClick={() => handleCancelar(c.id, c.folio)}
+                                  disabled={cancelarComanda.isPending}
+                                  className="flex items-center gap-1 text-[10px] font-semibold text-error-st/50 hover:text-error-st transition-colors disabled:opacity-40"
+                                >
+                                  <X weight="light" className="h-3 w-3" />
+                                  Cancelar
+                                </button>
+                              </div>
                             </div>
-                            <p className="mt-0.5 text-body-sm text-on-surface-variant truncate">
-                              {c.items.map((it) => it.nombre).join(", ")}
-                            </p>
                           </div>
-                          <button
-                            onClick={() => handleCancelar(c.id, c.folio)}
-                            disabled={cancelarComanda.isPending}
-                            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-error-st/50 hover:bg-error-container/30 hover:text-error-st transition-colors disabled:opacity-40"
-                          >
-                            <X weight="light" className="h-4 w-4" />
-                          </button>
                         </div>
                       );
                     })()}
