@@ -131,12 +131,13 @@ export function CocinaPage() {
     idsAnteriores.current = nuevosIds;
   }, [comandas]);
 
-  const activas = (comandas ?? []).filter(
-    (c) =>
+  const activas = (comandas ?? [])
+    .filter((c) =>
       c.estado === "Recibida" ||
       c.estado === "EnPreparacion" ||
       c.estado === "Lista",
-  );
+    )
+    .sort((a, b) => new Date(b.creadaEn).getTime() - new Date(a.creadaEn).getTime());
 
   // Canceladas recientes (ultimos 2 min) — para avisar al cocinero
   const canceladasRecientes = (comandas ?? []).filter((c) => {
@@ -199,14 +200,40 @@ export function CocinaPage() {
         </button>
       }
     >
-      {/* ── Banner nueva comanda ── */}
+      {/* ── Notificacion estilo iOS — baja desde arriba ── */}
       {banner > 0 && (
-        <div className="fixed left-1/2 top-20 z-50 -translate-x-1/2 animate-[fadeIn_0.3s_ease-out]">
-          <div className="flex items-center gap-2 rounded-full bg-cafe-intenso px-5 py-3 text-label-md font-bold text-crema shadow-xl">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-caramelo/30 text-[11px] font-black text-cafe-intenso">
-              {banner}
-            </span>
-            nuevo{banner !== 1 ? "s" : ""} pedido{banner !== 1 ? "s" : ""}
+        <div
+          className="fixed inset-x-0 top-0 z-50 flex justify-center"
+          style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 3.5rem)" }}
+        >
+          <div
+            className="mx-4 w-full max-w-sm overflow-hidden rounded-2xl shadow-[0_8px_32px_-8px_rgba(43,31,25,0.30)]"
+            style={{
+              background: "rgba(43,31,25,0.92)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              animation: "slideDown 0.4s cubic-bezier(0.32,0.72,0,1) forwards",
+            }}
+          >
+            <style>{`
+              @keyframes slideDown {
+                from { transform: translateY(-110%); opacity: 0; }
+                to   { transform: translateY(0);     opacity: 1; }
+              }
+            `}</style>
+            <div className="flex items-center gap-3 px-4 py-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-caramelo/20 text-label-lg font-black text-caramelo">
+                {banner}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-label-md font-bold text-crema">
+                  Nuevo{banner !== 1 ? "s" : ""} pedido{banner !== 1 ? "s" : ""}
+                </p>
+                <p className="text-body-sm text-crema/60">
+                  {banner === 1 ? "Una comanda llego a cocina" : `${banner} comandas llegaron`}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}
