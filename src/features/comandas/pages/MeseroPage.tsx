@@ -25,6 +25,7 @@ import { ApiError } from "@/lib/http";
 import { cn } from "@/lib/cn";
 import { formatCurrency } from "@/lib/format";
 import type { Producto } from "@/types/api";
+import { RolUsuario } from "@/types/api";
 import { useEnviarComanda, useComandasActivas, useCancelarComanda } from "../hooks";
 
 // â”€â”€â”€ Tipos locales â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -247,7 +248,7 @@ export function MeseroPage() {
             <Drawer
               open={drawerComandas}
               onClose={() => setDrawerComandas(false)}
-              title="Mis comandas activas"
+              title={sesion?.rol === RolUsuario.Administrador ? "Comandas activas" : "Mis comandas activas"}
               descripcion={`${misComandas.length} pedido${misComandas.length !== 1 ? "s" : ""} en curso`}
             >
               <div className="flex flex-col gap-3 pt-2">
@@ -382,7 +383,7 @@ export function MeseroPage() {
                   <div className="mt-5">
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60">
-                        Mis comandas activas
+                        {sesion?.rol === RolUsuario.Administrador ? "Comandas activas" : "Mis comandas activas"}
                       </p>
                       {misComandas.length > 1 && (
                         <button
@@ -411,6 +412,9 @@ export function MeseroPage() {
                                 <div className="flex items-center gap-2 flex-wrap">
                                   <span className="text-label-lg font-black text-cafe-intenso">#{c.folio}</span>
                                   <span className="text-body-sm text-on-surface-variant">{c.esParaLlevar ? "Para llevar" : `Mesa ${c.mesa}`}</span>
+                                  {sesion?.rol === RolUsuario.Administrador && (
+                                    <span className="text-[10px] font-semibold text-primary-container">{c.meseroNombre}</span>
+                                  )}
                                 </div>
                                 <p className="mt-1 text-body-sm text-on-surface-variant truncate">
                                   {c.items.map((it) => `${it.nombre}${it.cantidad > 1 ? ` x${it.cantidad}` : ""}`).join(", ")}
@@ -685,7 +689,9 @@ export function MeseroPage() {
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• BARRA DE NAVEGACIÀ“N FIJA â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       {paso < 3 && (
         <footer className="fixed inset-x-0 z-30 backdrop-blur-md"
-          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 6.5rem)" }}
+          style={{ bottom: sesion?.rol === RolUsuario.Administrador
+            ? "calc(env(safe-area-inset-bottom, 0px) + 6.5rem)"
+            : "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}
         >
           <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
             <button
