@@ -284,7 +284,7 @@ function ComandaCobro({ comanda: c }: { comanda: ComandaDto }) {
         <div className="rounded-[calc(1.25rem-3px)] overflow-hidden bg-surface-container-lowest">
 
           {/* Header — compact */}
-          <div className="flex items-center justify-between px-4 pt-3 pb-2">
+          <div className="flex items-center justify-between px-4 pt-3 pb-1">
             <div className="flex items-baseline gap-2">
               <span className="text-label-lg font-black text-cafe-intenso">#{c.folio}</span>
               <span className="text-body-sm text-on-surface-variant">
@@ -293,6 +293,16 @@ function ComandaCobro({ comanda: c }: { comanda: ComandaDto }) {
             </div>
             <span className="text-headline-sm font-black text-primary-container tabular-nums">
               {formatCurrency(c.total)}
+            </span>
+          </div>
+
+          {/* Auditoria — mesero + hora */}
+          <div className="flex items-center gap-1.5 px-4 pb-2">
+            <span className="text-[10px] text-on-surface-variant/50">por</span>
+            <span className="text-[10px] font-semibold text-on-surface-variant">{c.meseroNombre}</span>
+            <span className="text-[10px] text-on-surface-variant/30">·</span>
+            <span className="text-[10px] text-on-surface-variant/50">
+              {new Date(c.creadaEn).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}
             </span>
           </div>
 
