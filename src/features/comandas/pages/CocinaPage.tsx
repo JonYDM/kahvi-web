@@ -252,25 +252,6 @@ export function CocinaPage() {
         </div>
       )}
 
-      {/* ── Estado: vacio ── */}
-      {!isLoading && !isError && listaMostrada.length === 0 && (
-        <div className="flex flex-col items-center gap-4 py-16 text-center mt-4">
-          <img
-            src="/spil.webp"
-            alt="Sin comandas"
-            className="h-32 w-32 object-contain"
-          />
-          <div>
-            <p className="text-headline-sm font-bold text-cafe-intenso">
-              Todo listo
-            </p>
-            <p className="mt-1 text-body-md text-on-surface-variant">
-              {textoVacioFiltro(filtro)}
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* ── Lista mobile / Kanban desktop ── */}
       {!isLoading && !isError && (activas.length > 0 || canceladasRecientes.length > 0) && (
         <>
@@ -335,6 +316,15 @@ export function CocinaPage() {
             })}
           </div>
         </>
+      )}
+
+      {/* Empty state global — cuando no hay nada activo */}
+      {!isLoading && !isError && activas.length === 0 && canceladasRecientes.length === 0 && (
+        <div className="flex flex-col items-center gap-3 py-16 text-center mt-4">
+          <img src="/spil.webp" alt="" className="h-32 w-32 object-contain" />
+          <p className="text-headline-sm font-bold text-cafe-intenso">Todo listo</p>
+          <p className="text-body-md text-on-surface-variant">Sin comandas activas. Actualiza cada 5s.</p>
+        </div>
       )}
     </PantallaConHeader>
   );
