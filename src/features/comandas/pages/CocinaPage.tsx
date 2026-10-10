@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
 import { ArrowsClockwise, Clock, Fire, CheckCircle } from "@phosphor-icons/react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
-import { SkeletonFila } from "@/components/ui";
+import { Drawer, SkeletonFila } from "@/components/ui";
 import { useToast } from "@/components/feedback/useToast";
 import { ApiError } from "@/lib/http";
 import { cn } from "@/lib/cn";
@@ -256,7 +256,10 @@ export function CocinaPage() {
           </div>
 
           {/* TABLET/DESKTOP: Kanban 3 columnas */}
-          <div className="mt-4 hidden md:grid md:grid-cols-3 md:gap-4">
+          <div
+            className="mt-4 hidden md:grid md:grid-cols-3 md:gap-4"
+            style={{ width: "90vw", marginLeft: "calc((90vw - 100%) / -2)", paddingLeft: "1rem", paddingRight: "1rem" }}
+          >
             {(["Recibida", "EnPreparacion", "Lista"] as const).map((estado) => {
               const cols = estado === "Lista"
                 ? activas.filter((c) => c.estado === "Lista")
@@ -314,133 +317,174 @@ function ComandaCard({
   const urgente = esUrgente(comanda.creadaEn);
   const tiempo = tiempoTranscurrido(comanda.creadaEn);
   const estilos = ESTILOS[comanda.estado] ?? ESTILOS.Recibida;
-
   const esLista = comanda.estado === "Lista";
+  const [drawerAbierto, setDrawerAbierto] = useState(false);
+
+  const MAX_VISIBLE = 4;
+  const itemsVisibles = comanda.items.slice(0, MAX_VISIBLE);
+  const hayMas = comanda.items.length > MAX_VISIBLE;
+  const tieneNotas = comanda.items.some((it) => it.nota);
 
   return (
-    /* Outer shell — double-bezel */
-    <div
-      className={cn(
-        "rounded-[1.25rem] p-[3px]",
-        "bg-gradient-to-b to-transparent",
-        estilos.outerFrom,
-        "shadow-[0_2px_16px_-4px_rgba(43,31,25,0.12)]",
-        "transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
-        comanda.estado === "Cancelada" && "opacity-60 grayscale",
-      )}
-    >
-      {/* Inner core */}
-      <div className="overflow-hidden rounded-[calc(1.25rem-3px)] bg-surface-container-lowest">
+    <>
+      {/* Outer shell — double-bezel */}
+      <div
+        className={cn(
+          "rounded-[1.25rem] p-[3px]",
+          "bg-gradient-to-b to-transparent",
+          estilos.outerFrom,
+          "shadow-[0_2px_16px_-4px_rgba(43,31,25,0.12)]",
+          "transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]",
+          comanda.estado === "Cancelada" && "opacity-60 grayscale",
+        )}
+      >
+        <div className="overflow-hidden rounded-[calc(1.25rem-3px)] bg-surface-container-lowest">
 
-        {/* ── Fila superior ── */}
-        <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-3">
-          {/* Izquierda: no. comanda + mesa */}
-          <div className="min-w-0 flex-1 flex flex-col gap-1">
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">No. Comanda</span>
-              <span className="text-xl font-black leading-none text-cafe-intenso">#{comanda.folio}</span>
+          {/* Header */}
+          <div className="flex items-start justify-between gap-3 px-4 pt-4 pb-3">
+            <div className="min-w-0 flex-1 flex flex-col gap-1">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">No. Comanda</span>
+                <span className="text-xl font-black leading-none text-cafe-intenso">#{comanda.folio}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">
+                  {comanda.esParaLlevar ? "Para" : "Mesa"}
+                </span>
+                <span className="text-label-md font-semibold text-on-surface truncate">
+                  {comanda.esParaLlevar ? (comanda.nombreCliente ?? "llevar") : comanda.mesa}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">
-                {comanda.esParaLlevar ? "Para" : "Mesa"}
-              </span>
-              <span className="text-label-md font-semibold text-on-surface truncate">
-                {comanda.esParaLlevar
-                  ? comanda.nombreCliente ? comanda.nombreCliente : "llevar"
-                  : comanda.mesa}
-              </span>
-            </div>
-          </div>
-
-          {/* Derecha: solo badge estado (sin label) */}
-          <div className="flex shrink-0 flex-col items-end gap-1.5">
-            <span
-              className={cn(
-                "rounded-full px-2 py-0.5 text-[10px] font-bold",
-                estilos.badgeBg,
-                estilos.badgeText,
-              )}
-            >
+            <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold", estilos.badgeBg, estilos.badgeText)}>
               {estadoComandaLabel[comanda.estado]}
             </span>
           </div>
-        </div>
 
-        {/* ── Divisor ── */}
-        <div className="border-t border-outline-variant/20" />
+          <div className="border-t border-outline-variant/20" />
 
-        {/* ── Items con label Pedido + tiempo en misma fila ── */}
-        <ul className="flex flex-col gap-1.5 bg-surface-container/30 px-4 py-3">
-          {/* Fila: PEDIDO (izq) + tiempo (der) */}
-          <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">Pedido</p>
-            <span
-              className={cn(
-                "flex items-center gap-1 text-[10px] font-semibold",
+          {/* Items — 2 por fila */}
+          <div className="bg-surface-container/30 px-4 py-3">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50">Pedido</p>
+              <span className={cn("flex items-center gap-1 text-[10px] font-semibold",
                 urgente ? "text-red-500" : "text-on-surface-variant/60",
-              )}
-            >
-              {urgente ? (
-                <Fire weight="fill" className="h-3 w-3 shrink-0" aria-hidden />
-              ) : (
-                <Clock weight="light" className="h-3 w-3 shrink-0" aria-hidden />
-              )}
-              {tiempo}
-            </span>
-          </div>
-          {comanda.items.map((item, i) => (
-            <li key={i} className="flex items-start gap-2">
-              <span className="mt-0.5 text-cafe-intenso/40 text-body-md leading-snug">•</span>
-              <div className="min-w-0 flex-1">
-                <span className={cn(
-                  "font-bold text-on-surface text-[1.05rem] leading-snug",
-                  comanda.estado === "Cancelada" && "line-through text-on-surface-variant",
-                )}>
-                  {item.nombre}
-                  {item.cantidad > 1 && (
-                    <span className="ml-2 text-label-lg font-black text-primary-container">(x{item.cantidad})</span>
-                  )}
-                </span>
-                {item.nota ? (
-                  <p className="mt-0.5 text-body-sm italic text-on-surface-variant">
-                    "{item.nota}"
-                  </p>
-                ) : null}
-              </div>
-            </li>
-          ))}
-        </ul>
+              )}>
+                {urgente ? <Fire weight="fill" className="h-3 w-3" /> : <Clock weight="light" className="h-3 w-3" />}
+                {tiempo}
+              </span>
+            </div>
 
-        {/* ── Accion ── */}
-        {!esLista && comanda.estado !== "Entregada" ? (
-          <div className="px-4 pb-4 pt-3">
+            {/* Grid 2 columnas */}
+            <div className="grid grid-cols-2 gap-1.5">
+              {itemsVisibles.map((item, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "rounded-xl bg-surface-container-lowest/80 px-2.5 py-2 border border-outline-variant/20",
+                    comanda.estado === "Cancelada" && "opacity-60",
+                  )}
+                >
+                  <p className={cn(
+                    "text-label-md font-bold leading-snug text-cafe-intenso",
+                    comanda.estado === "Cancelada" && "line-through",
+                  )}>
+                    {item.nombre}
+                    {item.cantidad > 1 && (
+                      <span className="ml-1 text-[11px] font-black text-primary-container">x{item.cantidad}</span>
+                    )}
+                  </p>
+                  {item.nota ? (
+                    <p className="mt-0.5 text-[10px] italic text-primary-container truncate">"{item.nota}"</p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+
+            {/* Sin notas o ver mas */}
+            <div className="mt-2 flex items-center justify-between">
+              {!tieneNotas ? (
+                <p className="text-[10px] text-on-surface-variant/40 italic">Sin notas especiales</p>
+              ) : (
+                <div />
+              )}
+              {hayMas && (
+                <button
+                  onClick={() => setDrawerAbierto(true)}
+                  className="text-[10px] font-semibold text-primary-container hover:underline"
+                >
+                  +{comanda.items.length - MAX_VISIBLE} mas
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Accion */}
+          {!esLista && comanda.estado !== "Entregada" ? (
+            <div className="px-4 pb-4 pt-3">
+              <button
+                onClick={onAvanzar}
+                disabled={avanzando}
+                className={cn(
+                  "w-full rounded-full py-2.5 text-label-md font-bold transition-all active:scale-[0.98] disabled:opacity-50",
+                  comanda.estado === "Recibida"
+                    ? "border border-caramelo/40 bg-caramelo/20 text-cafe-intenso hover:bg-caramelo/30"
+                    : "bg-cafe-intenso text-crema",
+                )}
+              >
+                {comanda.estado === "Recibida" ? "Preparar" : "Marcar como lista"}
+              </button>
+            </div>
+          ) : esLista ? (
+            <div className="flex items-center justify-center gap-1.5 px-4 pb-4 pt-3">
+              <CheckCircle weight="fill" className="h-4 w-4 shrink-0 text-verde-menta" />
+              <span className="text-label-sm font-semibold text-on-surface-variant">Lista para caja</span>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      {/* Drawer de detalles completos */}
+      <Drawer
+        open={drawerAbierto}
+        onClose={() => setDrawerAbierto(false)}
+        title={`Comanda #${comanda.folio}`}
+        descripcion={comanda.esParaLlevar ? "Para llevar" : `Mesa ${comanda.mesa}`}
+      >
+        <div className="flex flex-col gap-3 pt-2">
+          {comanda.items.map((item, i) => (
+            <div key={i} className="flex items-start gap-3 rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-3 shadow-soft">
+              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-surface-container text-label-lg font-black text-cafe-intenso">
+                {item.cantidad}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-label-lg font-bold text-on-surface">{item.nombre}</p>
+                {item.nota ? (
+                  <p className="mt-0.5 text-body-sm italic text-primary-container">"{item.nota}"</p>
+                ) : (
+                  <p className="mt-0.5 text-body-sm text-on-surface-variant/40 italic">Sin nota</p>
+                )}
+              </div>
+            </div>
+          ))}
+          {/* Boton accion dentro del drawer */}
+          {!esLista && comanda.estado !== "Entregada" && comanda.estado !== "Cancelada" && (
             <button
-              onClick={onAvanzar}
+              onClick={() => { onAvanzar(); setDrawerAbierto(false); }}
               disabled={avanzando}
               className={cn(
-                "w-full rounded-full py-2.5 text-label-md font-bold transition-all active:scale-[0.98] disabled:opacity-50",
+                "mt-2 w-full rounded-full py-3 text-label-md font-bold transition-all active:scale-[0.98] disabled:opacity-50",
                 comanda.estado === "Recibida"
-                  ? "border border-caramelo/40 bg-caramelo/20 text-cafe-intenso hover:bg-caramelo/30"
+                  ? "border border-caramelo/40 bg-caramelo/20 text-cafe-intenso"
                   : "bg-cafe-intenso text-crema",
               )}
             >
               {comanda.estado === "Recibida" ? "Preparar" : "Marcar como lista"}
             </button>
-          </div>
-        ) : esLista ? (
-          <div className="flex items-center justify-center gap-1.5 px-4 pb-4 pt-3">
-            <CheckCircle
-              weight="fill"
-              className="h-4 w-4 shrink-0 text-verde-menta"
-              aria-hidden
-            />
-            <span className="text-label-sm font-semibold text-on-surface-variant">
-              Lista para caja
-            </span>
-          </div>
-        ) : null}
-      </div>
-    </div>
+          )}
+        </div>
+      </Drawer>
+    </>
   );
 }
 
