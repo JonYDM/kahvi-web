@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import { ArrowsClockwise, Clock, Fire, CheckCircle } from "@phosphor-icons/react";
 import { PantallaConHeader } from "@/components/organisms/PantallaConHeader";
 import { Drawer, SkeletonFila } from "@/components/ui";
@@ -11,7 +11,7 @@ import { useComandasActivas, useAvanzarComanda } from "../hooks";
 
 // ─── Tipos de filtro ──────────────────────────────────────────────────────────
 
-type FiltroChip = "Todos" | "Recibida" | "EnPreparacion" | "Lista" | "Cancelada";
+type FiltroChip = "Recibida" | "EnPreparacion" | "Lista" | "Cancelada";
 
 interface ChipDef {
   id: FiltroChip;
@@ -19,7 +19,6 @@ interface ChipDef {
 }
 
 const CHIPS: ChipDef[] = [
-  { id: "Todos", label: "Todos" },
   { id: "Recibida", label: "Pendiente" },
   { id: "EnPreparacion", label: "Preparando" },
   { id: "Lista", label: "Lista" },
@@ -80,14 +79,11 @@ const ESTILOS: Record<EstadoComanda, EstiloEstado> = {
 
 function textoVacioFiltro(filtro: FiltroChip): string {
   switch (filtro) {
-    case "Recibida":
-      return "No hay comandas pendientes.";
-    case "EnPreparacion":
-      return "Nada en preparacion ahora.";
-    case "Lista":
-      return "Ninguna comanda lista para caja.";
-    default:
-      return "No hay comandas activas. El sistema actualiza cada 5 segundos.";
+    case "Recibida": return "No hay comandas pendientes.";
+    case "EnPreparacion": return "Nada en preparacion ahora.";
+    case "Lista": return "Ninguna comanda lista para caja.";
+    case "Cancelada": return "Sin cancelaciones recientes.";
+    default: return "No hay comandas activas.";
   }
 }
 
@@ -100,7 +96,40 @@ export function CocinaPage() {
   const avanzar = useAvanzarComanda();
   const toast = useToast();
 
-  const [filtro, setFiltro] = useState<FiltroChip>("Todos");
+  const [filtro, setFiltro] = useState<FiltroChip>("Recibida");
+  const [banner, setBanner] = useState<number>(0); // cuantas nuevas comandas
+  const idsAnteriores = useRef<Set<string>>(new Set());
+
+  // Detectar nuevas comandas Recibidas y mostrar banner + sonido
+  useEffect(() => {
+    if (!comandas) return;
+    const nuevas = comandas.filter(
+      (c) => c.estado === "Recibida" && !idsAnteriores.current.has(c.id),
+    );
+    if (nuevas.length > 0) {
+      setBanner(nuevas.length);
+      // Sonido corto con AudioContext — sin dependencias externas
+      try {
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+        osc.onended = () => ctx.close();
+      } catch { /* AudioContext no disponible */ }
+      // Auto-ocultar el banner tras 4s
+      setTimeout(() => setBanner(0), 4000);
+    }
+    // Actualizar el set de ids conocidos
+    const nuevosIds = new Set<string>(comandas.map((c) => c.id));
+    idsAnteriores.current = nuevosIds;
+  }, [comandas]);
 
   const activas = (comandas ?? []).filter(
     (c) =>
@@ -116,13 +145,9 @@ export function CocinaPage() {
     return min < 2;
   });
 
-  const todasVisibles = [...activas, ...canceladasRecientes];
-
   const listaMostrada =
-    filtro === "Todos"
-      ? todasVisibles
-      : filtro === "Cancelada"
-        ? canceladasRecientes
+    filtro === "Cancelada"
+      ? canceladasRecientes
         : activas.filter((c) => c.estado === filtro);
 
   const ultimaActualizacion =
@@ -174,6 +199,18 @@ export function CocinaPage() {
         </button>
       }
     >
+      {/* ── Banner nueva comanda ── */}
+      {banner > 0 && (
+        <div className="fixed left-1/2 top-20 z-50 -translate-x-1/2 animate-[fadeIn_0.3s_ease-out]">
+          <div className="flex items-center gap-2 rounded-full bg-cafe-intenso px-5 py-3 text-label-md font-bold text-crema shadow-xl">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-caramelo/30 text-[11px] font-black text-cafe-intenso">
+              {banner}
+            </span>
+            nuevo{banner !== 1 ? "s" : ""} pedido{banner !== 1 ? "s" : ""}
+          </div>
+        </div>
+      )}
+
       {/* ── Chips de filtro — solo en mobile ── */}
       <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
         {CHIPS.map((chip) => (
